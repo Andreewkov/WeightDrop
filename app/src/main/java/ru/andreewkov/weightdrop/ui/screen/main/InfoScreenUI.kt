@@ -1,11 +1,8 @@
-package ru.andreewkov.weightdrop.ui.screen
+package ru.andreewkov.weightdrop.ui.screen.main
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -21,11 +18,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,7 +37,6 @@ import ru.andreewkov.weightdrop.model.Weighting
 import ru.andreewkov.weightdrop.ui.ProgressWidgetValue
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
-import ru.andreewkov.weightdrop.ui.container.RowColumnContainer
 import ru.andreewkov.weightdrop.ui.theme.Dark
 import ru.andreewkov.weightdrop.ui.theme.Grey
 import ru.andreewkov.weightdrop.ui.theme.Peach
@@ -57,78 +51,84 @@ import ru.andreewkov.weightdrop.ui.widget.WeightChartColor
 import java.time.LocalDate
 
 @Composable
-fun MainScreen() {
-    val viewModel: MainViewModel = viewModel()
+fun InfoScreenUI() {
+    val viewModel: InfoViewModel = viewModel()
     val screenState by viewModel.screenState.collectAsState()
 
     when (val state = screenState) {
-        is MainViewModel.ScreenState.Chart -> MainScreenChart(state.weightChart)
-        MainViewModel.ScreenState.Loading -> Unit
+        is InfoViewModel.ScreenState.Chart -> InfoScreenContent(state.weightChart)
+        InfoViewModel.ScreenState.Loading -> Unit
     }
 }
 
 @Composable
-private fun MainScreenChart(
+private fun InfoScreenContent(
     weightChart: WeightChart,
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(10.dp)
+                .padding(16.dp)
                 .fillMaxSize(),
         ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        vertical = 10.dp,
-                        horizontal = 20.dp,
-                    )
-                    .height(getContentHeight()),
-            ) {
-                ProgressWidget(
-                    color = ProgressWidgetColor(
-                        inactiveColor = Peach,
-                        shadowColor = Grey,
-                        positivePrimaryColor = Color(0xFF5CDE2A),
-                        positiveSecondaryColor = Color(0xFF266C0E),
-                        negativePrimaryColor = Color(0xFFFC643B),
-                        negativeSecondaryColor = Color(0xFFAD2E0D),
-                    ),
-                    value = ProgressWidgetValue(
-                        target = 80f,
-                        max = 90.2f,
-                        current = 84.4f,
-                    ),
-                    modifier = Modifier.fillMaxHeight(),
-                )
-
-                Spacer(modifier = Modifier.size(20.dp))
-
-                if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    ButtonsWeightPortraitContent()
-                } else {
-                    ButtonsWeightLandscapeContent()
-                }
-            }
-
-            Box {
-                ChartWidget(
-                    chart = weightChart,
-                    color = WeightChartColor(
-                        gridColor = MaterialTheme.colorScheme.primary,
-                        textColor = MaterialTheme.colorScheme.primary,
-                        weightLineColor = MaterialTheme.colorScheme.secondary,
-                        pointColor = MaterialTheme.colorScheme.tertiary,
-                        targetLineColor = MaterialTheme.colorScheme.tertiary,
-                    ),
-                )
-            }
+            InfoScreenResults()
+            Spacer(modifier = Modifier.size(10.dp))
+            InfoScreenChart(weightChart)
         }
     }
+}
+
+@Composable
+private fun InfoScreenResults() {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(getContentHeight()),
+    ) {
+        ProgressWidget(
+            color = ProgressWidgetColor(
+                inactiveColor = Peach,
+                shadowColor = Grey,
+                positivePrimaryColor = Color(0xFF5CDE2A),
+                positiveSecondaryColor = Color(0xFF266C0E),
+                negativePrimaryColor = Color(0xFFFC643B),
+                negativeSecondaryColor = Color(0xFFAD2E0D),
+            ),
+            value = ProgressWidgetValue(
+                target = 80f,
+                max = 90.2f,
+                current = 84.4f,
+            ),
+            modifier = Modifier.fillMaxHeight(),
+        )
+
+        Spacer(modifier = Modifier.size(20.dp))
+
+        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            ButtonsWeightPortraitContent()
+        } else {
+            ButtonsWeightLandscapeContent()
+        }
+    }
+}
+
+@Composable
+private fun InfoScreenChart(
+    weightChart: WeightChart,
+) {
+    ChartWidget(
+        chart = weightChart,
+        color = WeightChartColor(
+            gridColor = MaterialTheme.colorScheme.primary,
+            textColor = MaterialTheme.colorScheme.primary,
+            weightLineColor = MaterialTheme.colorScheme.secondary,
+            pointColor = MaterialTheme.colorScheme.tertiary,
+            targetLineColor = MaterialTheme.colorScheme.tertiary,
+        ),
+    )
 }
 
 context(RowScope)
@@ -232,7 +232,7 @@ private fun getContentHeight(): Dp {
 
 @WeightDropPreview
 @Composable
-private fun MainScreenChartPreview() {
+private fun InfoScreenContentPreview() {
     val calculator = WeightChartCalculator()
     val target = 86f
     val weightings = listOf(
@@ -249,6 +249,6 @@ private fun MainScreenChartPreview() {
     )
     val chart = calculator.calculateWeightChart(target, weightings)
     WeightDropTheme {
-        MainScreenChart(chart)
+        InfoScreenContent(chart)
     }
 }

@@ -41,10 +41,10 @@ import java.time.LocalDate
 import kotlin.math.abs
 import kotlin.math.min
 
-private const val START_MARGIN_CHART = 90f
-private const val TOP_MARGIN_CHART = 20f
-private const val END_MARGIN_CHART = 40f
-private const val BOTTOM_MARGIN_CHART = 90f
+private const val START_MARGIN_CHART = 80f
+private const val TOP_MARGIN_CHART = 0f
+private const val END_MARGIN_CHART = 0f
+private const val BOTTOM_MARGIN_CHART = 60f
 
 data class WeightChartColor(
     val gridColor: Color,
@@ -72,7 +72,7 @@ fun ChartWidget(
             textMeasurer = measurer,
             textStyle = textStyle,
             lineColor = color.gridColor,
-            dividers = chart.scope.dividers
+            dividers = chart.scope.dividers,
         )
 
         drawDateDividers(
@@ -192,7 +192,7 @@ private fun DrawScope.drawDateDivider(
             textLayoutResult = textLayoutResult,
             topLeft = Offset(
                 x = x - textSize.width / 2,
-                y = size.height - 45 - textSize.height / 2,
+                y = size.height - BOTTOM_MARGIN_CHART / 2 - textSize.height / 2,
             )
         )
     }
@@ -421,7 +421,7 @@ private fun ChartWidgetPreview() {
 @Composable
 private fun ChartWidgetPreview2() {
     val calculator = WeightChartCalculator()
-    val target = 70f
+    val target = 80f
     val weights = listOf(
         Weighting(93.7f, LocalDate.parse("2024-10-18")),
         Weighting(93.9f, LocalDate.parse("2024-10-19")),

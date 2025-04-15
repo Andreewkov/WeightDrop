@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WeightDrop</string>
+    <string name="add_weight_button">Добавить</string>
+    <string name="add_weight_previous_value">Текущее значение</string>
 </resources>

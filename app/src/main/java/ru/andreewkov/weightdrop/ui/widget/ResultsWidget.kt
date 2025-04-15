@@ -105,7 +105,7 @@ fun ResultsWidget(
 }
 
 @Composable
-fun ResultRow(
+private fun ResultRow(
     title: String,
     value: String,
     background: Color,
