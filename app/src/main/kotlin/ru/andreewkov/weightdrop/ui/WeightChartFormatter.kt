@@ -8,7 +8,7 @@ object WeightChartFormatter {
 
     private val formatter = DateTimeFormatter.ofPattern("dd.MM")
 
-    fun formatDate(date: LocalDate, startDate: LocalDate, endDate: LocalDate): String {
+    fun formatDate(date: LocalDate): String {
         return date.format(formatter)
     }
 

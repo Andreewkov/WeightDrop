@@ -2,8 +2,6 @@ package ru.andreewkov.weightdrop.ui.util
 
 import kotlin.math.ceil
 import kotlin.math.floor
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.round
 
 fun Float.floorToStep(step: Float): Float {

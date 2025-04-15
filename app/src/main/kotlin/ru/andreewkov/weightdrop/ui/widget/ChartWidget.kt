@@ -152,8 +152,6 @@ private fun DrawScope.drawDateDividers(
         bottom = 0f,
     ) {
         val xStep = size.width / (weightPoints.size - 1)
-        val startDate = weightPoints.first().date
-        val endDate = weightPoints.last().date
 
         weightPoints.mapIndexedNotNull { index, point ->
             if (point.drawDivider) {
@@ -165,7 +163,7 @@ private fun DrawScope.drawDateDividers(
             val currentX = index * xStep
             drawDateDivider(
                 x = currentX,
-                title = WeightChartFormatter.formatDate(date, startDate, endDate),
+                title = WeightChartFormatter.formatDate(date),
                 textMeasurer = textMeasurer,
                 textStyle = textStyle,
                 lineColor = lineColor,
@@ -290,7 +288,9 @@ private fun DrawScope.drawWeightLines(
                 cubicTo(cubicPositions)
             },
             color = lineColor,
-            style = Stroke(width = 3.dp.toPx(),)
+            style = Stroke(
+                width = 3.dp.toPx(),
+            )
         )
         fillWeightChart(cubicPositions)
     }

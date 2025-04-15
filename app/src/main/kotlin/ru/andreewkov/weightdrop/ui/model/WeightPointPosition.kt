@@ -5,8 +5,3 @@ data class WeightPointPosition(
     val y: Float,
     val weightPoint: WeightPoint,
 )
-
-data class WeightPointPositionsScope(
-    val points: List<WeightPointPosition>,
-    val targetY: Float,
-)
