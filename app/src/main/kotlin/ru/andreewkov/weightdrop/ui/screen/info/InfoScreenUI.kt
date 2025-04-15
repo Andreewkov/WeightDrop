@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.screen.main
+package ru.andreewkov.weightdrop.ui.screen.info
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -48,7 +48,6 @@ import ru.andreewkov.weightdrop.ui.widget.ProgressWidgetColor
 import ru.andreewkov.weightdrop.ui.widget.ResultsWidget
 import ru.andreewkov.weightdrop.ui.widget.ResultsWidgetItem
 import ru.andreewkov.weightdrop.ui.widget.WeightChartColor
-import java.time.LocalDate
 
 @Composable
 fun InfoScreenUI() {

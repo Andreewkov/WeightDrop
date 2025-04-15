@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.screen.main
+package ru.andreewkov.weightdrop.ui.screen.info
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

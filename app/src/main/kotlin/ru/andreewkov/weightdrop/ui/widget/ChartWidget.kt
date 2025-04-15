@@ -39,8 +39,6 @@ import ru.andreewkov.weightdrop.ui.util.drawVerticalLine
 import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumFirst
 import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumSecond
 import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumThird
-
-import java.time.LocalDate
 import kotlin.math.abs
 import kotlin.math.min
 
