@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.andreewkov.weightdrop.R
-import ru.andreewkov.weightdrop.model.Weighting
 import ru.andreewkov.weightdrop.ui.ProgressWidgetValue
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
@@ -42,6 +41,7 @@ import ru.andreewkov.weightdrop.ui.theme.Grey
 import ru.andreewkov.weightdrop.ui.theme.Peach
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
+import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumFourth
 import ru.andreewkov.weightdrop.ui.widget.ChartWidget
 import ru.andreewkov.weightdrop.ui.widget.ProgressWidget
 import ru.andreewkov.weightdrop.ui.widget.ProgressWidgetColor
@@ -235,19 +235,7 @@ private fun getContentHeight(): Dp {
 private fun InfoScreenContentPreview() {
     val calculator = WeightChartCalculator()
     val target = 86f
-    val weightings = listOf(
-        Weighting(93.7f, LocalDate.parse("2024-10-18")),
-        Weighting(93.9f, LocalDate.parse("2024-10-19")),
-        Weighting(92.3f, LocalDate.parse("2024-10-21")),
-        Weighting(91.0f, LocalDate.parse("2024-10-24")),
-        Weighting(88.1f, LocalDate.parse("2024-10-25")),
-        Weighting(87.8f, LocalDate.parse("2024-10-27")),
-        Weighting(89.2f, LocalDate.parse("2024-10-30")),
-        Weighting(87.9f, LocalDate.parse("2024-11-01")),
-        Weighting(86.9f, LocalDate.parse("2024-11-02")),
-        Weighting(86.7f, LocalDate.parse("2024-11-04")),
-    )
-    val chart = calculator.calculateWeightChart(target, weightings)
+    val chart = calculator.calculateWeightChart(target, stubWeightingsMediumFourth)
     WeightDropTheme {
         InfoScreenContent(chart)
     }

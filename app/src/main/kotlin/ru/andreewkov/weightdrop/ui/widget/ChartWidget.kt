@@ -25,7 +25,6 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.andreewkov.weightdrop.model.Weighting
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
 import ru.andreewkov.weightdrop.ui.WeightChartFormatter
@@ -37,6 +36,10 @@ import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
 import ru.andreewkov.weightdrop.ui.util.drawHorizontalLine
 import ru.andreewkov.weightdrop.ui.util.drawVerticalLine
+import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumFirst
+import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumSecond
+import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumThird
+
 import java.time.LocalDate
 import kotlin.math.abs
 import kotlin.math.min
@@ -375,34 +378,13 @@ private fun Path.cubicTo(positions: WeightLineCubicPositions): Path {
 private fun ChartWidgetPreview() {
     val calculator = WeightChartCalculator()
     val target = 90f
-    val weights = listOf(
-        Weighting(93.7f, LocalDate.parse("2024-10-18")),
-        Weighting(93.9f, LocalDate.parse("2024-10-19")),
-        Weighting(93.7f, LocalDate.parse("2024-10-20")),
-        Weighting(92.3f, LocalDate.parse("2024-10-21")),
-        Weighting(92.0f, LocalDate.parse("2024-10-24")),
-        Weighting(92.1f, LocalDate.parse("2024-10-25")),
-        Weighting(92.7f, LocalDate.parse("2024-10-26")),
-        Weighting(92.8f, LocalDate.parse("2024-10-27")),
-        Weighting(93.2f, LocalDate.parse("2024-10-28")),
-        Weighting(93.7f, LocalDate.parse("2024-10-30")),
-        Weighting(93.1f, LocalDate.parse("2024-11-01")),
-        Weighting(92.9f, LocalDate.parse("2024-11-02")),
-        Weighting(92.7f, LocalDate.parse("2024-11-03")),
-        Weighting(92.1f, LocalDate.parse("2024-11-05")),
-        Weighting(92.2f, LocalDate.parse("2024-11-06")),
-        Weighting(92.1f, LocalDate.parse("2024-11-09")),
-        Weighting(92.9f, LocalDate.parse("2024-11-14")),
-        Weighting(92.9f, LocalDate.parse("2024-11-16")),
-        Weighting(92.8f, LocalDate.parse("2024-11-19")),
-    )
     WeightDropTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             Box(modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()) {
                 ChartWidget(
-                    chart = calculator.calculateWeightChart(target, weights),
+                    chart = calculator.calculateWeightChart(target, stubWeightingsMediumFirst),
                     color = WeightChartColor(
                         gridColor = MaterialTheme.colorScheme.primary,
                         textColor = MaterialTheme.colorScheme.primary,
@@ -422,34 +404,13 @@ private fun ChartWidgetPreview() {
 private fun ChartWidgetPreview2() {
     val calculator = WeightChartCalculator()
     val target = 80f
-    val weights = listOf(
-        Weighting(93.7f, LocalDate.parse("2024-10-18")),
-        Weighting(93.9f, LocalDate.parse("2024-10-19")),
-        Weighting(93.7f, LocalDate.parse("2024-10-20")),
-        Weighting(92.3f, LocalDate.parse("2024-10-21")),
-        Weighting(92.0f, LocalDate.parse("2024-10-24")),
-        Weighting(92.1f, LocalDate.parse("2024-10-25")),
-        Weighting(92.7f, LocalDate.parse("2024-10-26")),
-        Weighting(92.8f, LocalDate.parse("2024-10-27")),
-        Weighting(91.2f, LocalDate.parse("2024-10-28")),
-        Weighting(90.7f, LocalDate.parse("2024-10-30")),
-        Weighting(88.1f, LocalDate.parse("2024-11-01")),
-        Weighting(88.9f, LocalDate.parse("2024-11-02")),
-        Weighting(87.7f, LocalDate.parse("2024-11-03")),
-        Weighting(87.1f, LocalDate.parse("2024-11-05")),
-        Weighting(86.2f, LocalDate.parse("2024-11-06")),
-        Weighting(85.1f, LocalDate.parse("2024-11-09")),
-        Weighting(85.4f, LocalDate.parse("2024-11-14")),
-        Weighting(83.9f, LocalDate.parse("2024-11-16")),
-        Weighting(83.8f, LocalDate.parse("2024-11-19")),
-    )
     WeightDropTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             Box(modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()) {
                 ChartWidget(
-                    chart = calculator.calculateWeightChart(target, weights),
+                    chart = calculator.calculateWeightChart(target, stubWeightingsMediumSecond),
                     color = WeightChartColor(
                         gridColor = MaterialTheme.colorScheme.primary,
                         textColor = MaterialTheme.colorScheme.primary,
@@ -468,34 +429,13 @@ private fun ChartWidgetPreview2() {
 private fun ChartWidgetPreview3() {
     val calculator = WeightChartCalculator()
     val target = 88f
-    val weights = listOf(
-        Weighting(93.7f, LocalDate.parse("2024-10-18")),
-        Weighting(93.9f, LocalDate.parse("2024-10-19")),
-        Weighting(93.7f, LocalDate.parse("2024-10-20")),
-        Weighting(92.3f, LocalDate.parse("2024-10-21")),
-        Weighting(92.0f, LocalDate.parse("2024-10-24")),
-        Weighting(92.1f, LocalDate.parse("2024-10-25")),
-        Weighting(92.7f, LocalDate.parse("2024-10-26")),
-        Weighting(92.8f, LocalDate.parse("2024-10-27")),
-        Weighting(91.2f, LocalDate.parse("2024-10-28")),
-        Weighting(90.7f, LocalDate.parse("2024-10-30")),
-        Weighting(88.3f, LocalDate.parse("2024-11-01")),
-        Weighting(88.9f, LocalDate.parse("2024-11-02")),
-        Weighting(87.7f, LocalDate.parse("2024-11-03")),
-        Weighting(87.1f, LocalDate.parse("2024-11-05")),
-        Weighting(86.2f, LocalDate.parse("2024-11-06")),
-        Weighting(85.1f, LocalDate.parse("2024-11-09")),
-        Weighting(85.4f, LocalDate.parse("2024-11-14")),
-        Weighting(83.9f, LocalDate.parse("2024-11-16")),
-        Weighting(83.8f, LocalDate.parse("2024-11-19")),
-    )
     WeightDropTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             Box(modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()) {
                 ChartWidget(
-                    chart = calculator.calculateWeightChart(target, weights),
+                    chart = calculator.calculateWeightChart(target, stubWeightingsMediumThird),
                     color = WeightChartColor(
                         gridColor = MaterialTheme.colorScheme.primary,
                         textColor = MaterialTheme.colorScheme.primary,
