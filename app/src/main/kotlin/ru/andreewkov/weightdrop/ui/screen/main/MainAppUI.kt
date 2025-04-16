@@ -6,7 +6,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,7 +20,7 @@ import ru.andreewkov.weightdrop.ui.util.observe
 fun MainAppUI(
     navController: NavHostController = rememberNavController()
 ) {
-    val viewModel: MainAppViewModel = viewModel()
+    val viewModel: MainAppViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
         viewModel.navigationScreen.observe { screen ->
@@ -35,7 +35,9 @@ fun MainAppUI(
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(route = Screen.Info.name) {
-                InfoScreenUI()
+                InfoScreenUI(
+                    actionHandler = viewModel,
+                )
             }
             composable(route = Screen.Add.name) {
                 AddScreenUI()

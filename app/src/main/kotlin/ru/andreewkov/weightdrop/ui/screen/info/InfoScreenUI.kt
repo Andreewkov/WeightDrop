@@ -31,11 +31,14 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.ui.ProgressWidgetValue
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
+import ru.andreewkov.weightdrop.ui.screen.AppAction
+import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
+import ru.andreewkov.weightdrop.ui.screen.main.MainAppViewModel
 import ru.andreewkov.weightdrop.ui.theme.Dark
 import ru.andreewkov.weightdrop.ui.theme.Grey
 import ru.andreewkov.weightdrop.ui.theme.Peach
@@ -50,12 +53,19 @@ import ru.andreewkov.weightdrop.ui.widget.ResultsWidgetItem
 import ru.andreewkov.weightdrop.ui.widget.WeightChartColor
 
 @Composable
-fun InfoScreenUI() {
-    val viewModel: InfoViewModel = viewModel()
+fun InfoScreenUI(
+    actionHandler: AppActionHandler,
+) {
+    val viewModel: InfoViewModel = hiltViewModel()
     val screenState by viewModel.screenState.collectAsState()
 
     when (val state = screenState) {
-        is InfoViewModel.ScreenState.Chart -> InfoScreenContent(state.weightChart)
+        is InfoViewModel.ScreenState.Chart -> {
+            InfoScreenContent(
+                weightChart = state.weightChart,
+                onAddClick = { actionHandler.handleAction(AppAction.ClickAdd) }
+            )
+        }
         InfoViewModel.ScreenState.Loading -> Unit
     }
 }
@@ -63,6 +73,7 @@ fun InfoScreenUI() {
 @Composable
 private fun InfoScreenContent(
     weightChart: WeightChart,
+    onAddClick: () -> Unit = { }
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -71,7 +82,9 @@ private fun InfoScreenContent(
                 .padding(16.dp)
                 .fillMaxSize(),
         ) {
-            InfoScreenResults()
+            InfoScreenResults(
+                onAddClick = onAddClick,
+            )
             Spacer(modifier = Modifier.size(10.dp))
             InfoScreenChart(weightChart)
         }
@@ -79,7 +92,7 @@ private fun InfoScreenContent(
 }
 
 @Composable
-private fun InfoScreenResults() {
+private fun InfoScreenResults(onAddClick: () -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -107,9 +120,13 @@ private fun InfoScreenResults() {
         Spacer(modifier = Modifier.size(20.dp))
 
         if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            ButtonsWeightPortraitContent()
+            ButtonsWeightPortraitContent(
+                onAddClick = onAddClick,
+            )
         } else {
-            ButtonsWeightLandscapeContent()
+            ButtonsWeightLandscapeContent(
+                onAddClick = onAddClick,
+            )
         }
     }
 }
@@ -132,7 +149,9 @@ private fun InfoScreenChart(
 
 context(RowScope)
 @Composable
-private fun ButtonsWeightPortraitContent() {
+private fun ButtonsWeightPortraitContent(
+    onAddClick: () -> Unit,
+) {
     Column {
         ResultsWidget(
             results = createResultsWidgetItems(),
@@ -146,6 +165,7 @@ private fun ButtonsWeightPortraitContent() {
             modifier = Modifier
         ) {
             ActionButton(
+                onClick = onAddClick,
                 modifier = Modifier
                     .height(34.dp)
                     .fillMaxWidth()
@@ -153,6 +173,7 @@ private fun ButtonsWeightPortraitContent() {
             )
             Spacer(modifier = Modifier.size(6.dp))
             ActionButton(
+                onClick = onAddClick,
                 modifier = Modifier.size(34.dp),
             )
         }
@@ -161,7 +182,9 @@ private fun ButtonsWeightPortraitContent() {
 
 context(RowScope)
 @Composable
-private fun ButtonsWeightLandscapeContent() {
+private fun ButtonsWeightLandscapeContent(
+    onAddClick: () -> Unit,
+) {
     ResultsWidget(
         results = createResultsWidgetItems(),
         background = Peach,
@@ -174,6 +197,7 @@ private fun ButtonsWeightLandscapeContent() {
         modifier = Modifier
     ) {
         ActionButton(
+            onClick = onAddClick,
             modifier = Modifier
                 .aspectRatio(1f)
                 .fillMaxSize()
@@ -181,6 +205,7 @@ private fun ButtonsWeightLandscapeContent() {
         )
         Spacer(modifier = Modifier.size(6.dp))
         ActionButton(
+            onClick = onAddClick,
             modifier = Modifier
                 .aspectRatio(1f)
                 .fillMaxSize()
@@ -199,7 +224,10 @@ private fun createResultsWidgetItems(): List<ResultsWidgetItem> {
 }
 
 @Composable
-private fun ActionButton(modifier: Modifier = Modifier) {
+private fun ActionButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Button(
         shape = RoundedCornerShape(12.dp),
         colors = ButtonColors(
@@ -210,7 +238,7 @@ private fun ActionButton(modifier: Modifier = Modifier) {
         ),
         contentPadding = PaddingValues(8.dp),
         modifier = modifier,
-        onClick = { },
+        onClick = onClick,
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_plus),

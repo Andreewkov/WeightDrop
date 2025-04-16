@@ -1,14 +1,17 @@
 package ru.andreewkov.weightdrop.ui.screen.info
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
 import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumFourth
+import javax.inject.Inject
 
-class InfoViewModel : ViewModel() {
+@HiltViewModel
+class InfoViewModel @Inject constructor() : ViewModel() {
 
     private val weightChartCalculator = WeightChartCalculator()
     private val _screenState = MutableStateFlow<ScreenState>(ScreenState.Loading)

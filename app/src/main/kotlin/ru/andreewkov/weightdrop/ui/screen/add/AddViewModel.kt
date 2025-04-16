@@ -1,12 +1,15 @@
 package ru.andreewkov.weightdrop.ui.screen.add
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
+import javax.inject.Inject
 
-class AddViewModel : ViewModel() {
+@HiltViewModel
+class AddViewModel @Inject constructor() : ViewModel() {
 
     private val _screenState = MutableStateFlow(createDefaultScreenState())
     val screenState: StateFlow<ScreenState> get() = _screenState.asStateFlow()
