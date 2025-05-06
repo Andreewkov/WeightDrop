@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
+import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumFirst
 import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumFourth
+import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumSecond
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,9 +24,9 @@ class InfoViewModel @Inject constructor() : ViewModel() {
     }
 
     fun initData() {
-        val target = 80f
+        val target = 90f
         _screenState.value = ScreenState.Chart(
-            weightChart = weightChartCalculator.calculateWeightChart(target, stubWeightingsMediumFourth)
+            weightChart = weightChartCalculator.calculateWeightChart(target, stubWeightingsMediumFirst)
         )
     }
 

@@ -69,6 +69,10 @@ fun ChartWidget(
     )
 
     Canvas(modifier = modifier.fillMaxSize()) {
+        drawChartLines(
+            color = color.gridColor,
+        )
+
         drawWeightDividers(
             textMeasurer = measurer,
             textStyle = textStyle,
@@ -90,6 +94,19 @@ fun ChartWidget(
             pointColor = color.pointColor,
         )
     }
+}
+
+private fun DrawScope.drawChartLines(color: Color) {
+    drawVerticalLine(
+        color = color,
+        x = 0f,
+        strokeWidth = 1f,
+    )
+    drawHorizontalLine(
+        color = color,
+        y = size.height,
+        strokeWidth = 1f,
+    )
 }
 
 private fun DrawScope.drawWeightDividers(

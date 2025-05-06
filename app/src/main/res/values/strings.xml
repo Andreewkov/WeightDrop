@@ -3,4 +3,9 @@
     <string name="add_weight_button">Добавить</string>
     <string name="add_weight_previous_value">Текущее значение</string>
     <string name="add_weight_date">Дата</string>
+
+    <string name="screen_info">Обзор</string>
+    <string name="screen_history">История</string>
+    <string name="screen_settings">Настройки</string>
+    <string name="screen_add">Добавить</string>
 </resources>

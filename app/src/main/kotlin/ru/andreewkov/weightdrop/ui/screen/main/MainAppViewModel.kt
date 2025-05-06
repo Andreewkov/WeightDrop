@@ -22,12 +22,29 @@ class MainAppViewModel @Inject constructor() : ViewModel(), AppActionHandler {
     )
     val navigationScreen get() = _navigationScreen.asSharedFlow()
 
-    fun getStartNavigationScreen() = Screen.Info
+    fun getStartNavigationScreen(): Screen = Screen.getStartScreen()
 
     override fun handleAction(action: AppAction) {
         when (action) {
-            AppAction.ClickAdd -> onClickAdd()
+            is AppAction.NavigationCLick -> when (action.screen) {
+                Screen.Info -> onClickInfo()
+                Screen.History -> onClickHistory()
+                Screen.Settings -> onClickSettimgs()
+                Screen.Add -> onClickAdd()
+            }
         }
+    }
+
+    private fun onClickInfo() {
+        _navigationScreen.tryEmit(Screen.Info)
+    }
+
+    private fun onClickHistory() {
+        _navigationScreen.tryEmit(Screen.History)
+    }
+
+    private fun onClickSettimgs() {
+        //_navigationScreen.tryEmit(Screen.History)
     }
 
     private fun onClickAdd() {

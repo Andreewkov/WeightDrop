@@ -1,6 +1,7 @@
 package ru.andreewkov.weightdrop.ui.screen.info
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,6 +39,7 @@ import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
 import ru.andreewkov.weightdrop.ui.screen.AppAction
 import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
+import ru.andreewkov.weightdrop.ui.screen.Screen
 import ru.andreewkov.weightdrop.ui.screen.main.MainAppViewModel
 import ru.andreewkov.weightdrop.ui.theme.Dark
 import ru.andreewkov.weightdrop.ui.theme.Grey
@@ -63,7 +65,7 @@ fun InfoScreenUI(
         is InfoViewModel.ScreenState.Chart -> {
             InfoScreenContent(
                 weightChart = state.weightChart,
-                onAddClick = { actionHandler.handleAction(AppAction.ClickAdd) }
+                onAddClick = { actionHandler.handleAction(AppAction.NavigationCLick(Screen.History)) }
             )
         }
         InfoViewModel.ScreenState.Loading -> Unit
@@ -73,21 +75,19 @@ fun InfoScreenUI(
 @Composable
 private fun InfoScreenContent(
     weightChart: WeightChart,
-    onAddClick: () -> Unit = { }
+    onAddClick: () -> Unit = { },
+    modifier: Modifier = Modifier,
 ) {
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(16.dp)
-                .fillMaxSize(),
-        ) {
-            InfoScreenResults(
-                onAddClick = onAddClick,
-            )
-            Spacer(modifier = Modifier.size(10.dp))
-            InfoScreenChart(weightChart)
-        }
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxSize(),
+    ) {
+        InfoScreenResults(
+            onAddClick = onAddClick,
+        )
+        Spacer(modifier = Modifier.size(10.dp))
+        InfoScreenChart(weightChart)
     }
 }
 
@@ -160,23 +160,23 @@ private fun ButtonsWeightPortraitContent(
             modifier = Modifier.weight(1f)
         )
         Spacer(modifier = Modifier.size(6.dp))
-        Row(
-            horizontalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier
-        ) {
-            ActionButton(
-                onClick = onAddClick,
-                modifier = Modifier
-                    .height(34.dp)
-                    .fillMaxWidth()
-                    .weight(1f),
-            )
-            Spacer(modifier = Modifier.size(6.dp))
-            ActionButton(
-                onClick = onAddClick,
-                modifier = Modifier.size(34.dp),
-            )
-        }
+//        Row(
+//            horizontalArrangement = Arrangement.SpaceAround,
+//            modifier = Modifier
+//        ) {
+//            ActionButton(
+//                onClick = onAddClick,
+//                modifier = Modifier
+//                    .height(34.dp)
+//                    .fillMaxWidth()
+//                    .weight(1f),
+//            )
+//            Spacer(modifier = Modifier.size(6.dp))
+//            ActionButton(
+//                onClick = onAddClick,
+//                modifier = Modifier.size(34.dp),
+//            )
+//        }
     }
 }
 
@@ -251,7 +251,7 @@ private fun ActionButton(
 @Composable
 private fun getContentHeight(): Dp {
     return if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
-        150.dp
+        120.dp
     } else {
         80.dp
     }
@@ -264,6 +264,8 @@ private fun InfoScreenContentPreview() {
     val target = 86f
     val chart = calculator.calculateWeightChart(target, stubWeightingsMediumFourth)
     WeightDropTheme {
-        InfoScreenContent(chart)
+        Scaffold { innerPadding ->
+            InfoScreenContent(chart, modifier = Modifier.padding(innerPadding))
+        }
     }
 }

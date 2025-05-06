@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import ru.andreewkov.weightdrop.ui.WeightChartFormatter
 import ru.andreewkov.weightdrop.ui.theme.Dark
-import ru.andreewkov.weightdrop.ui.theme.LightPeach
+import ru.andreewkov.weightdrop.ui.theme.PeachLight
 import ru.andreewkov.weightdrop.ui.theme.Peach
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.roundToDecimals
@@ -176,7 +176,7 @@ private fun ResultsWidgetPreview2() {
             modifier = Modifier
                 .height(100.dp)
                 .width(200.dp)
-                .background(LightPeach)
+                .background(PeachLight)
         ) {
             ResultsWidget(
                 results = listOf(
