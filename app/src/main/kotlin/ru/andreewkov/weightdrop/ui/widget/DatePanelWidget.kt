@@ -58,8 +58,8 @@ data class DatePanelWidgetColors(
 
 @Composable
 fun DatePanelWidget(
-    colors: DatePanelWidgetColors,
     date: String,
+    colors: DatePanelWidgetColors,
     modifier: Modifier = Modifier,
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
@@ -72,7 +72,6 @@ fun DatePanelWidget(
         modifier = modifier
             .fillMaxSize()
             .onSizeChanged { size = it }
-            .clip(RoundedCornerShape(heightDp / 4))
             .background(colors.containerColor)
             .padding(heightDp / 10)
     ) {
@@ -85,7 +84,7 @@ fun DatePanelWidget(
         DateBox(
             cornerRadius = heightDp / 4,
             text = date,
-            textSize = with(LocalDensity.current) { heightDp.toSp() * 0.5f },
+            textSize = with(LocalDensity.current) { heightDp.toSp() * 0.4f },
             backgroundColor = colors.backgroundColor,
             dateColor = colors.dateColor,
         )
@@ -165,12 +164,12 @@ private fun DateBox(
 private fun DatePanelWidgetPreview() {
     MaterialTheme {
         DatePanelWidget(
+            date = "12.06.2007",
             colors = DatePanelWidgetColors(
                 containerColor = Peach,
                 backgroundColor = PeachLight,
                 dateColor = Dark,
             ),
-            date = "12.06.2007",
             modifier = Modifier
                 .height(40.dp)
                 .width(200.dp)
@@ -184,12 +183,12 @@ private fun DatePanelWidgetPreview() {
 private fun DatePanelWidgetPreviewInverse() {
     MaterialTheme {
         DatePanelWidget(
+            date = "07.10.1977",
             colors = DatePanelWidgetColors(
                 containerColor = Dark,
                 backgroundColor = DarkLight,
                 dateColor = Grey,
             ),
-            date = "07.10.1977",
             modifier = Modifier
                 .height(100.dp)
                 .width(400.dp)

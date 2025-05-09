@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -41,12 +43,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ru.andreewkov.weightdrop.R
+import ru.andreewkov.weightdrop.ui.screen.AppAction
 import ru.andreewkov.weightdrop.ui.screen.Screen
-import ru.andreewkov.weightdrop.ui.screen.add.AddScreenUI
+import ru.andreewkov.weightdrop.ui.screen.add.AddDialogUI
 import ru.andreewkov.weightdrop.ui.screen.history.HistoryScreenUI
 import ru.andreewkov.weightdrop.ui.screen.info.InfoScreenUI
-import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
-import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
 import ru.andreewkov.weightdrop.ui.util.observe
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarColors
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarWidget
@@ -59,6 +60,7 @@ fun MainAppUI(
     val viewModel: MainAppViewModel = hiltViewModel()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute by remember { derivedStateOf { backStackEntry?.destination?.route } }
+    val showAddDialog by viewModel.showAddDialog.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.navigationScreen.observe { screen ->
@@ -96,7 +98,7 @@ fun MainAppUI(
                         painter = painterResource(R.drawable.ic_plus),
                         contentDescription = "",
                         modifier = Modifier
-                            .clickable {  }
+                            .clickable { viewModel.handleAction(AppAction.OnClickAdd) }
                             .padding(horizontal = 16.dp)
                             .size(20.dp),
                     )
@@ -124,16 +126,20 @@ fun MainAppUI(
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(route = Screen.Info.id) {
-                InfoScreenUI(
-                    actionHandler = viewModel,
-                )
+                InfoScreenUI()
             }
             composable(route = Screen.History.id) {
                 HistoryScreenUI()
             }
             composable(route = Screen.Settings.id) {
-                AddScreenUI()
+
             }
         }
+    }
+
+    if (showAddDialog) {
+        AddDialogUI(
+            actionHandler = viewModel,
+        )
     }
 }

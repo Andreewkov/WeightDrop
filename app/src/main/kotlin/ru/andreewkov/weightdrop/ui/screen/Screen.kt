@@ -31,11 +31,6 @@ sealed class Screen(
         iconRes = R.drawable.ic_settings,
     )
 
-    data object Add : Screen(
-        id = "Add",
-        titleRes = R.string.screen_settings,
-    )
-
     companion object {
 
         fun getStartScreen() = Info
@@ -54,7 +49,6 @@ sealed class Screen(
             Info,
             History,
             Settings,
-            Add,
         )
     }
 }

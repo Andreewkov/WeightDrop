@@ -240,8 +240,13 @@ private fun createBackgroundBrush(): Brush {
     return Brush.verticalGradient(
         colorStops = arrayOf(
             0.05f to Color.Transparent,
-            0.35f to Color.Black,
-            0.65f to Color.Black,
+            0.15f to Color(0x4D000000),
+            1f / 7 * 2.7f to Color(0x66000000),
+            1f / 7 * 2.71f to Color.Black,
+
+            1f / 7 * 4.311f to Color.Black,
+            1f / 7 * 4.3f to Color(0x66000000),
+            0.85f to Color(0x4D000000),
             0.95f to Color.Transparent,
         ),
     )

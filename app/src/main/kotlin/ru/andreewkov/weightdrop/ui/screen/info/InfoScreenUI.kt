@@ -55,9 +55,7 @@ import ru.andreewkov.weightdrop.ui.widget.ResultsWidgetItem
 import ru.andreewkov.weightdrop.ui.widget.WeightChartColor
 
 @Composable
-fun InfoScreenUI(
-    actionHandler: AppActionHandler,
-) {
+fun InfoScreenUI() {
     val viewModel: InfoViewModel = hiltViewModel()
     val screenState by viewModel.screenState.collectAsState()
 
@@ -65,7 +63,6 @@ fun InfoScreenUI(
         is InfoViewModel.ScreenState.Chart -> {
             InfoScreenContent(
                 weightChart = state.weightChart,
-                onAddClick = { actionHandler.handleAction(AppAction.NavigationCLick(Screen.History)) }
             )
         }
         InfoViewModel.ScreenState.Loading -> Unit
@@ -75,7 +72,6 @@ fun InfoScreenUI(
 @Composable
 private fun InfoScreenContent(
     weightChart: WeightChart,
-    onAddClick: () -> Unit = { },
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -83,16 +79,14 @@ private fun InfoScreenContent(
             .padding(16.dp)
             .fillMaxSize(),
     ) {
-        InfoScreenResults(
-            onAddClick = onAddClick,
-        )
+        InfoScreenResults()
         Spacer(modifier = Modifier.size(10.dp))
         InfoScreenChart(weightChart)
     }
 }
 
 @Composable
-private fun InfoScreenResults(onAddClick: () -> Unit) {
+private fun InfoScreenResults() {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -120,13 +114,9 @@ private fun InfoScreenResults(onAddClick: () -> Unit) {
         Spacer(modifier = Modifier.size(20.dp))
 
         if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            ButtonsWeightPortraitContent(
-                onAddClick = onAddClick,
-            )
+            ButtonsWeightPortraitContent()
         } else {
-            ButtonsWeightLandscapeContent(
-                onAddClick = onAddClick,
-            )
+            ButtonsWeightLandscapeContent()
         }
     }
 }
@@ -149,9 +139,7 @@ private fun InfoScreenChart(
 
 context(RowScope)
 @Composable
-private fun ButtonsWeightPortraitContent(
-    onAddClick: () -> Unit,
-) {
+private fun ButtonsWeightPortraitContent() {
     Column {
         ResultsWidget(
             results = createResultsWidgetItems(),
@@ -182,9 +170,7 @@ private fun ButtonsWeightPortraitContent(
 
 context(RowScope)
 @Composable
-private fun ButtonsWeightLandscapeContent(
-    onAddClick: () -> Unit,
-) {
+private fun ButtonsWeightLandscapeContent() {
     ResultsWidget(
         results = createResultsWidgetItems(),
         background = Peach,
@@ -196,21 +182,21 @@ private fun ButtonsWeightLandscapeContent(
         verticalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
     ) {
-        ActionButton(
-            onClick = onAddClick,
-            modifier = Modifier
-                .aspectRatio(1f)
-                .fillMaxSize()
-                .weight(1f)
-        )
-        Spacer(modifier = Modifier.size(6.dp))
-        ActionButton(
-            onClick = onAddClick,
-            modifier = Modifier
-                .aspectRatio(1f)
-                .fillMaxSize()
-                .weight(1f)
-        )
+//        ActionButton(
+//            onClick = onAddClick,
+//            modifier = Modifier
+//                .aspectRatio(1f)
+//                .fillMaxSize()
+//                .weight(1f)
+//        )
+//        Spacer(modifier = Modifier.size(6.dp))
+//        ActionButton(
+//            onClick = onAddClick,
+//            modifier = Modifier
+//                .aspectRatio(1f)
+//                .fillMaxSize()
+//                .weight(1f)
+//        )
     }
 }
 
