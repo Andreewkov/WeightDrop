@@ -45,9 +45,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.ui.util.pxToDp
 import ru.andreewkov.weightdrop.ui.util.pxToSp
@@ -88,7 +91,6 @@ fun WeightPickerWidget(
     modifier: Modifier = Modifier,
 ) {
     val backgroundBrush = remember { createBackgroundBrush() }
-    val currentValue by state.currentValue.collectAsState()
 
     Row(
         modifier = modifier
@@ -118,8 +120,7 @@ fun WeightPickerWidget(
         ValueColumn(
             color = primaryColor,
             range = state.integerRange,
-            prefix = "",
-            currentIndex = currentValue.integer,
+            currentIndexFlow = state.currentValue.map { it.integer },
             modifier = Modifier.weight(1f),
             getItemModifier = { Modifier.align(Alignment.CenterEnd) },
             onItemScrolled = { index ->
@@ -128,12 +129,21 @@ fun WeightPickerWidget(
                 )
             }
         )
-        Spacer(Modifier.size(14.dp))
+        Text(
+            text = ".",
+            style = TextStyle(
+                color = primaryColor,
+                fontSize = 22.sp,
+                textAlign = TextAlign.Center,
+            ),
+            modifier = Modifier
+                .width(20.dp)
+                .align(Alignment.CenterVertically)
+        )
         ValueColumn(
             color = primaryColor,
             range = state.fractionRange,
-            prefix = ".",
-            currentIndex = currentValue.fraction,
+            currentIndexFlow = state.currentValue.map { it.fraction },
             modifier = Modifier.weight(1f),
             getItemModifier = { Modifier.align(Alignment.CenterStart) },
             onItemScrolled = { index ->
@@ -149,8 +159,7 @@ fun WeightPickerWidget(
 private fun ValueColumn(
     color: Color,
     range: IntRange,
-    prefix: String,
-    currentIndex: Int,
+    currentIndexFlow: Flow<Int>,
     modifier: Modifier = Modifier,
     getItemModifier: BoxScope.() -> Modifier = { Modifier },
     onItemScrolled: (Int) -> Unit = { },
@@ -168,14 +177,15 @@ private fun ValueColumn(
     val isScrollInProgress by remember {
         derivedStateOf { listState.isScrollInProgress || isScrolled }
     }
-
+    val currentIndex by currentIndexFlow.collectAsState(0)
     LaunchedEffect(currentIndex) {
         if (currentIndex > 0 && listState.firstVisibleItemIndex != currentIndex && !isScrollInProgress) {
             coroutineScope.launch {
                 isScrolled = true
+                val diiItems = (currentIndex - listState.firstVisibleItemIndex)
                 listState.animateScrollBy(
-                    value = (currentIndex - listState.firstVisibleItemIndex) * itemHeight,
-                    animationSpec = tween(durationMillis = 500)
+                    value = diiItems * itemHeight,
+                    animationSpec = tween(durationMillis = diiItems * 30 )
                 )
                 delay(500)
                 isScrolled = false
@@ -205,11 +215,12 @@ private fun ValueColumn(
             }
         }
     }
-    val items = range.map { "$prefix$it" }
+    val items = range.map { "$it" }
 
     LazyColumn(
         state = listState,
         contentPadding = contentPadding,
+        userScrollEnabled = !isScrolled,
         modifier = modifier
             .fillMaxSize()
             .onSizeChanged { columnSize = it }
