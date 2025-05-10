@@ -1,18 +1,18 @@
 [versions]
-agp = "8.7.2"
+agp = "8.7.3"
 kotlin = "2.0.0"
 coreKtx = "1.16.0"
 daggerHilt = "2.51.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.7"
-lifecycleViewmodelCompose = "2.8.7"
+lifecycleRuntimeKtx = "2.9.0"
+lifecycleViewmodelCompose = "2.9.0"
 activityCompose = "1.10.1"
-composeBom = "2025.04.00"
-navigationRuntimeKtx = "2.7.7"
-navigationCompose = "2.7.7"
-navigationComposeHilt = "1.0.0"
+composeBom = "2025.05.00"
+navigationRuntimeKtx = "2.9.0"
+navigationCompose = "2.9.0"
+navigationComposeHilt = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
