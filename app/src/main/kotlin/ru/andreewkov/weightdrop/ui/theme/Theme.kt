@@ -15,9 +15,11 @@ val DarkLight = Color(0xFF1E192C)
 private val colorScheme = darkColorScheme(
     surface = Dark,
     primary = Grey,
+    onPrimary = Dark,
     secondary = Peach,
     tertiary = PeachLight,
     background = Dark,
+    onSurface = Peach,
     surfaceContainer = Dark,
     surfaceVariant = DarkLight,
 )

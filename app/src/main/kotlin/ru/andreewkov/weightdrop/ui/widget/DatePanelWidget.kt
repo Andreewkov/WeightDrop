@@ -7,29 +7,20 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -38,15 +29,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.ui.theme.Dark
 import ru.andreewkov.weightdrop.ui.theme.DarkLight
 import ru.andreewkov.weightdrop.ui.theme.Grey
-import ru.andreewkov.weightdrop.ui.theme.GreyLight
 import ru.andreewkov.weightdrop.ui.theme.Peach
 import ru.andreewkov.weightdrop.ui.theme.PeachLight
 
@@ -58,33 +46,28 @@ data class DatePanelWidgetColors(
 
 @Composable
 fun DatePanelWidget(
+    height: Dp,
     date: String,
     colors: DatePanelWidgetColors,
     modifier: Modifier = Modifier,
 ) {
-    var size by remember { mutableStateOf(IntSize.Zero) }
-    val heightDp by with(LocalDensity.current) {
-        remember {
-            derivedStateOf { size.height.toDp() }
-        }
-    }
     Row(
         modifier = modifier
+            .height(height)
             .fillMaxSize()
-            .onSizeChanged { size = it }
             .background(colors.containerColor)
-            .padding(heightDp / 10)
+            .padding(height / 10)
     ) {
         CalendarBox(
-            cornerRadius = heightDp / 4,
+            cornerRadius = height / 4,
             backgroundColor = colors.backgroundColor,
             iconColor = colors.dateColor,
         )
-        Spacer(modifier = Modifier.size(heightDp / 10))
+        Spacer(modifier = Modifier.size(height / 10))
         DateBox(
-            cornerRadius = heightDp / 4,
+            cornerRadius = height / 4,
             text = date,
-            textSize = with(LocalDensity.current) { heightDp.toSp() * 0.4f },
+            textSize = with(LocalDensity.current) { height.toSp() * 0.4f },
             backgroundColor = colors.backgroundColor,
             dateColor = colors.dateColor,
         )
@@ -164,6 +147,7 @@ private fun DateBox(
 private fun DatePanelWidgetPreview() {
     MaterialTheme {
         DatePanelWidget(
+            height = 30.dp,
             date = "12.06.2007",
             colors = DatePanelWidgetColors(
                 containerColor = Peach,
@@ -171,7 +155,6 @@ private fun DatePanelWidgetPreview() {
                 dateColor = Dark,
             ),
             modifier = Modifier
-                .height(40.dp)
                 .width(200.dp)
                 .padding(5.dp)
         )
@@ -183,6 +166,7 @@ private fun DatePanelWidgetPreview() {
 private fun DatePanelWidgetPreviewInverse() {
     MaterialTheme {
         DatePanelWidget(
+            height = 100.dp,
             date = "07.10.1977",
             colors = DatePanelWidgetColors(
                 containerColor = Dark,
@@ -190,7 +174,6 @@ private fun DatePanelWidgetPreviewInverse() {
                 dateColor = Grey,
             ),
             modifier = Modifier
-                .height(100.dp)
                 .width(400.dp)
                 .padding(5.dp)
         )

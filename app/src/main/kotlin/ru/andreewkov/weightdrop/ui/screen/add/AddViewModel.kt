@@ -11,8 +11,19 @@ import javax.inject.Inject
 @HiltViewModel
 class AddViewModel @Inject constructor() : ViewModel() {
 
+    private val _showDateDialog = MutableStateFlow(false)
+    val showDateDialog get() = _showDateDialog
+
     private val _screenState = MutableStateFlow(createDefaultScreenState())
     val screenState: StateFlow<ScreenState> get() = _screenState.asStateFlow()
+
+    fun onDatePickerDialogRequest() {
+        _showDateDialog.tryEmit(true)
+    }
+
+    fun onDatePickerDialogDismissRequest() {
+        _showDateDialog.tryEmit(false)
+    }
 
     private fun createDefaultScreenState(): ScreenState {
         return ScreenState(

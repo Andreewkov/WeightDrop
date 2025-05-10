@@ -1,54 +1,42 @@
 package ru.andreewkov.weightdrop.ui.screen.add
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DisplayMode
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.ui.screen.AppAction
 import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
 import ru.andreewkov.weightdrop.ui.theme.Grey
 import ru.andreewkov.weightdrop.ui.theme.Peach
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
-import ru.andreewkov.weightdrop.ui.util.observe
 import ru.andreewkov.weightdrop.ui.widget.DatePanelWidget
 import ru.andreewkov.weightdrop.ui.widget.DatePanelWidgetColors
 import ru.andreewkov.weightdrop.ui.widget.WeightPickerNum
 import ru.andreewkov.weightdrop.ui.widget.WeightPickerWidget
 import ru.andreewkov.weightdrop.ui.widget.rememberWeightPickerWidgetState
-import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 
 @Composable
 fun AddDialogUI(
@@ -57,11 +45,26 @@ fun AddDialogUI(
 ) {
     val viewModel: AddViewModel = hiltViewModel()
     val state by viewModel.screenState.collectAsState()
+    val showDateDialog by viewModel.showDateDialog.collectAsState()
 
     Dialog(
         onDismissRequest = { actionHandler.handleAction(AppAction.OnDismissAdd) }
     ) {
-        AddDialogContent(state.date, state.weight) {actionHandler.handleAction(AppAction.OnDismissAdd)}
+        AddDialogContent(
+            date = state.date,
+            weight = state.weight,
+            onDateClick = viewModel::onDatePickerDialogRequest,
+            onAddClick = {
+                actionHandler.handleAction(AppAction.OnDismissAdd)
+            },
+            modifier = modifier,
+        )
+
+        if (showDateDialog) {
+            AddDatePickerDialog(
+                onDismissRequest = viewModel::onDatePickerDialogDismissRequest
+            )
+        }
     }
 }
 
@@ -69,8 +72,9 @@ fun AddDialogUI(
 private fun AddDialogContent(
     date: LocalDate,
     weight: Float?,
+    onDateClick: () -> Unit,
+    onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null
 ) {
     val weightPickerWidgetState = rememberWeightPickerWidgetState(
         num = WeightPickerNum(79, 3)
@@ -80,9 +84,13 @@ private fun AddDialogContent(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp)
+            .padding(
+                horizontal = 32.dp,
+                vertical = 16.dp,
+            )
     ) {
         DatePanelWidget(
+            height = 50.dp,
             date = "11.02.2011",
             colors = DatePanelWidgetColors(
                 containerColor = MaterialTheme.colorScheme.secondary,
@@ -90,9 +98,8 @@ private fun AddDialogContent(
                 dateColor = MaterialTheme.colorScheme.background,
             ),
             modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
                 .clip(RoundedCornerShape(20.dp))
+                .clickable(onClick = onDateClick)
         )
 
         WeightPickerWidget(
@@ -105,133 +112,24 @@ private fun AddDialogContent(
         )
 
         Button(
-            onClick = onClick ?: {},
+            onClick = onAddClick,
             shape = RoundedCornerShape(20.dp),
-            modifier = Modifier.fillMaxWidth()
+            colors = ButtonDefaults.buttonColors().copy(
+                containerColor = MaterialTheme.colorScheme.onSurface,
+            ),
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth()
         ) {
-            Text(text = "Click me")
+            Text(
+                text = stringResource(R.string.add_dialog_add_button),
+                color = MaterialTheme.colorScheme.surface,
+                style = TextStyle(
+                    fontSize = 20.sp,
+                )
+            )
         }
     }
-}
-
-
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun AddScreenContent1(
-    date: LocalDate,
-    weight: Float?,
-    modifier: Modifier = Modifier,
-) {
-    val datePickerColors = DatePickerDefaults.colors(
-        containerColor = MaterialTheme.colorScheme.background,
-    )
-
-    DatePickerDialog(
-        onDismissRequest = {
-
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    //weightPickerWidgetState.updateValue(WeightPickerNum(76, 2))
-                },
-                modifier = Modifier
-            ) {
-                Text(
-                    text = "Click me!"
-                )
-            }
-        },
-        colors = datePickerColors,
-    ) {
-        val state = rememberDatePickerState()
-
-        DatePicker(
-            state = state,
-            colors = datePickerColors,
-            showModeToggle = false,
-            modifier = Modifier.fillMaxSize()
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun AddScreenContent2(
-    date: LocalDate,
-    weight: Float?,
-    modifier: Modifier = Modifier,
-) {
-    DatePickerDialog(
-        onDismissRequest = { },
-        confirmButton = {}
-    ) {
-        val datePickerState = rememberDatePickerState(
-            initialDisplayMode = DisplayMode.Picker
-        )
-        val weightPickerWidgetState = rememberWeightPickerWidgetState(
-            num = WeightPickerNum(79, 3)
-        )
-        val selectedDate = datePickerState.selectedDateMillis?.let {
-            Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
-        }
-        val dateMillis by remember {
-            derivedStateOf {
-                datePickerState.selectedDateMillis
-            }
-        }
-        LaunchedEffect(dateMillis) {
-            Log.d("rrrttt", "dateMillis = $dateMillis")
-            //weightPickerWidgetState.updateValue(WeightPickerNum(79, 6))
-        }
-        Column(
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-            Box(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .weight(1f)
-            ) {
-                DatePicker(
-                    state = datePickerState,
-                    colors = DatePickerDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                    ),
-                    showModeToggle = false,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            Column {
-                WeightPickerWidget(
-                    state = weightPickerWidgetState,
-                    primaryColor = Grey,
-                    secondaryColor = Peach,
-                    modifier = Modifier
-                        .height(200.dp)
-                        .fillMaxWidth()
-                )
-                Button(
-                    onClick = {
-                        weightPickerWidgetState.updateValue(WeightPickerNum(76, 2))
-                    },
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) {
-                    Text(
-                        text = "Click me!"
-                    )
-                }
-            }
-        }
-
-        LaunchedEffect(Unit) {
-            weightPickerWidgetState.currentValue.observe {
-                Log.d("rrrttt", "currentValue = $it")
-            }
-        }
-    }
-
 }
 
 @Composable
@@ -245,6 +143,8 @@ private fun AddScreenContentPreview() {
                 AddDialogContent(
                     date = LocalDate.now().minusWeeks(24),
                     weight = null,
+                    onDateClick = { },
+                    onAddClick = { },
                     modifier = Modifier.padding(padding)
                 )
             }
@@ -263,6 +163,8 @@ private fun AddScreenContentEmpty() {
                 AddDialogContent(
                     date = LocalDate.now().minusWeeks(24),
                     weight = null,
+                    onDateClick = { },
+                    onAddClick = { },
                     modifier = Modifier.padding(padding)
                 )
             }
