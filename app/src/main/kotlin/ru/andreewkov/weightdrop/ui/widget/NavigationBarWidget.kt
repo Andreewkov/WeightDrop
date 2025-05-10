@@ -1,5 +1,6 @@
 package ru.andreewkov.weightdrop.ui.widget
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +19,6 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,19 +29,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import ru.andreewkov.weightdrop.ui.screen.AppAction
 import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
 import ru.andreewkov.weightdrop.ui.screen.Screen
 import ru.andreewkov.weightdrop.ui.screen.appActionHandlerStub
+import ru.andreewkov.weightdrop.ui.util.isPortrait
 
 data class NavigationBarColors(
     val containerColor: Color,
@@ -56,6 +55,7 @@ fun NavigationBarWidget(
     colors: NavigationBarColors,
     isNavigationBarItemSelected: (Screen.NavigationBarItem) -> Boolean,
     modifier: Modifier = Modifier,
+    showLabels: Boolean = isPortrait(),
 ) {
     Surface(
         color = colors.containerColor,
@@ -64,7 +64,7 @@ fun NavigationBarWidget(
         Row(
             modifier = Modifier.fillMaxWidth()
                 .windowInsetsPadding(WindowInsets.navigationBars)
-                .defaultMinSize(minHeight = 80.dp)
+                .defaultMinSize(minHeight = if (showLabels) 80.dp else 50.dp)
                 .selectableGroup(),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically,
@@ -102,14 +102,16 @@ fun NavigationBarWidget(
                             contentDescription = "",
                             modifier = Modifier.size(20.dp)
                         )
-                        Spacer(Modifier.size(4.dp))
-                        Text(
-                            text = stringResource(item.titleRes),
-                            style = TextStyle(
-                                fontSize = 12.sp,
-                                color = color,
+                        if (showLabels) {
+                            Spacer(Modifier.size(4.dp))
+                            Text(
+                                text = stringResource(item.titleRes),
+                                style = TextStyle(
+                                    fontSize = 12.sp,
+                                    color = color,
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

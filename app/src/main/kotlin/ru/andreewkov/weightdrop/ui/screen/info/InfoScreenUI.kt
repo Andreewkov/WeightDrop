@@ -46,6 +46,7 @@ import ru.andreewkov.weightdrop.ui.theme.Grey
 import ru.andreewkov.weightdrop.ui.theme.Peach
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
+import ru.andreewkov.weightdrop.ui.util.isPortrait
 import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumFourth
 import ru.andreewkov.weightdrop.ui.widget.ChartWidget
 import ru.andreewkov.weightdrop.ui.widget.ProgressWidget
@@ -113,7 +114,7 @@ private fun InfoScreenResults() {
 
         Spacer(modifier = Modifier.size(20.dp))
 
-        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (isPortrait()) {
             ButtonsWeightPortraitContent()
         } else {
             ButtonsWeightLandscapeContent()
@@ -236,7 +237,7 @@ private fun ActionButton(
 
 @Composable
 private fun getContentHeight(): Dp {
-    return if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
+    return if (isPortrait()) {
         120.dp
     } else {
         80.dp
