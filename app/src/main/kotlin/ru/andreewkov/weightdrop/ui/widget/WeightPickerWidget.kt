@@ -61,8 +61,8 @@ data class WeightPickerNum(
     val fraction: Int,
 )
 
-class WeightPickerWidgetState(
-    num: WeightPickerNum,
+data class WeightPickerWidgetState(
+    val num: WeightPickerNum,
     val integerRange: IntRange,
     val fractionRange: IntRange,
 ) {

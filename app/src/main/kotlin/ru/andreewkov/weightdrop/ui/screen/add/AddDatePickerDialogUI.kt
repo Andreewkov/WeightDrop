@@ -13,30 +13,28 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.DialogProperties
 import ru.andreewkov.weightdrop.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddDatePickerDialog(
+fun AddDatePickerDialogUI(
     onDismissRequest: () -> Unit,
 ) {
     val state = rememberDatePickerState()
     DatePickerDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = { ConfirmButton(onDismissRequest) },
-        properties = DialogProperties(usePlatformDefaultWidth = true),
-        modifier = Modifier.scale(0.9f)
+        modifier = Modifier
     ) {
         DatePicker(
             state = state,
         )
     }
+
 }
 
 @Composable

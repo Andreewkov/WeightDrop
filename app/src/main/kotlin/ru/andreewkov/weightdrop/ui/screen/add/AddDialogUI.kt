@@ -61,7 +61,7 @@ fun AddDialogUI(
         )
 
         if (showDateDialog) {
-            AddDatePickerDialog(
+            AddDatePickerDialogUI(
                 onDismissRequest = viewModel::onDatePickerDialogDismissRequest
             )
         }
@@ -141,7 +141,7 @@ private fun AddScreenContentPreview() {
                 onDismissRequest = {},
             ) {
                 AddDialogContent(
-                    date = LocalDate.now().minusWeeks(24),
+                    date = LocalDate.now(),
                     weight = null,
                     onDateClick = { },
                     onAddClick = { },

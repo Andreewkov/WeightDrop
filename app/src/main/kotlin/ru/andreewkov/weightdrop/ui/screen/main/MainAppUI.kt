@@ -16,6 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
@@ -48,11 +49,12 @@ import ru.andreewkov.weightdrop.ui.screen.Screen
 import ru.andreewkov.weightdrop.ui.screen.add.AddDialogUI
 import ru.andreewkov.weightdrop.ui.screen.history.HistoryScreenUI
 import ru.andreewkov.weightdrop.ui.screen.info.InfoScreenUI
+import ru.andreewkov.weightdrop.ui.util.ToolbarWidget
+import ru.andreewkov.weightdrop.ui.util.ToolbarWidgetColors
 import ru.andreewkov.weightdrop.ui.util.observe
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarColors
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarWidget
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainAppUI(
     navController: NavHostController = rememberNavController()
@@ -73,36 +75,13 @@ fun MainAppUI(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            CenterAlignedTopAppBar(
-                navigationIcon = {},
-                title = {
-                    Text(
-                        text = stringResource(Screen.findScreen(currentRoute).titleRes),
-                        style = TextStyle(
-                            fontSize = 22.sp,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Medium,
-                        ),
-                    )
-                },
-                colors = TopAppBarColors(
+            ToolbarWidget(
+                currentRoute = currentRoute,
+                actionHandler = viewModel,
+                colors = ToolbarWidgetColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                    actionIconContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                windowInsets = WindowInsets.statusBars,
-                actions = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_plus),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .clickable { viewModel.handleAction(AppAction.OnClickAdd) }
-                            .padding(horizontal = 16.dp)
-                            .size(20.dp),
-                    )
-                }
+                    contentColor = MaterialTheme.colorScheme.primary,
+                )
             )
         },
         bottomBar = {
@@ -114,9 +93,7 @@ fun MainAppUI(
                     activeItemColor = MaterialTheme.colorScheme.secondary,
                     inactiveItemColor = MaterialTheme.colorScheme.primary,
                 ),
-                isNavigationBarItemSelected = { item ->
-                    currentRoute == item.id
-                }
+                isNavigationBarItemSelected = { item -> currentRoute == item.id }
             )
         }
     ) { innerPadding ->
