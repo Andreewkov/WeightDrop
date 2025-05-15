@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.util
+package ru.andreewkov.weightdrop.ui.widget
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.WindowInsets
@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable

@@ -1,18 +1,18 @@
 package ru.andreewkov.weightdrop.ui.widget
-import android.util.Log
+
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.animateScrollBy
+import androidx.compose.foundation.gestures.stopScroll
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
@@ -46,15 +46,15 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.andreewkov.weightdrop.ui.util.inRange
 import ru.andreewkov.weightdrop.ui.util.pxToDp
-import ru.andreewkov.weightdrop.ui.util.pxToSp
-import java.util.LinkedList
+import kotlin.math.absoluteValue
 
 data class WeightPickerNum(
     val integer: Int,
@@ -86,8 +86,7 @@ fun rememberWeightPickerWidgetState(num: WeightPickerNum): WeightPickerWidgetSta
 @Composable
 fun WeightPickerWidget(
     state: WeightPickerWidgetState,
-    primaryColor: Color,
-    secondaryColor: Color,
+    color: Color,
     modifier: Modifier = Modifier,
 ) {
     val backgroundBrush = remember { createBackgroundBrush() }
@@ -107,22 +106,22 @@ fun WeightPickerWidget(
                     )
 
                     drawHorizontalLine(
-                        color = primaryColor,
+                        color = color,
                         y = topY,
                     )
                     drawHorizontalLine(
-                        color = primaryColor,
+                        color = color,
                         y = bottomY,
                     )
                 }
             }
     ) {
         ValueColumn(
-            color = primaryColor,
             range = state.integerRange,
             currentIndexFlow = state.currentValue.map { it.integer },
+            color = color,
+            textAlign = TextAlign.End,
             modifier = Modifier.weight(1f),
-            getItemModifier = { Modifier.align(Alignment.CenterEnd) },
             onItemScrolled = { index ->
                 state.updateValue(
                     state.currentValue.value.copy(integer = index)
@@ -132,7 +131,7 @@ fun WeightPickerWidget(
         Text(
             text = ".",
             style = TextStyle(
-                color = primaryColor,
+                color = color,
                 fontSize = 22.sp,
                 textAlign = TextAlign.Center,
             ),
@@ -141,11 +140,11 @@ fun WeightPickerWidget(
                 .align(Alignment.CenterVertically)
         )
         ValueColumn(
-            color = primaryColor,
             range = state.fractionRange,
             currentIndexFlow = state.currentValue.map { it.fraction },
+            color = color,
+            textAlign = TextAlign.Start,
             modifier = Modifier.weight(1f),
-            getItemModifier = { Modifier.align(Alignment.CenterStart) },
             onItemScrolled = { index ->
                 state.updateValue(
                     state.currentValue.value.copy(fraction = index)
@@ -157,69 +156,83 @@ fun WeightPickerWidget(
 
 @Composable
 private fun ValueColumn(
-    color: Color,
     range: IntRange,
     currentIndexFlow: Flow<Int>,
+    color: Color,
+    textAlign: TextAlign,
     modifier: Modifier = Modifier,
-    getItemModifier: BoxScope.() -> Modifier = { Modifier },
     onItemScrolled: (Int) -> Unit = { },
 ) {
     var columnSize by remember { mutableStateOf(IntSize.Zero) }
-    val itemHeight by remember {
+    val itemHeightPx by remember {
         derivedStateOf { (columnSize.height / 7f) }
     }
-    val fontSize = (columnSize.height / 9f).pxToSp()
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     var isScrolled by remember {
         mutableStateOf(false)
     }
-    val isScrollInProgress by remember {
-        derivedStateOf { listState.isScrollInProgress || isScrolled }
-    }
+
     val currentIndex by currentIndexFlow.collectAsState(0)
     LaunchedEffect(currentIndex) {
-        if (currentIndex > 0 && listState.firstVisibleItemIndex != currentIndex && !isScrollInProgress) {
+        val diffItems = (currentIndex - listState.firstVisibleItemIndex).absoluteValue
+        if ((listState.firstVisibleItemScrollOffset != 0 || diffItems != 0) && !listState.isScrollInProgress) {
             coroutineScope.launch {
                 isScrolled = true
-                val diiItems = (currentIndex - listState.firstVisibleItemIndex)
+                listState.stopScroll()
                 listState.animateScrollBy(
-                    value = diiItems * itemHeight,
-                    animationSpec = tween(durationMillis = diiItems * 30 )
+                    value = diffItems * itemHeightPx,
+                    animationSpec = tween(
+                        durationMillis = (diffItems * 30).inRange(
+                            min = 200,
+                            max = 2000,
+                        )
+                    )
                 )
-                delay(500)
                 isScrolled = false
             }
         }
     }
-    LaunchedEffect(isScrollInProgress) {
-        if (isScrollInProgress) return@LaunchedEffect
-        if (listState.firstVisibleItemScrollOffset != 0) {
-            val currentIndex = if (listState.firstVisibleItemScrollOffset >= itemHeight / 2) {
-                listState.firstVisibleItemIndex + 1
-            } else {
-                listState.firstVisibleItemIndex
-            }
-            listState.animateScrollToItem(currentIndex)
+
+    LaunchedEffect(isScrolled) {
+        if (isScrolled) return@LaunchedEffect
+        listState.scrollToCurrentIndex(itemHeightPx).collect {
+            onItemScrolled(it)
         }
     }
+
     val nestedScrollConnection = rememberNestedScrollConnection(
         onPostFling = {
-            onItemScrolled(listState.firstVisibleItemIndex)
+            listState.scrollToCurrentIndex(itemHeightPx).collect {
+                onItemScrolled(it)
+            }
         }
     )
-    val contentPadding by with(LocalDensity.current) {
+    val items = range.map { "$it" }
+    val itemModifier by with(LocalDensity.current) {
         remember {
             derivedStateOf {
-                PaddingValues(vertical = (itemHeight * 3).toDp())
+                Modifier
+                    .fillMaxWidth()
+                    .height(itemHeightPx.toDp())
             }
         }
     }
-    val items = range.map { "$it" }
+    val textStyle by with(LocalDensity.current) {
+        remember {
+            derivedStateOf {
+                TextStyle(
+                    color = color,
+                    textAlign = textAlign,
+                    fontSize = (columnSize.height / 9f).toSp(),
+                )
+            }
+        }
+    }
 
     LazyColumn(
         state = listState,
-        contentPadding = contentPadding,
+        contentPadding = PaddingValues(vertical = itemHeightPx.pxToDp() * 3),
         userScrollEnabled = !isScrolled,
         modifier = modifier
             .fillMaxSize()
@@ -227,22 +240,11 @@ private fun ValueColumn(
             .nestedScroll(nestedScrollConnection)
     ) {
         items(items = if (columnSize != IntSize.Zero) items else emptyList()) { item ->
-            Log.d("rrrttt", "item $item")
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(itemHeight.pxToDp())
-            ) {
-                Text(
-                    text = item,
-                    style = TextStyle(
-                        color = color,
-                        fontSize = fontSize,
-                        textAlign = TextAlign.Center,
-                    ),
-                    modifier = getItemModifier()
-                )
-            }
+            Text(
+                text = item,
+                style = textStyle,
+                modifier = itemModifier,
+            )
         }
     }
 }
@@ -276,7 +278,6 @@ private fun DrawScope.drawHorizontalLine(color: Color, y: Float) {
         ),
         strokeWidth = 3f,
     )
-    val stack = LinkedList<Char>()
 }
 
 @Composable
@@ -296,6 +297,22 @@ private fun rememberNestedScrollConnection(
     }
 }
 
+private fun LazyListState.scrollToCurrentIndex(itemHeight: Float): Flow<Int> {
+    return flow {
+        val index =  findCurrentIndex(itemHeight)
+        animateScrollToItem(index)
+        emit(index)
+    }
+}
+
+private fun LazyListState.findCurrentIndex(itemHeight: Float): Int {
+    return if (firstVisibleItemScrollOffset >= itemHeight / 2) {
+        firstVisibleItemIndex + 1
+    } else {
+        firstVisibleItemIndex
+    }
+}
+
 @Preview
 @Composable
 fun NumberPickerWidgetPreview() {
@@ -304,8 +321,7 @@ fun NumberPickerWidgetPreview() {
             state = rememberWeightPickerWidgetState(
                 num = WeightPickerNum(84, 7)
             ),
-            primaryColor = Color.White,
-            secondaryColor = Color.LightGray,
+            color = Color.White,
         )
     }
 }
@@ -318,8 +334,7 @@ fun NumberPickerWidgetPreviewStart() {
             state = rememberWeightPickerWidgetState(
                 num = WeightPickerNum(0, 0)
             ),
-            primaryColor = Color.White,
-            secondaryColor = Color.LightGray,
+            color = Color.White,
         )
     }
 }
@@ -332,8 +347,7 @@ fun NumberPickerWidgetPreviewEnd() {
             state = rememberWeightPickerWidgetState(
                 num = WeightPickerNum(199, 9)
             ),
-            primaryColor = Color.White,
-            secondaryColor = Color.LightGray,
+            color = Color.White,
         )
     }
 }
@@ -350,8 +364,7 @@ fun NumberPickerWidgetPreviewNarrow() {
             state = rememberWeightPickerWidgetState(
                 num = WeightPickerNum(104, 1)
             ),
-            primaryColor = Color.White,
-            secondaryColor = Color.LightGray,
+            color = Color.White,
         )
     }
 }
@@ -368,8 +381,7 @@ fun NumberPickerWidgetPreviewWide() {
             state = rememberWeightPickerWidgetState(
                 num = WeightPickerNum(56, 6)
             ),
-            primaryColor = Color.White,
-            secondaryColor = Color.LightGray,
+            color = Color.White,
         )
     }
 }

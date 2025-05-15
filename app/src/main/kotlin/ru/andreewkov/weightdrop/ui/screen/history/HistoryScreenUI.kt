@@ -40,8 +40,7 @@ fun HistoryScreenContent(
     ) {
         WeightPickerWidget(
             state = state,
-            primaryColor = MaterialTheme.colorScheme.primary,
-            secondaryColor = MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.height(300.dp),
         )
         Spacer(modifier = Modifier.size(100.dp))

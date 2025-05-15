@@ -104,15 +104,14 @@ private fun AddDialogContent(
 
         WeightPickerWidget(
             state = weightPickerWidgetState,
-            primaryColor = Grey,
-            secondaryColor = Peach,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .heightIn(max = 200.dp)
                 .fillMaxWidth()
         )
 
         Button(
-            onClick = onAddClick,
+            onClick = { weightPickerWidgetState.updateValue(WeightPickerNum(92, 7)) },//onAddClick,
             shape = RoundedCornerShape(20.dp),
             colors = ButtonDefaults.buttonColors().copy(
                 containerColor = MaterialTheme.colorScheme.onSurface,
