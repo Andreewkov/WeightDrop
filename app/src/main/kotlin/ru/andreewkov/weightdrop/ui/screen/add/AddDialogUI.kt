@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -27,10 +29,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.ui.screen.AppAction
 import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
-import ru.andreewkov.weightdrop.ui.theme.Grey
-import ru.andreewkov.weightdrop.ui.theme.Peach
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
+import ru.andreewkov.weightdrop.ui.util.getDecimals
+import ru.andreewkov.weightdrop.ui.util.roundToDecimals
 import ru.andreewkov.weightdrop.ui.widget.DatePanelWidget
 import ru.andreewkov.weightdrop.ui.widget.DatePanelWidgetColors
 import ru.andreewkov.weightdrop.ui.widget.WeightPickerNum
@@ -50,19 +52,22 @@ fun AddDialogUI(
     Dialog(
         onDismissRequest = { actionHandler.handleAction(AppAction.OnDismissAdd) }
     ) {
-        AddDialogContent(
-            date = state.date,
-            weight = state.weight,
-            onDateClick = viewModel::onDatePickerDialogRequest,
-            onAddClick = {
-                actionHandler.handleAction(AppAction.OnDismissAdd)
-            },
-            modifier = modifier,
-        )
+        Card() {
+            AddDialogContent(
+                date = state.date,
+                weight = state.weight,
+                onDateClick = viewModel::onDatePickerDialogRequest,
+                onAddClick = {
+                    actionHandler.handleAction(AppAction.OnDismissAdd)
+                },
+                modifier = modifier,
+            )
+        }
 
         if (showDateDialog) {
             AddDatePickerDialogUI(
-                onDismissRequest = viewModel::onDatePickerDialogDismissRequest
+                onDismissRequest = viewModel::onDatePickerDialogDismissRequest,
+                onConfirmClick = viewModel::onDatePickerDialogConfirm
             )
         }
     }
@@ -71,14 +76,25 @@ fun AddDialogUI(
 @Composable
 private fun AddDialogContent(
     date: LocalDate,
-    weight: Float?,
+    weight: Float,
     onDateClick: () -> Unit,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val weightPickerWidgetState = rememberWeightPickerWidgetState(
-        num = WeightPickerNum(79, 3)
+        num =             WeightPickerNum(
+            integer = weight.roundToDecimals().toInt(),
+            fraction = weight.getDecimals().toInt()
+        )
     )
+    LaunchedEffect(weight) {
+        weightPickerWidgetState.updateValue(
+            WeightPickerNum(
+                integer = weight.roundToDecimals().toInt(),
+                fraction = weight.getDecimals().toInt()
+            )
+        )
+    }
 
     Column(
         modifier = modifier
@@ -91,7 +107,7 @@ private fun AddDialogContent(
     ) {
         DatePanelWidget(
             height = 50.dp,
-            date = "11.02.2011",
+            date = date.toString(),
             colors = DatePanelWidgetColors(
                 containerColor = MaterialTheme.colorScheme.secondary,
                 backgroundColor = MaterialTheme.colorScheme.tertiary,
@@ -141,7 +157,7 @@ private fun AddScreenContentPreview() {
             ) {
                 AddDialogContent(
                     date = LocalDate.now(),
-                    weight = null,
+                    weight = 98.8f,
                     onDateClick = { },
                     onAddClick = { },
                     modifier = Modifier.padding(padding)
@@ -161,7 +177,7 @@ private fun AddScreenContentEmpty() {
             ) {
                 AddDialogContent(
                     date = LocalDate.now().minusWeeks(24),
-                    weight = null,
+                    weight = 76.9f,
                     onDateClick = { },
                     onAddClick = { },
                     modifier = Modifier.padding(padding)

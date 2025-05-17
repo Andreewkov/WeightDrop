@@ -25,15 +25,22 @@ class AddViewModel @Inject constructor() : ViewModel() {
         _showDateDialog.tryEmit(false)
     }
 
+    fun onDatePickerDialogConfirm(date: LocalDate) {
+        _showDateDialog.tryEmit(false)
+        _screenState.tryEmit(
+            _screenState.value.copy(date = date, weight = _screenState.value.weight + 1.1f)
+        )
+    }
+
     private fun createDefaultScreenState(): ScreenState {
         return ScreenState(
             date = LocalDate.now(),
-            weight = null,
+            weight = 98.7f,
         )
     }
 
     data class ScreenState(
         val date: LocalDate,
-        val weight: Float?,
+        val weight: Float,
     )
 }

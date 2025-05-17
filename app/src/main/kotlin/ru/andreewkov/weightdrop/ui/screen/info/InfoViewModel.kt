@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
 import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumFirst
-import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumFourth
-import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumSecond
 import javax.inject.Inject
 
 @HiltViewModel

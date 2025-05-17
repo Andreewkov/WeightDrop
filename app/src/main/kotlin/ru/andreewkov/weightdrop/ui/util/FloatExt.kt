@@ -19,3 +19,7 @@ fun Float.hasDecimals(): Boolean {
 fun Float.roundToDecimals(): Float {
     return round(this * 10) / 10
 }
+
+fun Float.getDecimals(): Float {
+    return this * 10 % 10
+}

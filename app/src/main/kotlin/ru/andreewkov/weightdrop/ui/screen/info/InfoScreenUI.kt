@@ -1,14 +1,11 @@
 package ru.andreewkov.weightdrop.ui.screen.info
 
-import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -37,10 +33,6 @@ import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.ui.ProgressWidgetValue
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
-import ru.andreewkov.weightdrop.ui.screen.AppAction
-import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
-import ru.andreewkov.weightdrop.ui.screen.Screen
-import ru.andreewkov.weightdrop.ui.screen.main.MainAppViewModel
 import ru.andreewkov.weightdrop.ui.theme.Dark
 import ru.andreewkov.weightdrop.ui.theme.Grey
 import ru.andreewkov.weightdrop.ui.theme.Peach
