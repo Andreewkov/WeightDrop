@@ -4,5 +4,5 @@ import kotlin.math.max
 import kotlin.math.min
 
 fun Int.inRange(min: Int, max: Int): Int {
-    return max(max, min(min, this))
+    return min(max, max(min, this))
 }

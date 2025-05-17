@@ -46,23 +46,28 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.ui.util.inRange
+import ru.andreewkov.weightdrop.ui.util.map
 import ru.andreewkov.weightdrop.ui.util.pxToDp
 import kotlin.math.absoluteValue
+import kotlin.math.max
 
 data class WeightPickerNum(
     val integer: Int,
     val fraction: Int,
 )
 
+data class WeightPickerNumWithPrev(
+    val current: WeightPickerNum,
+    val prev: WeightPickerNum,
+)
+
 data class WeightPickerWidgetState(
-    val num: WeightPickerNum,
+    val num: WeightPickerNumWithPrev,
     val integerRange: IntRange,
     val fractionRange: IntRange,
 ) {
@@ -71,7 +76,11 @@ data class WeightPickerWidgetState(
     val currentValue get() = _currentValue.asStateFlow()
 
     fun updateValue(num: WeightPickerNum) {
-        _currentValue.value = num
+        _currentValue.value = WeightPickerNumWithPrev(
+            current = num,
+            prev = _currentValue.value.current,
+        )
+
     }
 }
 
@@ -80,7 +89,14 @@ fun rememberWeightPickerWidgetState(num: WeightPickerNum): WeightPickerWidgetSta
     val integerRange = 0..199
     val fractionRange = 0..9
 
-    return remember { WeightPickerWidgetState(num, integerRange, fractionRange) }
+    return remember { WeightPickerWidgetState(
+        WeightPickerNumWithPrev(
+            current = num,
+            prev = WeightPickerNum(0, 0),
+        ),
+        integerRange = integerRange,
+        fractionRange = fractionRange,
+    ) }
 }
 
 @Composable
@@ -89,6 +105,7 @@ fun WeightPickerWidget(
     color: Color,
     modifier: Modifier = Modifier,
 ) {
+    val scope = rememberCoroutineScope()
     val backgroundBrush = remember { createBackgroundBrush() }
 
     Row(
@@ -118,13 +135,21 @@ fun WeightPickerWidget(
     ) {
         ValueColumn(
             range = state.integerRange,
-            currentIndexFlow = state.currentValue.map { it.integer },
+            currentIndexFlow = state.currentValue.map(scope) {
+                PickerScrollValue(
+                    current = it.current.integer,
+                    maxDiff = max(
+                        (it.current.integer - it.prev.integer).absoluteValue,
+                        (it.current.fraction - it.prev.fraction).absoluteValue,
+                    ),
+                )
+            },
             color = color,
             textAlign = TextAlign.End,
             modifier = Modifier.weight(1f),
             onItemScrolled = { index ->
                 state.updateValue(
-                    state.currentValue.value.copy(integer = index)
+                    state.currentValue.value.current.copy(integer = index)
                 )
             }
         )
@@ -141,13 +166,21 @@ fun WeightPickerWidget(
         )
         ValueColumn(
             range = state.fractionRange,
-            currentIndexFlow = state.currentValue.map { it.fraction },
+            currentIndexFlow = state.currentValue.map(scope) {
+                PickerScrollValue(
+                    current = it.current.fraction,
+                    maxDiff = max(
+                        (it.current.integer - it.prev.integer).absoluteValue,
+                        (it.current.fraction - it.prev.fraction).absoluteValue,
+                    ),
+                )
+            },
             color = color,
             textAlign = TextAlign.Start,
             modifier = Modifier.weight(1f),
             onItemScrolled = { index ->
                 state.updateValue(
-                    state.currentValue.value.copy(fraction = index)
+                    state.currentValue.value.current.copy(fraction = index)
                 )
             }
         )
@@ -157,25 +190,25 @@ fun WeightPickerWidget(
 @Composable
 private fun ValueColumn(
     range: IntRange,
-    currentIndexFlow: Flow<Int>,
+    currentIndexFlow: StateFlow<PickerScrollValue>,
     color: Color,
     textAlign: TextAlign,
     modifier: Modifier = Modifier,
+    listState: LazyListState = rememberLazyListState(),
     onItemScrolled: (Int) -> Unit = { },
 ) {
     var columnSize by remember { mutableStateOf(IntSize.Zero) }
     val itemHeightPx by remember {
         derivedStateOf { (columnSize.height / 7f) }
     }
-    val listState = rememberLazyListState()
+    val scrollValue by currentIndexFlow.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     var isScrolled by remember {
         mutableStateOf(false)
     }
 
-    val currentIndex by currentIndexFlow.collectAsState(0)
-    LaunchedEffect(currentIndex) {
-        val diffItems = (currentIndex - listState.firstVisibleItemIndex).absoluteValue
+    LaunchedEffect(scrollValue) {
+        val diffItems = (scrollValue.current - listState.firstVisibleItemIndex)
         if ((listState.firstVisibleItemScrollOffset != 0 || diffItems != 0) && !listState.isScrollInProgress) {
             coroutineScope.launch {
                 isScrolled = true
@@ -183,29 +216,20 @@ private fun ValueColumn(
                 listState.animateScrollBy(
                     value = diffItems * itemHeightPx,
                     animationSpec = tween(
-                        durationMillis = (diffItems * 30).inRange(
-                            min = 200,
-                            max = 2000,
-                        )
+                        durationMillis = (50 * scrollValue.maxDiff).inRange(400, 2000)
                     )
                 )
+                listState.animateScrollToItem(scrollValue.current)
                 isScrolled = false
             }
         }
     }
 
-    LaunchedEffect(isScrolled) {
-        if (isScrolled) return@LaunchedEffect
-        listState.scrollToCurrentIndex(itemHeightPx).collect {
-            onItemScrolled(it)
-        }
-    }
-
     val nestedScrollConnection = rememberNestedScrollConnection(
         onPostFling = {
-            listState.scrollToCurrentIndex(itemHeightPx).collect {
-                onItemScrolled(it)
-            }
+            val index =  listState.findCurrentIndex(itemHeightPx)
+            listState.animateScrollToItem(index)
+            onItemScrolled(index)
         }
     )
     val items = range.map { "$it" }
@@ -297,14 +321,6 @@ private fun rememberNestedScrollConnection(
     }
 }
 
-private fun LazyListState.scrollToCurrentIndex(itemHeight: Float): Flow<Int> {
-    return flow {
-        val index =  findCurrentIndex(itemHeight)
-        animateScrollToItem(index)
-        emit(index)
-    }
-}
-
 private fun LazyListState.findCurrentIndex(itemHeight: Float): Int {
     return if (firstVisibleItemScrollOffset >= itemHeight / 2) {
         firstVisibleItemIndex + 1
@@ -312,6 +328,11 @@ private fun LazyListState.findCurrentIndex(itemHeight: Float): Int {
         firstVisibleItemIndex
     }
 }
+
+private data class PickerScrollValue(
+    val current: Int,
+    val maxDiff: Int,
+)
 
 @Preview
 @Composable
