@@ -1,6 +1,6 @@
 package ru.andreewkov.weightdrop.ui
 
-import ru.andreewkov.weightdrop.data.model.Weighting
+import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.ui.model.WeightPoint
 import ru.andreewkov.weightdrop.ui.util.cellToStep
 import ru.andreewkov.weightdrop.ui.util.floorToStep

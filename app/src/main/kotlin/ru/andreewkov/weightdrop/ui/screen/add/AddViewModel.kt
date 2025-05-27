@@ -8,14 +8,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.andreewkov.weightdrop.data.api.WeightingRepository
-import ru.andreewkov.weightdrop.data.model.Weighting
+import ru.andreewkov.weightdrop.domain.UpdateWeightingUseCase
+import ru.andreewkov.weightdrop.domain.model.Weighting
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class AddViewModel @Inject constructor(
-    private val weightingRepository: WeightingRepository,
+    private val updateWeightingUseCase: UpdateWeightingUseCase
 ) : ViewModel() {
 
     private val _showDateDialog = MutableStateFlow(false)
@@ -43,7 +43,7 @@ class AddViewModel @Inject constructor(
 
     fun onWeightAddClick() {
         viewModelScope.launch(Dispatchers.IO) {
-            weightingRepository.updateWeighting(
+            updateWeightingUseCase(
                 Weighting(
                     value = _screenState.value.weight,
                     date = _screenState.value.date,

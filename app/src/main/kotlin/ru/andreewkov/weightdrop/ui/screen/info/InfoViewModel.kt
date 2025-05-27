@@ -7,15 +7,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.andreewkov.weightdrop.data.api.WeightingRepository
-import ru.andreewkov.weightdrop.data.model.Weighting
+import ru.andreewkov.weightdrop.domain.GetWeightingUseCase
+import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
 import javax.inject.Inject
 
 @HiltViewModel
 class InfoViewModel @Inject constructor(
-    private val weightingRepository: WeightingRepository,
+    private val getWeightingUseCase: GetWeightingUseCase,
 ) : ViewModel() {
 
     private val weightChartCalculator = WeightChartCalculator()
@@ -27,7 +27,7 @@ class InfoViewModel @Inject constructor(
     }
 
     fun initData() {
-        weightingRepository.getWeightings()
+        getWeightingUseCase()
             .onSuccess { flow ->
                 viewModelScope.launch {
                     flow.collect { weightings ->

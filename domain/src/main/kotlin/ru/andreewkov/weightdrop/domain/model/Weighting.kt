@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.data.model
+package ru.andreewkov.weightdrop.domain.model
 
 import java.time.LocalDate
 
