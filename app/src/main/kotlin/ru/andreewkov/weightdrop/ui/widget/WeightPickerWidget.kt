@@ -51,7 +51,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.ui.util.inRange
-import ru.andreewkov.weightdrop.ui.util.map
+import ru.andreewkov.weightdrop.util.map
 import ru.andreewkov.weightdrop.ui.util.pxToDp
 import kotlin.math.absoluteValue
 import kotlin.math.max

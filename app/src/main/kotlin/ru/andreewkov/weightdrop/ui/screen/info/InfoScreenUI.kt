@@ -58,6 +58,7 @@ fun InfoScreenUI() {
                 weightChart = state.weightChart,
             )
         }
+        InfoViewModel.ScreenState.Empty -> Unit
         InfoViewModel.ScreenState.Loading -> Unit
     }
 }

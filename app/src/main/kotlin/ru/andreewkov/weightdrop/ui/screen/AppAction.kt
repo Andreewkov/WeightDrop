@@ -6,7 +6,7 @@ sealed class AppAction {
 
     data object OnClickAdd : AppAction()
 
-    data object OnDismissAdd : AppAction()
+    data object OnDismissRequestAddDialog : AppAction()
 
-    data object OnValueAdded : AppAction()
+    data object OnValueAddFromDialog : AppAction()
 }

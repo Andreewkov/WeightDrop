@@ -1,6 +1,6 @@
 package ru.andreewkov.weightdrop.ui.util
 
-import ru.andreewkov.weightdrop.model.Weighting
+import ru.andreewkov.weightdrop.data.model.Weighting
 import java.time.LocalDate
 
 val stubWeightingsMediumFirst = listOf(

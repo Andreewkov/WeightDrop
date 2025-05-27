@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.util
+package ru.andreewkov.weightdrop.util
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -11,6 +11,10 @@ import kotlinx.coroutines.launch
 context(CoroutineScope)
 fun <T> Flow<T>.observe(action: suspend (T) -> Unit) {
     onEach { action(it) }.launchIn(this@CoroutineScope)
+}
+
+fun <T> Flow<T>.observe(scope: CoroutineScope, action: suspend (T) -> Unit) {
+    scope.apply { observe(action) }
 }
 
 fun <T, M> StateFlow<T>.map(

@@ -1,15 +1,22 @@
 package ru.andreewkov.weightdrop.ui.screen.add
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import ru.andreewkov.weightdrop.data.api.WeightingRepository
+import ru.andreewkov.weightdrop.data.model.Weighting
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class AddViewModel @Inject constructor() : ViewModel() {
+class AddViewModel @Inject constructor(
+    private val weightingRepository: WeightingRepository,
+) : ViewModel() {
 
     private val _showDateDialog = MutableStateFlow(false)
     val showDateDialog get() = _showDateDialog
@@ -27,9 +34,22 @@ class AddViewModel @Inject constructor() : ViewModel() {
 
     fun onDatePickerDialogConfirm(date: LocalDate) {
         _showDateDialog.tryEmit(false)
-        _screenState.tryEmit(
-            _screenState.value.copy(date = date, weight = _screenState.value.weight + 1.1f)
-        )
+        _screenState.tryEmit(_screenState.value.copy(date = date))
+    }
+
+    fun onWeightChanged(weight: Float) {
+        _screenState.tryEmit(_screenState.value.copy(weight = weight))
+    }
+
+    fun onWeightAddClick() {
+        viewModelScope.launch(Dispatchers.IO) {
+            weightingRepository.updateWeighting(
+                Weighting(
+                    value = _screenState.value.weight,
+                    date = _screenState.value.date,
+                )
+            )
+        }
     }
 
     private fun createDefaultScreenState(): ScreenState {

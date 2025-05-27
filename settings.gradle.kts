@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "WeightDrop"
 include(":app")
- 
+include(":data")
+include(":database")

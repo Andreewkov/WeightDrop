@@ -37,6 +37,7 @@ import ru.andreewkov.weightdrop.ui.widget.DatePanelWidget
 import ru.andreewkov.weightdrop.ui.widget.DatePanelWidgetColors
 import ru.andreewkov.weightdrop.ui.widget.WeightPickerNum
 import ru.andreewkov.weightdrop.ui.widget.WeightPickerWidget
+import ru.andreewkov.weightdrop.ui.widget.WeightPickerWidgetState
 import ru.andreewkov.weightdrop.ui.widget.rememberWeightPickerWidgetState
 import java.time.LocalDate
 
@@ -49,16 +50,33 @@ fun AddDialogUI(
     val state by viewModel.screenState.collectAsState()
     val showDateDialog by viewModel.showDateDialog.collectAsState()
 
+    val weightPickerWidgetState = rememberWeightPickerWidgetState(
+        num = WeightPickerNum(
+            integer = state.weight.roundToDecimals().toInt(),
+            fraction = state.weight.getDecimals().toInt()
+        )
+    )
+    LaunchedEffect(state) {
+        weightPickerWidgetState.updateValue(
+            WeightPickerNum(
+                integer = state.weight.roundToDecimals().toInt(),
+                fraction = state.weight.getDecimals().toInt(),
+            )
+        )
+    }
+
     Dialog(
-        onDismissRequest = { actionHandler.handleAction(AppAction.OnDismissAdd) }
+        onDismissRequest = { actionHandler.handleAction(AppAction.OnDismissRequestAddDialog) }
     ) {
         Card() {
             AddDialogContent(
                 date = state.date,
-                weight = state.weight,
                 onDateClick = viewModel::onDatePickerDialogRequest,
+                weightPickerWidgetState = weightPickerWidgetState,
+                onWeightChanged = viewModel::onWeightChanged,
                 onAddClick = {
-                    actionHandler.handleAction(AppAction.OnDismissAdd)
+                    viewModel.onWeightAddClick()
+                    actionHandler.handleAction(AppAction.OnValueAddFromDialog)
                 },
                 modifier = modifier,
             )
@@ -76,26 +94,16 @@ fun AddDialogUI(
 @Composable
 private fun AddDialogContent(
     date: LocalDate,
-    weight: Float,
     onDateClick: () -> Unit,
+    weightPickerWidgetState: WeightPickerWidgetState,
+    onWeightChanged: (Float) -> Unit,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val weightPickerWidgetState = rememberWeightPickerWidgetState(
-        num =             WeightPickerNum(
-            integer = weight.roundToDecimals().toInt(),
-            fraction = weight.getDecimals().toInt()
-        )
-    )
+    val weight by weightPickerWidgetState.currentValue.collectAsState()
     LaunchedEffect(weight) {
-        weightPickerWidgetState.updateValue(
-            WeightPickerNum(
-                integer = weight.roundToDecimals().toInt(),
-                fraction = weight.getDecimals().toInt()
-            )
-        )
+        onWeightChanged(weight.current.integer + weight.current.fraction.toFloat() / 10)
     }
-
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
@@ -127,7 +135,7 @@ private fun AddDialogContent(
         )
 
         Button(
-            onClick = { weightPickerWidgetState.updateValue(WeightPickerNum(92, 7)) },//onAddClick,
+            onClick = onAddClick,
             shape = RoundedCornerShape(20.dp),
             colors = ButtonDefaults.buttonColors().copy(
                 containerColor = MaterialTheme.colorScheme.onSurface,
@@ -157,8 +165,11 @@ private fun AddScreenContentPreview() {
             ) {
                 AddDialogContent(
                     date = LocalDate.now(),
-                    weight = 98.8f,
                     onDateClick = { },
+                    weightPickerWidgetState = rememberWeightPickerWidgetState(
+                        num = WeightPickerNum(98, 8)
+                    ),
+                    onWeightChanged = { },
                     onAddClick = { },
                     modifier = Modifier.padding(padding)
                 )
@@ -177,8 +188,11 @@ private fun AddScreenContentEmpty() {
             ) {
                 AddDialogContent(
                     date = LocalDate.now().minusWeeks(24),
-                    weight = 76.9f,
                     onDateClick = { },
+                    weightPickerWidgetState = rememberWeightPickerWidgetState(
+                        num = WeightPickerNum(76, 9)
+                    ),
+                    onWeightChanged = { },
                     onAddClick = { },
                     modifier = Modifier.padding(padding)
                 )

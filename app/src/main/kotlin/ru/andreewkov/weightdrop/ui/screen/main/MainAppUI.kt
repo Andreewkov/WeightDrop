@@ -21,9 +21,9 @@ import ru.andreewkov.weightdrop.ui.screen.Screen
 import ru.andreewkov.weightdrop.ui.screen.add.AddDialogUI
 import ru.andreewkov.weightdrop.ui.screen.history.HistoryScreenUI
 import ru.andreewkov.weightdrop.ui.screen.info.InfoScreenUI
+import ru.andreewkov.weightdrop.util.observe
 import ru.andreewkov.weightdrop.ui.widget.ToolbarWidget
 import ru.andreewkov.weightdrop.ui.widget.ToolbarWidgetColors
-import ru.andreewkov.weightdrop.ui.util.observe
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarColors
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarWidget
 

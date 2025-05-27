@@ -33,8 +33,8 @@ class MainAppViewModel @Inject constructor() : ViewModel(), AppActionHandler {
                 Screen.Settings -> onClickSettings()
             }
             AppAction.OnClickAdd -> onClickAdd()
-            AppAction.OnDismissAdd -> OnDismissAdd()
-            AppAction.OnValueAdded -> Unit
+            AppAction.OnDismissRequestAddDialog -> onDismissRequestAddDialog()
+            AppAction.OnValueAddFromDialog -> onValueAddFromDialog()
         }
     }
 
@@ -54,11 +54,11 @@ class MainAppViewModel @Inject constructor() : ViewModel(), AppActionHandler {
         _showAddDialog.tryEmit(true)
     }
 
-    private fun onValueAdded() {
-        //_showAddDialog.tryEmit(false)
+    private fun onDismissRequestAddDialog() {
+        _showAddDialog.tryEmit(false)
     }
 
-    private fun OnDismissAdd() {
+    private fun onValueAddFromDialog() {
         _showAddDialog.tryEmit(false)
     }
 }
