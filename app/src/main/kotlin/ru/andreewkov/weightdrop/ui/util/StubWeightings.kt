@@ -67,6 +67,8 @@ val stubWeightingsMediumThird = listOf(
     Weighting(85.4f, LocalDate.parse("2024-11-14")),
     Weighting(83.9f, LocalDate.parse("2024-11-16")),
     Weighting(83.8f, LocalDate.parse("2024-11-19")),
+    Weighting(84.0f, LocalDate.parse("2025-01-01")),
+    Weighting(84.6f, LocalDate.parse("2025-01-02")),
 )
 
 val stubWeightingsMediumFourth = listOf(

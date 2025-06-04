@@ -1,6 +1,7 @@
 package ru.andreewkov.weightdrop.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -14,4 +15,7 @@ interface WeightingDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertWeighting(dbo: WeightingDBO)
+
+    @Delete
+    fun deleteWeighting(dbo: WeightingDBO)
 }

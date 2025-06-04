@@ -8,4 +8,6 @@ interface WeightingRepository {
     fun getWeightings(): Result<Flow<List<WeightingDataModel>>>
 
     suspend fun updateWeighting(weighting: WeightingDataModel): Result<Unit>
+
+    suspend fun deleteWeighting(weighting: WeightingDataModel): Result<Unit>
 }

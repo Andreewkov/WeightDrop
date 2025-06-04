@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
-import ru.andreewkov.weightdrop.ui.WeightChartFormatter
+import ru.andreewkov.weightdrop.ui.WeightingFormatter
 import ru.andreewkov.weightdrop.ui.model.WeightLineCubicPositions
 import ru.andreewkov.weightdrop.ui.model.WeightPoint
 import ru.andreewkov.weightdrop.ui.model.WeightPointPosition
@@ -126,7 +126,7 @@ private fun DrawScope.drawWeightDividers(
         dividers.forEachIndexed { index, divider ->
             drawWeightDivider(
                 textMeasurer = textMeasurer,
-                title = WeightChartFormatter.formatWeightShort(divider),
+                title = WeightingFormatter.formatWeightShort(divider),
                 textStyle = textStyle,
                 lineColor = lineColor,
                 y = size.height - itemHeight * index,
@@ -181,7 +181,7 @@ private fun DrawScope.drawDateDividers(
             val currentX = index * xStep
             drawDateDivider(
                 x = currentX,
-                title = WeightChartFormatter.formatDate(date),
+                title = WeightingFormatter.formatDate(date),
                 textMeasurer = textMeasurer,
                 textStyle = textStyle,
                 lineColor = lineColor,

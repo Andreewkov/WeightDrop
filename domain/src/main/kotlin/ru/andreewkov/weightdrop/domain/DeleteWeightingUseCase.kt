@@ -1,0 +1,20 @@
+package ru.andreewkov.weightdrop.domain
+
+import ru.andreewkov.weightdrop.data.api.WeightingRepository
+import ru.andreewkov.weightdrop.data.model.WeightingDataModel
+import ru.andreewkov.weightdrop.domain.model.Weighting
+import javax.inject.Inject
+
+class DeleteWeightingUseCase @Inject constructor(
+    private val weightingRepository: WeightingRepository,
+) {
+
+    suspend operator fun invoke(weighting: Weighting): Result<Unit> {
+        return weightingRepository.deleteWeighting(
+            WeightingDataModel(
+                value = weighting.value,
+                date = weighting.date,
+            ),
+        )
+    }
+}

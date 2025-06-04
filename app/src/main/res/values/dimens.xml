@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="toolbar_elevation">12dp</dimen>
+    <dimen name="navbar_elevation">12dp</dimen>
+    <dimen name="content_screen_padding">20dp</dimen>
+    <dimen name="content_widget_padding">12dp</dimen>
+
+    <dimen name="history_list_items_vertical_padding">8dp</dimen>
+</resources>

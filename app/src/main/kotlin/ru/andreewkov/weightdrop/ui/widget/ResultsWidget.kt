@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import ru.andreewkov.weightdrop.ui.WeightChartFormatter
+import ru.andreewkov.weightdrop.ui.WeightingFormatter
 import ru.andreewkov.weightdrop.ui.theme.Dark
 import ru.andreewkov.weightdrop.ui.theme.PeachLight
 import ru.andreewkov.weightdrop.ui.theme.Peach
@@ -86,7 +86,7 @@ fun ResultsWidget(
             }
             ResultRow(
                 title = item.title,
-                value = WeightChartFormatter.formatWeightLong(item.value.roundToDecimals()),
+                value = WeightingFormatter.formatWeightLong(item.value),
                 background = background,
                 textSize = textSize,
                 textColor = textColor,

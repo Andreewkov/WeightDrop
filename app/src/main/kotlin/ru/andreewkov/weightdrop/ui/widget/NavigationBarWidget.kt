@@ -27,13 +27,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.ui.screen.AppAction
 import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
 import ru.andreewkov.weightdrop.ui.screen.Screen
@@ -57,6 +60,7 @@ fun NavigationBarWidget(
 ) {
     Surface(
         color = colors.containerColor,
+        shadowElevation = dimensionResource(R.dimen.navbar_elevation),
         modifier = modifier
     ) {
         Row(
