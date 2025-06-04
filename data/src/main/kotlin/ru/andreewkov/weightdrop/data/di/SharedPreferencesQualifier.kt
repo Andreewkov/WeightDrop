@@ -1,4 +1,6 @@
 package ru.andreewkov.weightdrop.data.di
 
-class SharedPreferencesQualifier {
-}
+import javax.inject.Qualifier
+
+@Qualifier
+annotation class SettingsQualifier
