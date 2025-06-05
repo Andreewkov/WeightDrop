@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.andreewkov.weightdrop.domain.UpdateWeightingUseCase
+import ru.andreewkov.weightdrop.domain.weighting.UpdateWeightingUseCase
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import java.time.LocalDate
 import javax.inject.Inject

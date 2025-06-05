@@ -5,9 +5,9 @@ import ru.andreewkov.weightdrop.data.model.SettingsDataModel
 
 interface SettingsRepository {
 
-    fun getSettings(): Flow<SettingsDataModel>
+    fun getSettings(): Result<Flow<SettingsDataModel>>
 
-    suspend fun updateTargetWeight(): Result<Unit>
+    suspend fun updateTargetWeight(weight: Float): Result<Unit>
 
-    suspend fun updateHeight(): Result<Unit>
+    suspend fun updateHeight(height: Int): Result<Unit>
 }

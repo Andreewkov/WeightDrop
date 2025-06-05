@@ -12,13 +12,13 @@ jetbrainsKotlinJvm = "2.1.20"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 kotlin = "2.1.20"
-ksp = "2.1.20-2.0.0"
-recyclerview = "1.4.0"
 lifecycleRuntimeKtx = "2.9.0"
 lifecycleViewmodelCompose = "2.9.0"
 navigationCompose = "2.9.0"
 navigationComposeHilt = "1.2.0"
 navigationRuntimeKtx = "2.9.0"
+ksp = "2.1.20-2.0.0"
+recyclerview = "1.4.0"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }

@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.domain
+package ru.andreewkov.weightdrop.domain.weighting
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

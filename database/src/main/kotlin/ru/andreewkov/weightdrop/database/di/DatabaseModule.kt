@@ -7,10 +7,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import ru.andreewkov.weightdrop.database.AppDatabase
-import ru.andreewkov.weightdrop.database.DatabaseDispatcherProvider
-import ru.andreewkov.weightdrop.database.DatabaseDispatcherProviderImpl
 import ru.andreewkov.weightdrop.database.LocalDateTypeConverter
 import ru.andreewkov.weightdrop.database.WeightingDao
 import javax.inject.Singleton
@@ -34,11 +33,5 @@ class DatabaseModule {
         )
             .addTypeConverter(converter)
             .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideDatabaseDispatcherProvider(): DatabaseDispatcherProvider {
-        return DatabaseDispatcherProviderImpl()
     }
 }

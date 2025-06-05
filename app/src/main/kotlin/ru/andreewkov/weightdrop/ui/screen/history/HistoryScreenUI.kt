@@ -58,8 +58,6 @@ import ru.andreewkov.weightdrop.ui.WeightingHistoryCalculator
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
 import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumThird
-import ru.andreewkov.weightdrop.ui.widget.animatedItemsIndexed
-import ru.andreewkov.weightdrop.ui.widget.updateAnimatedItemsState
 import java.time.LocalDate
 import java.time.Month
 

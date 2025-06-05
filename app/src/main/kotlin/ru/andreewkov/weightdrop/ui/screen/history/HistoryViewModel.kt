@@ -6,10 +6,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.andreewkov.weightdrop.domain.DeleteWeightingUseCase
-import ru.andreewkov.weightdrop.domain.GetWeightingUseCase
+import ru.andreewkov.weightdrop.domain.weighting.DeleteWeightingUseCase
+import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
 import ru.andreewkov.weightdrop.domain.model.Weighting
-import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumThird
 import java.time.LocalDate
 import javax.inject.Inject
 

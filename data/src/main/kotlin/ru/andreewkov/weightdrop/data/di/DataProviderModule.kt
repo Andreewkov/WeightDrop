@@ -7,16 +7,33 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import javax.inject.Singleton
 
 private const val SETTINGS_SHARED_PREFERENCES_NAME = "Settings"
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataProviderModule {
+object DataProviderModule {
 
     @Provides
-    @SettingsQualifier
+    @SettingsPreferencesQualifier
     fun provideSettingsSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
         return context.getSharedPreferences(SETTINGS_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    @Singleton
+    @DatabaseDispatcherQualifier
+    fun provideDatabaseDispatcher(): CoroutineDispatcher {
+        return Dispatchers.IO
+    }
+
+    @Provides
+    @Singleton
+    @SettingsDispatcherQualifier
+    fun provideSettingsDispatcher(): CoroutineDispatcher {
+        return Dispatchers.IO
     }
 }

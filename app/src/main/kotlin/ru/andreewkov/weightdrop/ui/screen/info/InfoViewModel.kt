@@ -3,11 +3,17 @@ package ru.andreewkov.weightdrop.ui.screen.info
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import ru.andreewkov.weightdrop.domain.GetWeightingUseCase
+import ru.andreewkov.weightdrop.domain.settings.GetSettingsUseCase
+import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
+import ru.andreewkov.weightdrop.domain.model.Settings
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
@@ -16,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class InfoViewModel @Inject constructor(
     private val getWeightingUseCase: GetWeightingUseCase,
+    private val getSettingsUseCase: GetSettingsUseCase,
 ) : ViewModel() {
 
     private val weightChartCalculator = WeightChartCalculator()
@@ -26,22 +33,24 @@ class InfoViewModel @Inject constructor(
         initData()
     }
 
-    fun initData() {
-        getWeightingUseCase()
-            .onSuccess { flow ->
-                viewModelScope.launch {
-                    flow.collect { weightings ->
-                        handleWeightings(weightings)
-                    }
-                }
-            }
-            .onFailure {
-                handleError()
-            }
+    private fun initData() {
+        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            handleError()
+        }
+        viewModelScope.launch(exceptionHandler) {
+            val weightingsDeferred = async { getWeightingUseCase() }
+            val settingsDeferred = async { getSettingsUseCase() }
+            combine(
+                weightingsDeferred.await().getOrThrow(),
+                settingsDeferred.await().getOrThrow()
+            ) { weightings, settings ->
+                handleCombine(weightings, settings)
+            }.collect()
+        }
     }
 
-    private fun handleWeightings(weightings: List<Weighting>) {
-        val target = 90f
+    private fun handleCombine(weightings: List<Weighting>, settings: Settings) {
+        val target = settings.targetWeight ?: 80f
         _screenState.value = if (weightings.isEmpty()) {
             ScreenState.Empty
         } else {

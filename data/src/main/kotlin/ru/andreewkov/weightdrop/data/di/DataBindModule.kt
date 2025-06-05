@@ -16,6 +16,6 @@ interface DataBindModule {
     @Binds
     fun bindWeightingRepository(repository: WeightingRepositoryImpl): WeightingRepository
 
-/*    @Binds
-    fun bind(repository: SettingsRepositoryImpl): SettingsRepository*/
+    @Binds
+    fun bindSettingsRepository(repository: SettingsRepositoryImpl): SettingsRepository
 }
