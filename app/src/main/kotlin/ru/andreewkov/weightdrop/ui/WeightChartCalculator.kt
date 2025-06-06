@@ -17,13 +17,13 @@ data class WeightChart(
 data class WeightsScope(
     val bottomWeight: Float,
     val topWeight: Float,
-    val targetWeight: Float,
+    val targetWeight: Float?,
     val dividers: List<Float>,
 )
 
 class WeightChartCalculator {
 
-    fun calculateWeightChart(targetWeight: Float, weightings: List<Weighting>): WeightChart {
+    fun calculateWeightChart(targetWeight: Float?, weightings: List<Weighting>): WeightChart {
         check(weightings.isNotEmpty())
 
         return WeightChart(
@@ -32,10 +32,10 @@ class WeightChartCalculator {
         )
     }
 
-    private fun calculateWeightsScope(targetWeight: Float, weightings: List<Weighting>): WeightsScope {
+    private fun calculateWeightsScope(targetWeight: Float?, weightings: List<Weighting>): WeightsScope {
         val (minWeight, maxWeight) = weightings.findConfines()
-        val minValue = min(minWeight.value, targetWeight)
-        val maxValue = max(maxWeight.value, targetWeight)
+        val minValue = min(minWeight.value, targetWeight ?: minWeight.value)
+        val maxValue = max(maxWeight.value, targetWeight ?: maxWeight.value)
 
         val diff = maxValue - minValue
         val step = getStep(diff)

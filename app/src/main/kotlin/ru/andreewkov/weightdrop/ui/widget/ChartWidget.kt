@@ -227,7 +227,7 @@ private fun DrawScope.drawWeightChart(
         bottom = BOTTOM_MARGIN_CHART,
     ) {
         val positionsScope = calculatePointPositionsScope(chart)
-        val targetY = positionsScope.targetY
+        val targetY = positionsScope.targetY ?: size.height
         val points = positionsScope.points
         val fillWeightPath = Path()
 
@@ -243,11 +243,13 @@ private fun DrawScope.drawWeightChart(
         )
         fillWeightPath.lineTo(size.width, targetY)
 
-        drawHorizontalLine(
-            color = targetLineColor,
-            y = targetY,
-            strokeWidth = 10f,
-        )
+        if (positionsScope.targetY != null) {
+            drawHorizontalLine(
+                color = targetLineColor,
+                y = targetY,
+                strokeWidth = 10f,
+            )
+        }
 
         drawPath(
             path = fillWeightPath,
@@ -284,7 +286,7 @@ private fun DrawScope.calculatePointPositionsScope(chart: WeightChart): WeightPo
                 )
             }
         },
-        targetY = (scope.topWeight - scope.targetWeight) * yStep
+        targetY = scope.targetWeight?.let { (scope.topWeight - scope.targetWeight) * yStep },
     )
 }
 

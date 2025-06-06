@@ -2,6 +2,7 @@ package ru.andreewkov.weightdrop.data.impl
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import ru.andreewkov.weightdrop.data.api.WeightingRepository
@@ -23,7 +24,7 @@ class WeightingRepositoryImpl @Inject constructor(
 
     override fun getWeightings(): Result<Flow<List<WeightingDataModel>>> {
         return runCatching(logger, errorMessage = "Error at getting weightings") {
-            weightingDao.getWeightings().map { weightings ->
+            weightingDao.getWeightings().flowOn(databaseDispatcher).map { weightings ->
                 weightings.toWeightingDataModels()
             }
         }

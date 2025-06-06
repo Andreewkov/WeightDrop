@@ -3,7 +3,9 @@ package ru.andreewkov.weightdrop.ui.screen.info
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -37,7 +39,7 @@ class InfoViewModel @Inject constructor(
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             handleError()
         }
-        viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler + Dispatchers.Default) {
             val weightingsDeferred = async { getWeightingUseCase() }
             val settingsDeferred = async { getSettingsUseCase() }
             combine(
@@ -50,7 +52,7 @@ class InfoViewModel @Inject constructor(
     }
 
     private fun handleCombine(weightings: List<Weighting>, settings: Settings) {
-        val target = settings.targetWeight ?: 80f
+        val target = settings.targetWeight
         _screenState.value = if (weightings.isEmpty()) {
             ScreenState.Empty
         } else {
