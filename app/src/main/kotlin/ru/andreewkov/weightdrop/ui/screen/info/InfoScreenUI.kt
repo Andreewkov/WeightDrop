@@ -21,7 +21,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -68,19 +70,37 @@ private fun InfoScreenContent(
     weightChart: WeightChart,
     modifier: Modifier = Modifier,
 ) {
+    val maxWeight by remember {
+        derivedStateOf {
+            weightChart.weightPoints.maxBy { it.weightValue ?: -1f }.weightValue
+        }
+    }
+    val currentWeight by remember {
+        derivedStateOf {
+            weightChart.weightPoints.last { it.weightValue != null }.weightValue
+        }
+    }
     Column(
         modifier = modifier
             .padding(16.dp)
             .fillMaxSize(),
     ) {
-        InfoScreenResults()
+        InfoScreenResults(
+            target = weightChart.scope.targetWeight ?: weightChart.scope.bottomWeight,
+            max = requireNotNull(maxWeight),
+            current = requireNotNull(currentWeight),
+        )
         Spacer(modifier = Modifier.size(10.dp))
         InfoScreenChart(weightChart)
     }
 }
 
 @Composable
-private fun InfoScreenResults() {
+private fun InfoScreenResults(
+    target: Float,
+    max: Float,
+    current: Float,
+) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -98,9 +118,9 @@ private fun InfoScreenResults() {
                 negativeSecondaryColor = Color(0xFFAD2E0D),
             ),
             value = ProgressWidgetValue(
-                target = 80f,
-                max = 90.2f,
-                current = 84.4f,
+                target = target,
+                max = max,
+                current = current,
             ),
             modifier = Modifier.fillMaxHeight(),
         )
@@ -142,23 +162,6 @@ private fun ButtonsWeightPortraitContent() {
             modifier = Modifier.weight(1f)
         )
         Spacer(modifier = Modifier.size(6.dp))
-//        Row(
-//            horizontalArrangement = Arrangement.SpaceAround,
-//            modifier = Modifier
-//        ) {
-//            ActionButton(
-//                onClick = onAddClick,
-//                modifier = Modifier
-//                    .height(34.dp)
-//                    .fillMaxWidth()
-//                    .weight(1f),
-//            )
-//            Spacer(modifier = Modifier.size(6.dp))
-//            ActionButton(
-//                onClick = onAddClick,
-//                modifier = Modifier.size(34.dp),
-//            )
-//        }
     }
 }
 
@@ -176,21 +179,6 @@ private fun ButtonsWeightLandscapeContent() {
         verticalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
     ) {
-//        ActionButton(
-//            onClick = onAddClick,
-//            modifier = Modifier
-//                .aspectRatio(1f)
-//                .fillMaxSize()
-//                .weight(1f)
-//        )
-//        Spacer(modifier = Modifier.size(6.dp))
-//        ActionButton(
-//            onClick = onAddClick,
-//            modifier = Modifier
-//                .aspectRatio(1f)
-//                .fillMaxSize()
-//                .weight(1f)
-//        )
     }
 }
 
