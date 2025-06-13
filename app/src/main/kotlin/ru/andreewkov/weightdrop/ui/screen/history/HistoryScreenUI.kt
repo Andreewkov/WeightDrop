@@ -77,7 +77,6 @@ fun HistoryScreenUI() {
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HistoryScreenContent(
     weightings: List<Weighting>,

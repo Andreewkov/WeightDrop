@@ -11,5 +11,6 @@ data class WeightingHistoryItem(
     data class Header(
         val month: Month,
         val year: Int,
+        val diff: Float,
     )
 }
