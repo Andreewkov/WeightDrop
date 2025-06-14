@@ -36,7 +36,6 @@ object WeightingFormatter {
         }.toString()
     }
 
-
     fun formatWeightLong(weight: Float): String {
         return weight.roundToDecimals().toString()
     }

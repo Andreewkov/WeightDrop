@@ -76,7 +76,7 @@ fun ProgressWidget(
             .drawBehind {
                 drawOuterShadow(color.shadowColor)
             }
-            .onSizeChanged { size = it }
+            .onSizeChanged { size = it },
     ) {
         Box(
             modifier = Modifier
@@ -98,12 +98,11 @@ fun ProgressWidget(
                         ratio = 6f,
                     )
                     onDrawWithContent {
-
                         drawProgress(lineWidth, value, progressBrush)
                         drawInnerShadow(lineWidth, color.shadowColor)
                         drawContent()
                     }
-                }
+                },
         ) {
             Text(
                 text = value.getDiff().roundToDecimals().absoluteValue.toString(),
@@ -113,10 +112,10 @@ fun ProgressWidget(
                     shadow = Shadow(
                         color = secondaryColor,
                         offset = Offset(2f, 2f),
-                        blurRadius = 2f
-                    )
+                        blurRadius = 2f,
+                    ),
                 ),
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center),
             )
         }
     }
@@ -168,7 +167,7 @@ private fun DrawScope.drawInnerShadow(lineWidth: Float, shadowColor: Color) {
 private fun createProgressBrush(
     color: Color,
     width: Float,
-    ratio: Float
+    ratio: Float,
 ): Brush {
     val gapWidth = width / ratio
     val brushSize = gapWidth + width
@@ -179,7 +178,7 @@ private fun createProgressBrush(
         stripeStart to color,
         start = Offset(0f, 0f),
         end = Offset(brushSize, brushSize / 2),
-        tileMode = TileMode.Repeated
+        tileMode = TileMode.Repeated,
     )
 }
 
@@ -206,7 +205,7 @@ private fun ProgressWidgetPreview() {
                 max = 90.2f,
                 current = 84.4f,
             ),
-            modifier = Modifier.size(150.dp)
+            modifier = Modifier.size(150.dp),
         )
     }
 }

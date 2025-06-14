@@ -36,11 +36,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import ru.andreewkov.weightdrop.ui.WeightingFormatter
 import ru.andreewkov.weightdrop.ui.theme.Dark
-import ru.andreewkov.weightdrop.ui.theme.PeachLight
 import ru.andreewkov.weightdrop.ui.theme.Peach
+import ru.andreewkov.weightdrop.ui.theme.PeachLight
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
-import ru.andreewkov.weightdrop.ui.util.roundToDecimals
-
 
 data class ResultsWidgetItem(
     val title: String,
@@ -78,7 +76,7 @@ fun ResultsWidget(
             .onSizeChanged { size = it }
             .graphicsLayer {
                 compositingStrategy = CompositingStrategy.Offscreen
-            }
+            },
     ) {
         results.forEachIndexed { index, item ->
             if (index != 0) {
@@ -110,7 +108,7 @@ private fun ResultRow(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Text(
             text = title,
@@ -125,7 +123,7 @@ private fun ResultRow(
                 .background(background)
                 .weight(1f)
                 .wrapContentHeight(align = Alignment.CenterVertically)
-                .padding(horizontal = 10.dp)
+                .padding(horizontal = 10.dp),
         )
         Spacer(modifier = Modifier.width(spaceWidth))
         Text(
@@ -138,7 +136,7 @@ private fun ResultRow(
                 .fillMaxHeight()
                 .background(background)
                 .wrapContentHeight(align = Alignment.CenterVertically)
-                .padding(horizontal = 10.dp)
+                .padding(horizontal = 10.dp),
         )
     }
 }
@@ -151,7 +149,7 @@ private fun ResultsWidgetPreview1() {
             modifier = Modifier
                 .height(100.dp)
                 .width(200.dp)
-                .background(Dark)
+                .background(Dark),
         ) {
             ResultsWidget(
                 results = listOf(
@@ -176,7 +174,7 @@ private fun ResultsWidgetPreview2() {
             modifier = Modifier
                 .height(100.dp)
                 .width(200.dp)
-                .background(PeachLight)
+                .background(PeachLight),
         ) {
             ResultsWidget(
                 results = listOf(

@@ -1,6 +1,5 @@
 package ru.andreewkov.weightdrop.domain.settings
 
-import kotlinx.coroutines.flow.Flow
 import ru.andreewkov.weightdrop.data.api.SettingsRepository
 import javax.inject.Inject
 

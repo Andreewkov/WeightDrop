@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -61,7 +60,7 @@ fun NavigationBarWidget(
     Surface(
         color = colors.containerColor,
         shadowElevation = dimensionResource(R.dimen.navbar_elevation),
-        modifier = modifier
+        modifier = modifier,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth()
@@ -73,7 +72,7 @@ fun NavigationBarWidget(
         ) {
             items.forEach { item ->
                 Box(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     val isSelected by remember {
                         derivedStateOf { isNavigationBarItemSelected(item) }
@@ -96,13 +95,13 @@ fun NavigationBarWidget(
                                 actionHandler.handleAction(AppAction.NavigationCLick(item))
                             }
                             .padding(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Icon(
                             painter = painterResource(item.iconRes),
                             tint = color,
                             contentDescription = "",
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(20.dp),
                         )
                         if (showLabels) {
                             Spacer(Modifier.size(4.dp))
@@ -111,13 +110,12 @@ fun NavigationBarWidget(
                                 style = TextStyle(
                                     fontSize = 12.sp,
                                     color = color,
-                                )
+                                ),
                             )
                         }
                     }
                 }
             }
-
         }
     }
 }
@@ -134,7 +132,7 @@ private fun NavigationBarWidgetPreviewOne() {
                 activeItemColor = MaterialTheme.colorScheme.primary,
                 inactiveItemColor = MaterialTheme.colorScheme.secondary,
             ),
-            isNavigationBarItemSelected = { false }
+            isNavigationBarItemSelected = { false },
         )
     }
 }

@@ -3,7 +3,6 @@ package ru.andreewkov.weightdrop.ui.screen.info
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -13,10 +12,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import ru.andreewkov.weightdrop.domain.settings.GetSettingsUseCase
-import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
 import ru.andreewkov.weightdrop.domain.model.Settings
 import ru.andreewkov.weightdrop.domain.model.Weighting
+import ru.andreewkov.weightdrop.domain.settings.GetSettingsUseCase
+import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
 import javax.inject.Inject
@@ -44,7 +43,7 @@ class InfoViewModel @Inject constructor(
             val settingsDeferred = async { getSettingsUseCase() }
             combine(
                 weightingsDeferred.await().getOrThrow(),
-                settingsDeferred.await().getOrThrow()
+                settingsDeferred.await().getOrThrow(),
             ) { weightings, settings ->
                 handleCombine(weightings, settings)
             }.collect()
@@ -57,10 +56,9 @@ class InfoViewModel @Inject constructor(
             ScreenState.Empty
         } else {
             ScreenState.Chart(
-                weightChart = weightChartCalculator.calculateWeightChart(target, weightings)
+                weightChart = weightChartCalculator.calculateWeightChart(target, weightings),
             )
         }
-
     }
 
     private fun handleError() {

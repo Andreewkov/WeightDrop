@@ -29,7 +29,7 @@ class SettingsRepositoryImpl @Inject constructor(
         SettingsDataModel(
             targetWeight = getTargetWeight(),
             height = getHeight(),
-        )
+        ),
     )
 
     override fun getSettings(): Result<Flow<SettingsDataModel>> {

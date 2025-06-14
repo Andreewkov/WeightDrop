@@ -1,14 +1,10 @@
 package ru.andreewkov.weightdrop.ui.screen.history
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.repeatable
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -49,7 +44,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.domain.model.Weighting
@@ -153,7 +147,8 @@ private fun WeightingCard(
                 onDelete(value, date)
             }
             SwipeToDismissBoxValue.StartToEnd,
-            SwipeToDismissBoxValue.Settled -> Unit
+            SwipeToDismissBoxValue.Settled,
+            -> Unit
         }
     }
 
@@ -179,7 +174,7 @@ private fun WeightingCard(
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
                         .size(24.dp)
-                        .align(Alignment.CenterEnd)
+                        .align(Alignment.CenterEnd),
                 )
             }
         },
@@ -193,13 +188,13 @@ private fun WeightingCard(
                 .offset {
                     IntOffset(
                         x = (50.dp.toPx() * offsetAnimatable.value).toInt(),
-                        y = 0
+                        y = 0,
                     )
                 }
                 .background(MaterialTheme.colorScheme.surfaceContainer)
                 .padding(
                     horizontal = dimensionResource(R.dimen.content_screen_padding),
-                    vertical = dimensionResource(R.dimen.history_list_items_vertical_padding)
+                    vertical = dimensionResource(R.dimen.history_list_items_vertical_padding),
                 ),
         ) {
             Text(text = WeightingFormatter.formatDateWithDay(date))
@@ -214,7 +209,7 @@ private fun MonthCard(
     month: Month,
     year: Int,
     diff: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -223,8 +218,8 @@ private fun MonthCard(
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(
                 horizontal = dimensionResource(R.dimen.content_screen_padding),
-                vertical = dimensionResource(R.dimen.history_list_items_vertical_padding)
-            )
+                vertical = dimensionResource(R.dimen.history_list_items_vertical_padding),
+            ),
     ) {
         Text(text = WeightingFormatter.formatMonthYear(month, year))
         Text(text = WeightingFormatter.formatWeightLong(diff))
@@ -238,7 +233,7 @@ private fun WeightingDivider() {
             .fillMaxWidth()
             .height(1.dp)
             .alpha(0.3f)
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.primary),
     )
 }
 
@@ -270,7 +265,7 @@ private suspend fun Animatable<Float, AnimationVector1D>.runOffsetAnimation() {
 fun WeightCardPreview() {
     WeightDropTheme {
         Surface(
-            modifier = Modifier.width(300.dp)
+            modifier = Modifier.width(300.dp),
         ) {
             WeightingCard(
                 value = 90f,
@@ -287,7 +282,7 @@ fun WeightCardPreview() {
 fun MonthCardPreview() {
     WeightDropTheme {
         Surface(
-            modifier = Modifier.width(300.dp)
+            modifier = Modifier.width(300.dp),
         ) {
             MonthCard(
                 month = Month.APRIL,

@@ -21,15 +21,15 @@ import ru.andreewkov.weightdrop.ui.screen.Screen
 import ru.andreewkov.weightdrop.ui.screen.add.AddDialogUI
 import ru.andreewkov.weightdrop.ui.screen.history.HistoryScreenUI
 import ru.andreewkov.weightdrop.ui.screen.info.InfoScreenUI
-import ru.andreewkov.weightdrop.util.observe
-import ru.andreewkov.weightdrop.ui.widget.ToolbarWidget
-import ru.andreewkov.weightdrop.ui.widget.ToolbarWidgetColors
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarColors
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarWidget
+import ru.andreewkov.weightdrop.ui.widget.ToolbarWidget
+import ru.andreewkov.weightdrop.ui.widget.ToolbarWidgetColors
+import ru.andreewkov.weightdrop.util.observe
 
 @Composable
 fun MainAppUI(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
     val viewModel: MainAppViewModel = hiltViewModel()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -53,7 +53,7 @@ fun MainAppUI(
                 colors = ToolbarWidgetColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     contentColor = MaterialTheme.colorScheme.primary,
-                )
+                ),
             )
         },
         bottomBar = {
@@ -65,9 +65,9 @@ fun MainAppUI(
                     activeItemColor = MaterialTheme.colorScheme.secondary,
                     inactiveItemColor = MaterialTheme.colorScheme.primary,
                 ),
-                isNavigationBarItemSelected = { item -> currentRoute == item.id }
+                isNavigationBarItemSelected = { item -> currentRoute == item.id },
             )
-        }
+        },
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -81,7 +81,6 @@ fun MainAppUI(
                 HistoryScreenUI()
             }
             composable(route = Screen.Settings.id) {
-
             }
         }
 

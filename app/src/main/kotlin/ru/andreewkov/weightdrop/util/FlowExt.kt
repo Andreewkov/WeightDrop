@@ -19,10 +19,10 @@ fun <T> Flow<T>.observe(scope: CoroutineScope, action: suspend (T) -> Unit) {
 
 fun <T, M> StateFlow<T>.map(
     coroutineScope : CoroutineScope,
-    mapper : (value : T) -> M
+    mapper : (value : T) -> M,
 ) : StateFlow<M> {
     val flow = MutableStateFlow(
-        mapper(value)
+        mapper(value),
     )
     coroutineScope.launch {
         collect {
