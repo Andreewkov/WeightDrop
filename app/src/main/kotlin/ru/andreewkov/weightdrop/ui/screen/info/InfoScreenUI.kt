@@ -1,6 +1,7 @@
 package ru.andreewkov.weightdrop.ui.screen.info
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -43,6 +44,7 @@ import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
 import ru.andreewkov.weightdrop.ui.util.isPortrait
 import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumFourth
 import ru.andreewkov.weightdrop.ui.widget.ChartWidget
+import ru.andreewkov.weightdrop.ui.widget.LoadingIndicatorWidget
 import ru.andreewkov.weightdrop.ui.widget.ProgressWidget
 import ru.andreewkov.weightdrop.ui.widget.ProgressWidgetColor
 import ru.andreewkov.weightdrop.ui.widget.ResultsWidget
@@ -61,8 +63,19 @@ fun InfoScreenUI() {
             )
         }
         InfoViewModel.ScreenState.Empty -> Unit
-        InfoViewModel.ScreenState.Loading -> Unit
+        InfoViewModel.ScreenState.Loading -> InfoScreenLoading()
     }
+}
+
+@Composable
+private fun InfoScreenLoading(
+    modifier: Modifier = Modifier,
+) {
+    LoadingIndicatorWidget(
+        color = MaterialTheme.colorScheme.secondary,
+        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        modifier = modifier,
+    )
 }
 
 @Composable
@@ -234,6 +247,16 @@ private fun InfoScreenContentPreview() {
     WeightDropTheme {
         Scaffold { innerPadding ->
             InfoScreenContent(chart, modifier = Modifier.padding(innerPadding))
+        }
+    }
+}
+
+@WeightDropPreview
+@Composable
+private fun InfoScreenLoadingPreview() {
+    WeightDropTheme {
+        Scaffold { innerPadding ->
+            InfoScreenLoading(modifier = Modifier.padding(innerPadding))
         }
     }
 }
