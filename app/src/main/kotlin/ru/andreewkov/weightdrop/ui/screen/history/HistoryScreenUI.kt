@@ -96,50 +96,36 @@ fun HistoryScreenContent(
         overscrollEffect = null,
         modifier = modifier.fillMaxSize(),
     ) {
-        historyItems.forEachIndexed { headerIndex, item ->
-            item.header?.let { header ->
+        historyItems.forEachIndexed { headerIndex, headerItem ->
+            headerItem.header?.let { header ->
                 stickyHeader {
                     MonthCard(
                         month = header.month,
                         year = header.year,
+                        diff = header.diff,
                     )
                 }
             }
 
-            val wightingSize = item.weightings.size
-            itemsIndexed(item.weightings) { index, weighting ->
+            val itemSize = headerItem.weightingItems.size
+            itemsIndexed(headerItem.weightingItems) { index, item ->
                 val showAnimation = headerIndex == 0 && index == 0
 
                 var isItemVisible by remember { mutableStateOf(true)}
-//                AnimatedVisibility(
-//                    visible = isItemVisible,
-//                    exit = shrinkVertically(
-//                        animationSpec = tween(
-//                            durationMillis = 300,
-//                        )
-//                    ),
-//                    enter = expandVertically(
-//                        animationSpec = tween(
-//                            durationMillis = 300
-//                        )
-//                    )
-//                ) {
-//
-//                }
                 WeightingCard(
-                    value = weighting.value,
-                    date = weighting.date,
+                    value = item.weighting.value,
+                    date = item.weighting.date,
+                    diff = item.diff,
                     onDelete = { value, date ->
                         coroutineScope.launch {
                             isItemVisible = false
-                            //delay(400)
                             onDelete(value, date)
                         }
                     },
                     showAnimation = showAnimation && !isAnimationRun,
                     onAnimationRun = ::onAnimationRun,
                 )
-                if (index != wightingSize - 1) {
+                if (index != itemSize - 1) {
                     WeightingDivider()
                 }
             }
@@ -151,11 +137,12 @@ fun HistoryScreenContent(
 private fun WeightingCard(
     value: Float,
     date: LocalDate,
+    diff: Float,
     onDelete: (Float, LocalDate) -> Unit,
     modifier: Modifier = Modifier,
     showAnimation: Boolean = false,
     onAnimationRun: () -> Unit = {},
-) {1
+) {
     val dismissState = rememberSwipeToDismissBoxState()
     LaunchedEffect(date) {
         dismissState.snapTo(SwipeToDismissBoxValue.Settled)
@@ -216,6 +203,7 @@ private fun WeightingCard(
                 ),
         ) {
             Text(text = WeightingFormatter.formatDateWithDay(date))
+            Text(text = WeightingFormatter.formatWeightLong(diff))
             Text(text = WeightingFormatter.formatWeightLong(value))
         }
     }
@@ -225,6 +213,7 @@ private fun WeightingCard(
 private fun MonthCard(
     month: Month,
     year: Int,
+    diff: Float,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -238,6 +227,7 @@ private fun MonthCard(
             )
     ) {
         Text(text = WeightingFormatter.formatMonthYear(month, year))
+        Text(text = WeightingFormatter.formatWeightLong(diff))
     }
 }
 
@@ -285,6 +275,7 @@ fun WeightCardPreview() {
             WeightingCard(
                 value = 90f,
                 date = LocalDate.of(2025, 5, 30),
+                diff = 0f,
                 onDelete = { _, _ -> },
             )
         }
@@ -301,6 +292,7 @@ fun MonthCardPreview() {
             MonthCard(
                 month = Month.APRIL,
                 year = 1997,
+                diff = 0f,
             )
         }
     }
