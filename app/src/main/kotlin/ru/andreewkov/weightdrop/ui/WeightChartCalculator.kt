@@ -28,11 +28,14 @@ class WeightChartCalculator {
 
         return WeightChart(
             scope = calculateWeightsScope(targetWeight, weightings),
-            weightPoints = calculateWeightPoints(weightings)
+            weightPoints = calculateWeightPoints(weightings),
         )
     }
 
-    private fun calculateWeightsScope(targetWeight: Float?, weightings: List<Weighting>): WeightsScope {
+    private fun calculateWeightsScope(
+        targetWeight: Float?,
+        weightings: List<Weighting>,
+    ): WeightsScope {
         val (minWeight, maxWeight) = weightings.findConfines()
         val minValue = min(minWeight.value, targetWeight ?: minWeight.value)
         val maxValue = max(maxWeight.value, targetWeight ?: maxWeight.value)
@@ -49,7 +52,7 @@ class WeightChartCalculator {
             targetWeight = targetWeight,
             dividers = List(size = count) { index ->
                 bottomValue + step * index
-            }
+            },
         )
     }
 
@@ -68,7 +71,7 @@ class WeightChartCalculator {
                 .also { if (it != null) currentWeightingIndex++ }
 
             WeightPoint(
-                date = date ,
+                date = date,
                 weightValue = weighting?.value,
                 drawDivider = dividers.any { it == date } || index == 0,
             )
@@ -94,7 +97,8 @@ class WeightChartCalculator {
                 val daysPerDivider = days / 5 + 1
                 buildList {
                     var lastLocalDate = endLocalDate
-                    while (lastLocalDate.isAfter(startLocalDate) || lastLocalDate == startLocalDate) {
+                    val isAfter = lastLocalDate.isAfter(startLocalDate)
+                    while (isAfter || lastLocalDate == startLocalDate) {
                         add(lastLocalDate)
                         lastLocalDate = lastLocalDate.minusDays(daysPerDivider)
                     }

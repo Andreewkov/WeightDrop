@@ -53,22 +53,22 @@ fun AddDialogUI(
     val weightPickerWidgetState = rememberWeightPickerWidgetState(
         num = WeightPickerNum(
             integer = state.weight.roundToDecimals().toInt(),
-            fraction = state.weight.getDecimals().toInt()
-        )
+            fraction = state.weight.getDecimals().toInt(),
+        ),
     )
     LaunchedEffect(state) {
         weightPickerWidgetState.updateValue(
             WeightPickerNum(
                 integer = state.weight.roundToDecimals().toInt(),
                 fraction = state.weight.getDecimals().toInt(),
-            )
+            ),
         )
     }
 
     Dialog(
-        onDismissRequest = { actionHandler.handleAction(AppAction.OnDismissRequestAddDialog) }
+        onDismissRequest = { actionHandler.handleAction(AppAction.OnDismissRequestAddDialog) },
     ) {
-        Card() {
+        Card {
             AddDialogContent(
                 date = state.date,
                 onDateClick = viewModel::onDatePickerDialogRequest,
@@ -85,7 +85,7 @@ fun AddDialogUI(
         if (showDateDialog) {
             AddDatePickerDialogUI(
                 onDismissRequest = viewModel::onDatePickerDialogDismissRequest,
-                onConfirmClick = viewModel::onDatePickerDialogConfirm
+                onConfirmClick = viewModel::onDatePickerDialogConfirm,
             )
         }
     }
@@ -111,7 +111,7 @@ private fun AddDialogContent(
             .padding(
                 horizontal = 32.dp,
                 vertical = 16.dp,
-            )
+            ),
     ) {
         DatePanelWidget(
             height = 50.dp,
@@ -123,7 +123,7 @@ private fun AddDialogContent(
             ),
             modifier = Modifier
                 .clip(RoundedCornerShape(20.dp))
-                .clickable(onClick = onDateClick)
+                .clickable(onClick = onDateClick),
         )
 
         WeightPickerWidget(
@@ -131,7 +131,7 @@ private fun AddDialogContent(
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .heightIn(max = 200.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         )
 
         Button(
@@ -142,14 +142,14 @@ private fun AddDialogContent(
             ),
             modifier = Modifier
                 .height(50.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             Text(
                 text = stringResource(R.string.add_dialog_add_button),
                 color = MaterialTheme.colorScheme.surface,
                 style = TextStyle(
                     fontSize = 20.sp,
-                )
+                ),
             )
         }
     }
@@ -167,11 +167,11 @@ private fun AddScreenContentPreview() {
                     date = LocalDate.now(),
                     onDateClick = { },
                     weightPickerWidgetState = rememberWeightPickerWidgetState(
-                        num = WeightPickerNum(98, 8)
+                        num = WeightPickerNum(98, 8),
                     ),
                     onWeightChanged = { },
                     onAddClick = { },
-                    modifier = Modifier.padding(padding)
+                    modifier = Modifier.padding(padding),
                 )
             }
         }
@@ -190,11 +190,11 @@ private fun AddScreenContentEmpty() {
                     date = LocalDate.now().minusWeeks(24),
                     onDateClick = { },
                     weightPickerWidgetState = rememberWeightPickerWidgetState(
-                        num = WeightPickerNum(76, 9)
+                        num = WeightPickerNum(76, 9),
                     ),
                     onWeightChanged = { },
                     onAddClick = { },
-                    modifier = Modifier.padding(padding)
+                    modifier = Modifier.padding(padding),
                 )
             }
         }

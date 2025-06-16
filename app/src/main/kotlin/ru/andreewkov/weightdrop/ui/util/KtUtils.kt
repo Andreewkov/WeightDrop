@@ -12,11 +12,9 @@ fun String.capitalizeFirstChar(): String {
     }
 }
 
-
 fun Int.inRange(min: Int, max: Int): Int {
     return min(max, max(min, this))
 }
-
 
 fun Float.floorToStep(step: Float): Float {
     return floor(this / step) * step

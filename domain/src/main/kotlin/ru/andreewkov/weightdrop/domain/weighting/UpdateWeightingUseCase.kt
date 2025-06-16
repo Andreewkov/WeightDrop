@@ -14,7 +14,7 @@ class UpdateWeightingUseCase @Inject constructor(
             WeightingDataModel(
                 value = weighting.value,
                 date = weighting.date,
-            )
+            ),
         )
     }
 }

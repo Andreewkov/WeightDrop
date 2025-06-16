@@ -47,7 +47,7 @@ class MainAppViewModel @Inject constructor() : ViewModel(), AppActionHandler {
     }
 
     private fun onClickSettings() {
-        //_navigationScreen.tryEmit(Screen.History)
+        // _navigationScreen.tryEmit(Screen.History)
     }
 
     private fun onClickAdd() {

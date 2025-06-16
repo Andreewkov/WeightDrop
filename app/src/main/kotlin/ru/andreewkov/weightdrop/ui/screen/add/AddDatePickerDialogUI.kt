@@ -40,10 +40,10 @@ fun AddDatePickerDialogUI(
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate()
                     onConfirmClick(date)
-                }
+                },
             )
         },
-        modifier = Modifier.scale(0.95f)
+        modifier = Modifier.scale(0.95f),
     ) {
         DatePicker(
             state = state,
@@ -52,7 +52,7 @@ fun AddDatePickerDialogUI(
 }
 
 @Composable
-private fun ConfirmButton(onClick: ()-> Unit) {
+private fun ConfirmButton(onClick: () -> Unit) {
     Button(
         onClick = onClick,
         shape = RoundedCornerShape(20.dp),
@@ -61,14 +61,14 @@ private fun ConfirmButton(onClick: ()-> Unit) {
         ),
         modifier = Modifier
             .height(50.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         Text(
             text = stringResource(R.string.add_dialog_add_button),
             color = MaterialTheme.colorScheme.surface,
             style = TextStyle(
                 fontSize = 20.sp,
-            )
+            ),
         )
     }
 }

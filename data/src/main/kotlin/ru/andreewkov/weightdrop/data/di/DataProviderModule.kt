@@ -19,7 +19,9 @@ object DataProviderModule {
 
     @Provides
     @SettingsPreferencesQualifier
-    fun provideSettingsSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+    fun provideSettingsSharedPreferences(
+        @ApplicationContext context: Context,
+    ): SharedPreferences {
         return context.getSharedPreferences(SETTINGS_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
 

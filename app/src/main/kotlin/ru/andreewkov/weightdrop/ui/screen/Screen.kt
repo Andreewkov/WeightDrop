@@ -11,7 +11,7 @@ sealed class Screen(
         override val id: String,
         override val titleRes: Int,
         val iconRes: Int,
-    ): Screen(id, titleRes)
+    ) : Screen(id, titleRes)
 
     data object Info : NavigationBarItem(
         id = "info",

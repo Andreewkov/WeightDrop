@@ -121,7 +121,7 @@ private fun DrawScope.drawWeightDividers(
         right = 0f,
         bottom = BOTTOM_MARGIN_CHART,
     ) {
-        val itemHeight = size.height  / (dividers.size - 1)
+        val itemHeight = size.height / (dividers.size - 1)
 
         dividers.forEachIndexed { index, divider ->
             drawWeightDivider(
@@ -152,7 +152,7 @@ private fun DrawScope.drawWeightDivider(
         topLeft = Offset(
             x = START_MARGIN_CHART / 2 - textSize.width / 2,
             y = y - textSize.height / 2,
-        )
+        ),
     )
     drawHorizontalLine(lineColor, y, startMargin = START_MARGIN_CHART, endMargin = END_MARGIN_CHART)
 }
@@ -209,7 +209,7 @@ private fun DrawScope.drawDateDivider(
             topLeft = Offset(
                 x = x - textSize.width / 2,
                 y = size.height - BOTTOM_MARGIN_CHART / 2 - textSize.height / 2,
-            )
+            ),
         )
     }
 }
@@ -239,7 +239,7 @@ private fun DrawScope.drawWeightChart(
         drawWeightLines(
             points = points,
             lineColor = weightLineColor,
-            fillWeightChart = fillWeightPath::cubicTo
+            fillWeightChart = fillWeightPath::cubicTo,
         )
         fillWeightPath.lineTo(size.width, targetY)
 
@@ -257,14 +257,14 @@ private fun DrawScope.drawWeightChart(
                 colors = listOf(
                     weightLineColor.copy(alpha = 0.5f),
                     Color.Transparent,
-                )
-            )
+                ),
+            ),
         )
         points.forEach { point ->
             drawCircle(
                 color = pointColor,
                 radius = 8f,
-                center = Offset(point.x, point.y)
+                center = Offset(point.x, point.y),
             )
         }
     }
@@ -298,8 +298,8 @@ private fun DrawScope.drawWeightLines(
     val lines = points.zipWithNext()
 
     lines.forEachIndexed { index, (startPoint, endPoint) ->
-        val prevPoint = if (index > 0) lines[index-1].first else startPoint
-        val nextPoint = if (index < lines.lastIndex) lines[index+1].second else endPoint
+        val prevPoint = if (index > 0) lines[index - 1].first else startPoint
+        val nextPoint = if (index < lines.lastIndex) lines[index + 1].second else endPoint
         val cubicPositions = findLineCubicPositions(prevPoint, startPoint, endPoint, nextPoint)
 
         drawPath(
@@ -310,7 +310,7 @@ private fun DrawScope.drawWeightLines(
             color = lineColor,
             style = Stroke(
                 width = 3.dp.toPx(),
-            )
+            ),
         )
         fillWeightChart(cubicPositions)
     }
@@ -397,9 +397,11 @@ private fun ChartWidgetPreview() {
     val target = 90f
     WeightDropTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Box(modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+            ) {
                 ChartWidget(
                     chart = calculator.calculateWeightChart(target, stubWeightingsMediumFirst),
                     color = WeightChartColor(
@@ -409,7 +411,7 @@ private fun ChartWidgetPreview() {
                         pointColor = MaterialTheme.colorScheme.tertiary,
                         targetLineColor = MaterialTheme.colorScheme.tertiary,
                     ),
-                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
+                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
                 )
             }
         }
@@ -423,9 +425,11 @@ private fun ChartWidgetPreview2() {
     val target = 80f
     WeightDropTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Box(modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+            ) {
                 ChartWidget(
                     chart = calculator.calculateWeightChart(target, stubWeightingsMediumSecond),
                     color = WeightChartColor(
@@ -435,12 +439,13 @@ private fun ChartWidgetPreview2() {
                         pointColor = MaterialTheme.colorScheme.tertiary,
                         targetLineColor = MaterialTheme.colorScheme.tertiary,
                     ),
-                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
+                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
                 )
             }
         }
     }
 }
+
 @WeightDropPreview
 @Composable
 private fun ChartWidgetPreview3() {
@@ -448,9 +453,11 @@ private fun ChartWidgetPreview3() {
     val target = 88f
     WeightDropTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Box(modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+            ) {
                 ChartWidget(
                     chart = calculator.calculateWeightChart(target, stubWeightingsMediumThird),
                     color = WeightChartColor(
@@ -460,7 +467,7 @@ private fun ChartWidgetPreview3() {
                         pointColor = MaterialTheme.colorScheme.tertiary,
                         targetLineColor = MaterialTheme.colorScheme.tertiary,
                     ),
-                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
+                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
                 )
             }
         }

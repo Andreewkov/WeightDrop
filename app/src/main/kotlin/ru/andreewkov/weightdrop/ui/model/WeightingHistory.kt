@@ -10,7 +10,7 @@ data class WeightingHistory(
 
     data class Item(
         val weighting: Weighting,
-        val diff: Float
+        val diff: Float,
     )
 
     data class Header(

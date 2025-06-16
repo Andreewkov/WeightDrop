@@ -1,7 +1,6 @@
 package ru.andreewkov.weightdrop.ui.screen.info
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -172,7 +171,7 @@ private fun ButtonsWeightPortraitContent() {
             results = createResultsWidgetItems(),
             background = Peach,
             textColor = Dark,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Spacer(modifier = Modifier.size(6.dp))
     }
@@ -185,12 +184,12 @@ private fun ButtonsWeightLandscapeContent() {
         results = createResultsWidgetItems(),
         background = Peach,
         textColor = Dark,
-        modifier = Modifier.width(300.dp)
+        modifier = Modifier.width(300.dp),
     )
     Spacer(modifier = Modifier.size(6.dp))
     Column(
         verticalArrangement = Arrangement.SpaceAround,
-        modifier = Modifier
+        modifier = Modifier,
     ) {
     }
 }

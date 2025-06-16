@@ -19,7 +19,7 @@ object WeightingHistoryCalculator {
         val historyItems = sortedWeightings.map { weighting ->
             WeightingHistory.Item(
                 weighting = weighting,
-                diff = (weighting.value - prevWeight).roundToDecimals()
+                diff = (weighting.value - prevWeight).roundToDecimals(),
             ).also {
                 prevWeight = weighting.value
             }
@@ -60,10 +60,10 @@ object WeightingHistoryCalculator {
                 header = WeightingHistory.Header(
                     month = monthDate.month,
                     year = monthDate.year,
-                    diff = items.map { it.diff }.sum().roundToDecimals()
+                    diff = items.map { it.diff }.sum().roundToDecimals(),
                 ).takeIf { takeHeader },
                 weightingItems = items.reversed(),
-            )
+            ),
         )
     }
 }

@@ -7,8 +7,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import ru.andreewkov.weightdrop.database.AppDatabase
 import ru.andreewkov.weightdrop.database.LocalDateTypeConverter
 import ru.andreewkov.weightdrop.database.WeightingDao
@@ -24,12 +22,14 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
+    fun provideAppDatabase(
+        @ApplicationContext appContext: Context,
+    ): AppDatabase {
         val converter = LocalDateTypeConverter()
         return Room.databaseBuilder(
             appContext,
             AppDatabase::class.java,
-            "AppDatabase"
+            "AppDatabase",
         )
             .addTypeConverter(converter)
             .build()

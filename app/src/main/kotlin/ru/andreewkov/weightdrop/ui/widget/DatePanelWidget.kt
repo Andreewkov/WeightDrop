@@ -56,7 +56,7 @@ fun DatePanelWidget(
             .height(height)
             .fillMaxSize()
             .background(colors.containerColor)
-            .padding(height / 10)
+            .padding(height / 10),
     ) {
         CalendarBox(
             cornerRadius = height / 4,
@@ -90,7 +90,7 @@ private fun CalendarBox(
                 ambientColor = iconColor,
             )
             .clip(RoundedCornerShape(cornerRadius))
-            .background(backgroundColor)
+            .background(backgroundColor),
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_calendar),
@@ -99,7 +99,7 @@ private fun CalendarBox(
             modifier = Modifier
                 .padding(cornerRadius * 2 / 3)
                 .aspectRatio(1f)
-                .fillMaxSize()
+                .fillMaxSize(),
         )
     }
 }
@@ -123,7 +123,7 @@ private fun DateBox(
                 ambientColor = dateColor,
             )
             .clip(RoundedCornerShape(cornerRadius))
-            .background(backgroundColor)
+            .background(backgroundColor),
     ) {
         Text(
             text = text,
@@ -137,7 +137,7 @@ private fun DateBox(
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier
                 .padding(horizontal = cornerRadius * 2 / 3)
-                .align(Alignment.Center)
+                .align(Alignment.Center),
         )
     }
 }
@@ -156,7 +156,7 @@ private fun DatePanelWidgetPreview() {
             ),
             modifier = Modifier
                 .width(200.dp)
-                .padding(5.dp)
+                .padding(5.dp),
         )
     }
 }
@@ -175,7 +175,7 @@ private fun DatePanelWidgetPreviewInverse() {
             ),
             modifier = Modifier
                 .width(400.dp)
-                .padding(5.dp)
+                .padding(5.dp),
         )
     }
 }

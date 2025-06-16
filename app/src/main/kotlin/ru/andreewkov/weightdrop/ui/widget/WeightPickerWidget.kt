@@ -51,8 +51,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.ui.util.inRange
-import ru.andreewkov.weightdrop.util.map
 import ru.andreewkov.weightdrop.ui.util.pxToDp
+import ru.andreewkov.weightdrop.util.map
 import kotlin.math.absoluteValue
 import kotlin.math.max
 
@@ -80,7 +80,6 @@ data class WeightPickerWidgetState(
             current = num,
             prev = _currentValue.value.current,
         )
-
     }
 }
 
@@ -89,14 +88,16 @@ fun rememberWeightPickerWidgetState(num: WeightPickerNum): WeightPickerWidgetSta
     val integerRange = 0..199
     val fractionRange = 0..9
 
-    return remember { WeightPickerWidgetState(
-        WeightPickerNumWithPrev(
-            current = num,
-            prev = WeightPickerNum(0, 0),
-        ),
-        integerRange = integerRange,
-        fractionRange = fractionRange,
-    ) }
+    return remember {
+        WeightPickerWidgetState(
+            WeightPickerNumWithPrev(
+                current = num,
+                prev = WeightPickerNum(0, 0),
+            ),
+            integerRange = integerRange,
+            fractionRange = fractionRange,
+        )
+    }
 }
 
 @Composable
@@ -131,7 +132,7 @@ fun WeightPickerWidget(
                         y = bottomY,
                     )
                 }
-            }
+            },
     ) {
         ValueColumn(
             range = state.integerRange,
@@ -149,9 +150,9 @@ fun WeightPickerWidget(
             modifier = Modifier.weight(1f),
             onItemScrolled = { index ->
                 state.updateValue(
-                    state.currentValue.value.current.copy(integer = index)
+                    state.currentValue.value.current.copy(integer = index),
                 )
-            }
+            },
         )
         Text(
             text = ".",
@@ -162,7 +163,7 @@ fun WeightPickerWidget(
             ),
             modifier = Modifier
                 .width(20.dp)
-                .align(Alignment.CenterVertically)
+                .align(Alignment.CenterVertically),
         )
         ValueColumn(
             range = state.fractionRange,
@@ -180,9 +181,9 @@ fun WeightPickerWidget(
             modifier = Modifier.weight(1f),
             onItemScrolled = { index ->
                 state.updateValue(
-                    state.currentValue.value.current.copy(fraction = index)
+                    state.currentValue.value.current.copy(fraction = index),
                 )
-            }
+            },
         )
     }
 }
@@ -208,16 +209,19 @@ private fun ValueColumn(
     }
 
     LaunchedEffect(scrollValue) {
-        val diffItems = (scrollValue.current - listState.firstVisibleItemIndex)
-        if ((listState.firstVisibleItemScrollOffset != 0 || diffItems != 0) && !listState.isScrollInProgress) {
+        val offset = listState.firstVisibleItemScrollOffset
+        val diffItems = scrollValue.current - listState.firstVisibleItemIndex
+        val isScrollInProgress = listState.isScrollInProgress
+
+        if ((offset != 0 || diffItems != 0) && !isScrollInProgress) {
             coroutineScope.launch {
                 isScrolled = true
                 listState.stopScroll()
                 listState.animateScrollBy(
                     value = diffItems * itemHeightPx,
                     animationSpec = tween(
-                        durationMillis = (50 * scrollValue.maxDiff).inRange(400, 2000)
-                    )
+                        durationMillis = (50 * scrollValue.maxDiff).inRange(400, 2000),
+                    ),
                 )
                 listState.animateScrollToItem(scrollValue.current)
                 isScrolled = false
@@ -227,10 +231,10 @@ private fun ValueColumn(
 
     val nestedScrollConnection = rememberNestedScrollConnection(
         onPostFling = {
-            val index =  listState.findCurrentIndex(itemHeightPx)
+            val index = listState.findCurrentIndex(itemHeightPx)
             listState.animateScrollToItem(index)
             onItemScrolled(index)
-        }
+        },
     )
     val items = range.map { "$it" }
     val itemModifier by with(LocalDensity.current) {
@@ -261,7 +265,7 @@ private fun ValueColumn(
         modifier = modifier
             .fillMaxSize()
             .onSizeChanged { columnSize = it }
-            .nestedScroll(nestedScrollConnection)
+            .nestedScroll(nestedScrollConnection),
     ) {
         items(items = if (columnSize != IntSize.Zero) items else emptyList()) { item ->
             Text(
@@ -280,7 +284,6 @@ private fun createBackgroundBrush(): Brush {
             0.15f to Color(0x4D000000),
             1f / 7 * 2.7f to Color(0x66000000),
             1f / 7 * 2.71f to Color.Black,
-
             1f / 7 * 4.311f to Color.Black,
             1f / 7 * 4.3f to Color(0x66000000),
             0.85f to Color(0x4D000000),
@@ -312,7 +315,7 @@ private fun rememberNestedScrollConnection(
         object : NestedScrollConnection {
             override suspend fun onPostFling(
                 consumed: Velocity,
-                available: Velocity
+                available: Velocity,
             ): Velocity {
                 onPostFling()
                 return super.onPostFling(consumed, available)
@@ -340,7 +343,7 @@ fun NumberPickerWidgetPreview() {
     Box(modifier = Modifier.size(100.dp)) {
         WeightPickerWidget(
             state = rememberWeightPickerWidgetState(
-                num = WeightPickerNum(84, 7)
+                num = WeightPickerNum(84, 7),
             ),
             color = Color.White,
         )
@@ -353,7 +356,7 @@ fun NumberPickerWidgetPreviewStart() {
     Box(modifier = Modifier.size(100.dp)) {
         WeightPickerWidget(
             state = rememberWeightPickerWidgetState(
-                num = WeightPickerNum(0, 0)
+                num = WeightPickerNum(0, 0),
             ),
             color = Color.White,
         )
@@ -366,7 +369,7 @@ fun NumberPickerWidgetPreviewEnd() {
     Box(modifier = Modifier.size(100.dp)) {
         WeightPickerWidget(
             state = rememberWeightPickerWidgetState(
-                num = WeightPickerNum(199, 9)
+                num = WeightPickerNum(199, 9),
             ),
             color = Color.White,
         )
@@ -379,11 +382,11 @@ fun NumberPickerWidgetPreviewNarrow() {
     Box(
         modifier = Modifier
             .width(100.dp)
-            .height(200.dp)
+            .height(200.dp),
     ) {
         WeightPickerWidget(
             state = rememberWeightPickerWidgetState(
-                num = WeightPickerNum(104, 1)
+                num = WeightPickerNum(104, 1),
             ),
             color = Color.White,
         )
@@ -396,11 +399,11 @@ fun NumberPickerWidgetPreviewWide() {
     Box(
         modifier = Modifier
             .width(200.dp)
-            .height(100.dp)
+            .height(100.dp),
     ) {
         WeightPickerWidget(
             state = rememberWeightPickerWidgetState(
-                num = WeightPickerNum(56, 6)
+                num = WeightPickerNum(56, 6),
             ),
             color = Color.White,
         )

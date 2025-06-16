@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.TextUnit
 @Composable
 fun isPortrait() = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
 
-
 @Composable
 fun Dp.dpToPx() = with(LocalDensity.current) { this@dpToPx.toPx() }
 
@@ -26,7 +25,6 @@ fun Float.pxToDp() = with(LocalDensity.current) { this@pxToDp.toDp() }
 
 @Composable
 fun Float.pxToSp() = with(LocalDensity.current) { this@pxToSp.toSp() }
-
 
 internal fun DrawScope.drawHorizontalLine(
     color: Color,

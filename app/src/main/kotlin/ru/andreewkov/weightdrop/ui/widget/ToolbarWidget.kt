@@ -75,6 +75,6 @@ fun ToolbarWidget(
         },
         modifier = Modifier.shadow(
             elevation = dimensionResource(R.dimen.toolbar_elevation),
-        )
+        ),
     )
 }
