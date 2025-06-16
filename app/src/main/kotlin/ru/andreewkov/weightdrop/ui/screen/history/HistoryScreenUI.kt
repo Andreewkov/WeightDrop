@@ -198,7 +198,7 @@ private fun WeightingCard(
                     vertical = dimensionResource(R.dimen.history_list_items_vertical_padding),
                 ),
         ) {
-            Text(text = WeightingFormatter.formatDateWithDay(date))
+            Text(text = WeightingFormatter.formatDateShortWithDay(date))
             Text(text = WeightingFormatter.formatWeightLong(diff))
             Text(text = WeightingFormatter.formatWeightLong(value))
         }

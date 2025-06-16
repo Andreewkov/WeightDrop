@@ -181,7 +181,7 @@ private fun DrawScope.drawDateDividers(
             val currentX = index * xStep
             drawDateDivider(
                 x = currentX,
-                title = WeightingFormatter.formatDate(date),
+                title = WeightingFormatter.formatDateShort(date),
                 textMeasurer = textMeasurer,
                 textStyle = textStyle,
                 lineColor = lineColor,

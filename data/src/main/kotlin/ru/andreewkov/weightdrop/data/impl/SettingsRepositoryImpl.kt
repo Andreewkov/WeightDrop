@@ -25,7 +25,7 @@ class SettingsRepositoryImpl @Inject constructor(
 
     private val logger = loggerProvider.get("SettingsRepositoryImpl")
 
-    private val _currentSettings = MutableStateFlow(
+    private val currentSettings = MutableStateFlow(
         SettingsDataModel(
             targetWeight = getTargetWeight(),
             height = getHeight(),

@@ -12,15 +12,20 @@ import java.util.Locale
 
 object WeightingFormatter {
 
-    private val formatter = DateTimeFormatter.ofPattern("dd.MM")
+    private val shortDateFormatter = DateTimeFormatter.ofPattern("dd.MM")
+    private val longDateFormatter = DateTimeFormatter.ofPattern("dd.MM.yy")
 
-    fun formatDate(date: LocalDate): String {
-        return date.format(formatter)
+    fun formatDateShort(date: LocalDate): String {
+        return date.format(shortDateFormatter)
     }
 
-    fun formatDateWithDay(date: LocalDate): String {
+    fun formatDateLong(date: LocalDate): String {
+        return date.format(longDateFormatter)
+    }
+
+    fun formatDateShortWithDay(date: LocalDate): String {
         val dayName = date.dayOfWeek.getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
-        return "${date.format(formatter)} (${dayName.capitalizeFirstChar()}.)"
+        return "${date.format(shortDateFormatter)} (${dayName.capitalizeFirstChar()}.)"
     }
 
     fun formatMonthYear(month: Month, year: Int): String {

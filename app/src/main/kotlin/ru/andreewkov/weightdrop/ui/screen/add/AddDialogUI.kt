@@ -1,12 +1,13 @@
 package ru.andreewkov.weightdrop.ui.screen.add
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -18,8 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -27,14 +29,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import ru.andreewkov.weightdrop.R
+import ru.andreewkov.weightdrop.ui.WeightingFormatter
 import ru.andreewkov.weightdrop.ui.screen.AppAction
 import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
 import ru.andreewkov.weightdrop.ui.util.getDecimals
 import ru.andreewkov.weightdrop.ui.util.roundToDecimals
-import ru.andreewkov.weightdrop.ui.widget.DatePanelWidget
-import ru.andreewkov.weightdrop.ui.widget.DatePanelWidgetColors
+import ru.andreewkov.weightdrop.ui.widget.ValuePanelWidget
 import ru.andreewkov.weightdrop.ui.widget.WeightPickerNum
 import ru.andreewkov.weightdrop.ui.widget.WeightPickerWidget
 import ru.andreewkov.weightdrop.ui.widget.WeightPickerWidgetState
@@ -106,25 +108,24 @@ private fun AddDialogContent(
     }
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.background)
             .padding(
                 horizontal = 32.dp,
                 vertical = 16.dp,
             ),
     ) {
-        DatePanelWidget(
-            height = 50.dp,
-            date = date.toString(),
-            colors = DatePanelWidgetColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                backgroundColor = MaterialTheme.colorScheme.tertiary,
-                dateColor = MaterialTheme.colorScheme.background,
-            ),
+        ValuePanelWidget(
+            title = stringResource(R.string.dialog_add_date_title),
+            text = WeightingFormatter.formatDateLong(date),
+            tintColor = MaterialTheme.colorScheme.primary,
+            iconPainter = painterResource(R.drawable.ic_calendar),
+            onClick = onDateClick,
             modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
-                .clickable(onClick = onDateClick),
+                .fillMaxWidth()
+                .height(54.dp),
         )
+
+        Spacer(modifier = Modifier.size(30.dp))
 
         WeightPickerWidget(
             state = weightPickerWidgetState,
@@ -134,21 +135,24 @@ private fun AddDialogContent(
                 .fillMaxWidth(),
         )
 
+        Spacer(modifier = Modifier.size(30.dp))
+
         Button(
             onClick = onAddClick,
-            shape = RoundedCornerShape(20.dp),
+            shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors().copy(
-                containerColor = MaterialTheme.colorScheme.onSurface,
+                containerColor = MaterialTheme.colorScheme.secondary,
             ),
             modifier = Modifier
-                .height(50.dp)
-                .fillMaxWidth(),
+                .height(42.dp)
+                .align(Alignment.CenterHorizontally),
         ) {
             Text(
                 text = stringResource(R.string.add_dialog_add_button),
                 color = MaterialTheme.colorScheme.surface,
                 style = TextStyle(
-                    fontSize = 20.sp,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSecondary,
                 ),
             )
         }
