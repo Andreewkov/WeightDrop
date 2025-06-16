@@ -81,35 +81,34 @@ class WeightChartCalculator {
     private fun findDateDividers(
         weightings: List<Weighting>,
     ): List<LocalDate> {
-        val startLocalDate = weightings.first().date
-        val endLocalDate = weightings.last().date
+        val startDate = weightings.first().date
+        val endDate = weightings.last().date
 
-        return when (val days = ChronoUnit.DAYS.between(startLocalDate, endLocalDate) + 1) {
-            1L -> listOf(startLocalDate)
+        return when (val days = ChronoUnit.DAYS.between(startDate, endDate) + 1) {
+            1L -> listOf(startDate)
             in 2..7 -> buildList {
-                add(startLocalDate)
+                add(startDate)
                 for (i: Int in 1 until days.toInt() - 1) {
-                    add(startLocalDate.plusDays(i.toLong()))
+                    add(startDate.plusDays(i.toLong()))
                 }
-                add(endLocalDate)
+                add(endDate)
             }
             else -> {
                 val daysPerDivider = days / 5 + 1
                 buildList {
-                    var lastLocalDate = endLocalDate
-                    val isAfter = lastLocalDate.isAfter(startLocalDate)
-                    while (isAfter || lastLocalDate == startLocalDate) {
-                        add(lastLocalDate)
-                        lastLocalDate = lastLocalDate.minusDays(daysPerDivider)
+                    var lastDate = endDate
+                    while (lastDate.isAfter(startDate) || lastDate == startDate) {
+                        add(lastDate)
+                        lastDate = lastDate.minusDays(daysPerDivider)
                     }
                 }
                 buildList {
-                    var lastLocalDate = startLocalDate
-                    while (lastLocalDate.isBefore(endLocalDate) || lastLocalDate == endLocalDate) {
+                    var lastLocalDate = startDate
+                    while (lastLocalDate.isBefore(endDate) || lastLocalDate == endDate) {
                         add(lastLocalDate)
                         lastLocalDate = lastLocalDate.plusDays(daysPerDivider)
                     }
-                    add(endLocalDate)
+                    add(endDate)
                 }
             }
         }
