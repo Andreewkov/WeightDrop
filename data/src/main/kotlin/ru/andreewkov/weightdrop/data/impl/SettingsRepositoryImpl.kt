@@ -33,7 +33,7 @@ class SettingsRepositoryImpl @Inject constructor(
     )
 
     override fun getSettings(): Result<Flow<SettingsDataModel>> {
-        return _currentSettings.asStateFlow().asSuccess()
+        return currentSettings.asStateFlow().asSuccess()
     }
 
     override suspend fun updateTargetWeight(
@@ -43,7 +43,7 @@ class SettingsRepositoryImpl @Inject constructor(
             settingsPreferences.edit {
                 putFloat(TARGET_WEIGHT_NAME, weight)
             }
-            _currentSettings.value = _currentSettings.value.copy(targetWeight = weight)
+            currentSettings.value = currentSettings.value.copy(targetWeight = weight)
         }
     }
 
@@ -54,7 +54,7 @@ class SettingsRepositoryImpl @Inject constructor(
             settingsPreferences.edit {
                 putInt(HEIGHT_NAME, height)
             }
-            _currentSettings.value = _currentSettings.value.copy(height = height)
+            currentSettings.value = currentSettings.value.copy(height = height)
         }
     }
 

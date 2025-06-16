@@ -21,6 +21,7 @@ import ru.andreewkov.weightdrop.ui.screen.Screen
 import ru.andreewkov.weightdrop.ui.screen.add.AddDialogUI
 import ru.andreewkov.weightdrop.ui.screen.history.HistoryScreenUI
 import ru.andreewkov.weightdrop.ui.screen.info.InfoScreenUI
+import ru.andreewkov.weightdrop.ui.screen.settings.SettingsScreenUI
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarColors
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarWidget
 import ru.andreewkov.weightdrop.ui.widget.ToolbarWidget
@@ -81,6 +82,7 @@ fun MainAppUI(
                 HistoryScreenUI()
             }
             composable(route = Screen.Settings.id) {
+                SettingsScreenUI()
             }
         }
 
