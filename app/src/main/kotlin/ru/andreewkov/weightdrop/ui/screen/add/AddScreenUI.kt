@@ -31,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.ui.WeightingFormatter
+import ru.andreewkov.weightdrop.ui.screen.dialog.DatePickerDialogUI
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
 import ru.andreewkov.weightdrop.ui.util.getDecimals
@@ -81,7 +82,7 @@ fun AddScreenUI(
     }
 
     if (showDateDialog) {
-        AddDatePickerDialogUI(
+        DatePickerDialogUI(
             onDismissRequest = viewModel::onDatePickerDialogDismissRequest,
             onConfirmClick = viewModel::onDatePickerDialogConfirm,
         )

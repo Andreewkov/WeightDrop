@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.screen.add
+package ru.andreewkov.weightdrop.ui.screen.dialog
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,7 +25,7 @@ import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddDatePickerDialogUI(
+fun DatePickerDialogUI(
     onDismissRequest: () -> Unit,
     onConfirmClick: (LocalDate) -> Unit,
 ) {
