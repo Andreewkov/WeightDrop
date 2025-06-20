@@ -69,7 +69,7 @@ fun ToolbarWidget(
                     .padding(horizontal = 16.dp)
                     .size(36.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable { actionHandler.handleAction(AppAction.OnClickAdd) }
+                    .clickable { actionHandler.handleAction(AppAction.NavigationCLick(Screen.Add)) }
                     .padding(8.dp),
             )
         },

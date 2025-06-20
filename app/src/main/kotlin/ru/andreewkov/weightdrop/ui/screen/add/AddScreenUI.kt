@@ -30,8 +30,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.ui.WeightingFormatter
-import ru.andreewkov.weightdrop.ui.screen.AppAction
-import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
 import ru.andreewkov.weightdrop.ui.util.getDecimals
@@ -44,8 +42,7 @@ import ru.andreewkov.weightdrop.ui.widget.rememberWeightPickerWidgetState
 import java.time.LocalDate
 
 @Composable
-fun AddDialogUI(
-    actionHandler: AppActionHandler,
+fun AddScreenUI(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: AddViewModel = hiltViewModel()
@@ -67,29 +64,24 @@ fun AddDialogUI(
         )
     }
 
-    Dialog(
-        onDismissRequest = { actionHandler.handleAction(AppAction.OnDismissRequestAddDialog) },
-    ) {
-        Card {
-            AddDialogContent(
-                date = state.date,
-                onDateClick = viewModel::onDatePickerDialogRequest,
-                weightPickerWidgetState = weightPickerWidgetState,
-                onWeightChanged = viewModel::onWeightChanged,
-                onAddClick = {
-                    viewModel.onWeightAddClick()
-                    actionHandler.handleAction(AppAction.OnValueAddFromDialog)
-                },
-                modifier = modifier,
-            )
-        }
+    Card {
+        AddDialogContent(
+            date = state.date,
+            onDateClick = viewModel::onDatePickerDialogRequest,
+            weightPickerWidgetState = weightPickerWidgetState,
+            onWeightChanged = viewModel::onWeightChanged,
+            onAddClick = {
+                viewModel.onWeightAddClick()
+            },
+            modifier = modifier,
+        )
+    }
 
-        if (showDateDialog) {
-            AddDatePickerDialogUI(
-                onDismissRequest = viewModel::onDatePickerDialogDismissRequest,
-                onConfirmClick = viewModel::onDatePickerDialogConfirm,
-            )
-        }
+    if (showDateDialog) {
+        AddDatePickerDialogUI(
+            onDismissRequest = viewModel::onDatePickerDialogDismissRequest,
+            onConfirmClick = viewModel::onDatePickerDialogConfirm,
+        )
     }
 }
 
@@ -114,19 +106,6 @@ private fun AddDialogContent(
                 vertical = 16.dp,
             ),
     ) {
-        ValuePanelWidget(
-            title = stringResource(R.string.dialog_add_date_title),
-            text = WeightingFormatter.formatDateLong(date),
-            tintColor = MaterialTheme.colorScheme.primary,
-            iconPainter = painterResource(R.drawable.ic_calendar),
-            onClick = onDateClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(54.dp),
-        )
-
-        Spacer(modifier = Modifier.size(30.dp))
-
         WeightPickerWidget(
             state = weightPickerWidgetState,
             color = MaterialTheme.colorScheme.primary,
@@ -135,7 +114,22 @@ private fun AddDialogContent(
                 .fillMaxWidth(),
         )
 
-        Spacer(modifier = Modifier.size(30.dp))
+        Spacer(modifier = Modifier.size(12.dp))
+
+        ValuePanelWidget(
+            title = stringResource(R.string.dialog_add_date_title),
+            text = WeightingFormatter.formatDateLong(date),
+            tintColor = MaterialTheme.colorScheme.primary,
+            iconPainter = painterResource(R.drawable.ic_calendar),
+            onClick = {
+                onDateClick()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(54.dp),
+        )
+
+        Spacer(modifier = Modifier.size(24.dp))
 
         Button(
             onClick = onAddClick,
@@ -145,6 +139,7 @@ private fun AddDialogContent(
             ),
             modifier = Modifier
                 .height(42.dp)
+                .fillMaxWidth()
                 .align(Alignment.CenterHorizontally),
         ) {
             Text(

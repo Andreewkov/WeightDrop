@@ -6,7 +6,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -16,9 +15,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import ru.andreewkov.weightdrop.ui.screen.Screen
-import ru.andreewkov.weightdrop.ui.screen.add.AddDialogUI
+import ru.andreewkov.weightdrop.ui.screen.add.AddScreenUI
 import ru.andreewkov.weightdrop.ui.screen.history.HistoryScreenUI
 import ru.andreewkov.weightdrop.ui.screen.info.InfoScreenUI
 import ru.andreewkov.weightdrop.ui.screen.settings.SettingsScreenUI
@@ -35,7 +35,6 @@ fun MainAppUI(
     val viewModel: MainAppViewModel = hiltViewModel()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute by remember { derivedStateOf { backStackEntry?.destination?.route } }
-    val showAddDialog by viewModel.showAddDialog.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.navigationScreen.observe { screen ->
@@ -84,12 +83,9 @@ fun MainAppUI(
             composable(route = Screen.Settings.id) {
                 SettingsScreenUI()
             }
-        }
-
-        if (showAddDialog) {
-            AddDialogUI(
-                actionHandler = viewModel,
-            )
+            dialog(route = Screen.Add.id) {
+                AddScreenUI()
+            }
         }
     }
 }
