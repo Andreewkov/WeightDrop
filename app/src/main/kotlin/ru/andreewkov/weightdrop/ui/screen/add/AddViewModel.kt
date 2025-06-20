@@ -9,12 +9,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.domain.model.Weighting
+import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
 import ru.andreewkov.weightdrop.domain.weighting.UpdateWeightingUseCase
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class AddViewModel @Inject constructor(
+    private val getWeightingUseCase: GetWeightingUseCase,
     private val updateWeightingUseCase: UpdateWeightingUseCase,
 ) : ViewModel() {
 
@@ -23,6 +25,10 @@ class AddViewModel @Inject constructor(
 
     private val _screenState = MutableStateFlow(createDefaultScreenState())
     val screenState: StateFlow<ScreenState> get() = _screenState.asStateFlow()
+
+    init {
+        updateWeight(LocalDate.now())
+    }
 
     fun onDatePickerDialogRequest() {
         _showDateDialog.tryEmit(true)
@@ -35,6 +41,14 @@ class AddViewModel @Inject constructor(
     fun onDatePickerDialogConfirm(date: LocalDate) {
         _showDateDialog.tryEmit(false)
         _screenState.tryEmit(_screenState.value.copy(date = date))
+        updateWeight(date)
+    }
+
+    private fun updateWeight(date: LocalDate) {
+        viewModelScope.launch {
+            val weighting = getWeightingUseCase(date).getOrElse { return@launch } // TODO
+            _screenState.emit(ScreenState(date = weighting.date, weight = weighting.value))
+        }
     }
 
     fun onWeightChanged(weight: Float) {
@@ -55,7 +69,7 @@ class AddViewModel @Inject constructor(
     private fun createDefaultScreenState(): ScreenState {
         return ScreenState(
             date = LocalDate.now(),
-            weight = 98.7f,
+            weight = 0f,
         )
     }
 

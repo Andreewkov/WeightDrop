@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.weighting.DeleteWeightingUseCase
-import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
+import ru.andreewkov.weightdrop.domain.weighting.GetWeightingsUseCase
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
-    private val getWeightingUseCase: GetWeightingUseCase,
+    private val getWeightingsUseCase: GetWeightingsUseCase,
     private val deleteWeightingUseCase: DeleteWeightingUseCase,
 ) : ViewModel() {
 
@@ -37,13 +37,16 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun loadHistory() {
-        getWeightingUseCase()
+        getWeightingsUseCase()
             .onSuccess {
                 viewModelScope.launch {
                     it.collect {
                         handleHistory(it)
                     }
                 }
+            }
+            .onFailure {
+                // TODO
             }
     }
 

@@ -9,9 +9,11 @@ import ru.andreewkov.weightdrop.data.api.WeightingRepository
 import ru.andreewkov.weightdrop.data.di.DatabaseDispatcherQualifier
 import ru.andreewkov.weightdrop.data.model.WeightingDataModel
 import ru.andreewkov.weightdrop.data.model.toWeightingDBO
+import ru.andreewkov.weightdrop.data.model.toWeightingDataModel
 import ru.andreewkov.weightdrop.data.model.toWeightingDataModels
 import ru.andreewkov.weightdrop.database.WeightingDao
 import ru.andreewkov.weightdrop.utils.api.LoggerProvider
+import java.time.LocalDate
 import javax.inject.Inject
 
 class WeightingRepositoryImpl @Inject constructor(
@@ -27,6 +29,14 @@ class WeightingRepositoryImpl @Inject constructor(
             weightingDao.getWeightings().flowOn(databaseDispatcher).map { weightings ->
                 weightings.toWeightingDataModels()
             }
+        }
+    }
+
+    override suspend fun getWeighting(
+        date: LocalDate,
+    ): Result<WeightingDataModel> = withContext(databaseDispatcher) {
+        return@withContext runCatching(logger, errorMessage = "Error at getting weighting $date") {
+            weightingDao.getWeighting(date).toWeightingDataModel()
         }
     }
 

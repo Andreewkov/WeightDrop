@@ -84,7 +84,7 @@ fun MainAppUI(
                 SettingsScreenUI()
             }
             dialog(route = Screen.Add.id) {
-                AddScreenUI()
+                AddScreenUI(navController = navController)
             }
         }
     }

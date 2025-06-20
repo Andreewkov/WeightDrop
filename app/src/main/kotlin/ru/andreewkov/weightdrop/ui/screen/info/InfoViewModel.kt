@@ -15,14 +15,14 @@ import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.domain.model.Settings
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.settings.GetSettingsUseCase
-import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
+import ru.andreewkov.weightdrop.domain.weighting.GetWeightingsUseCase
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
 import javax.inject.Inject
 
 @HiltViewModel
 class InfoViewModel @Inject constructor(
-    private val getWeightingUseCase: GetWeightingUseCase,
+    private val getWeightingsUseCase: GetWeightingsUseCase,
     private val getSettingsUseCase: GetSettingsUseCase,
 ) : ViewModel() {
 
@@ -39,7 +39,7 @@ class InfoViewModel @Inject constructor(
             handleError()
         }
         viewModelScope.launch(exceptionHandler + Dispatchers.Default) {
-            val weightingsDeferred = async { getWeightingUseCase() }
+            val weightingsDeferred = async { getWeightingsUseCase() }
             val settingsDeferred = async { getSettingsUseCase() }
             combine(
                 weightingsDeferred.await().getOrThrow(),

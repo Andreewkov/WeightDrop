@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.ui.WeightingFormatter
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
@@ -43,6 +44,7 @@ import java.time.LocalDate
 
 @Composable
 fun AddScreenUI(
+    navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: AddViewModel = hiltViewModel()
@@ -72,6 +74,7 @@ fun AddScreenUI(
             onWeightChanged = viewModel::onWeightChanged,
             onAddClick = {
                 viewModel.onWeightAddClick()
+                navController.popBackStack()
             },
             modifier = modifier,
         )
