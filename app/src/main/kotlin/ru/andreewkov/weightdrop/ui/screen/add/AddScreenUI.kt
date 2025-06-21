@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -121,7 +120,7 @@ private fun AddDialogContent(
         Spacer(modifier = Modifier.size(12.dp))
 
         ValuePanelWidget(
-            title = stringResource(R.string.dialog_add_date_title),
+            title = stringResource(R.string.screen_add_date_title),
             text = WeightingFormatter.formatDateLong(date),
             tintColor = MaterialTheme.colorScheme.primary,
             iconPainter = painterResource(R.drawable.ic_calendar),
@@ -143,8 +142,7 @@ private fun AddDialogContent(
             ),
             modifier = Modifier
                 .height(42.dp)
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally),
+                .fillMaxWidth(),
         ) {
             Text(
                 text = stringResource(R.string.add_dialog_add_button),
