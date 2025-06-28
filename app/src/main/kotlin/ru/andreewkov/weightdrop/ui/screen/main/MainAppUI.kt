@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -18,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import ru.andreewkov.weightdrop.ui.screen.Screen
+import ru.andreewkov.weightdrop.ui.screen.Screen.Companion.getStartScreen
 import ru.andreewkov.weightdrop.ui.screen.add.AddScreenUI
 import ru.andreewkov.weightdrop.ui.screen.history.HistoryScreenUI
 import ru.andreewkov.weightdrop.ui.screen.info.InfoScreenUI
@@ -33,13 +36,15 @@ fun MainAppUI(
     navController: NavHostController = rememberNavController(),
 ) {
     val viewModel: MainAppViewModel = hiltViewModel()
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute by remember { derivedStateOf { backStackEntry?.destination?.route } }
+    var currentNavigationBarItem by remember { mutableStateOf(getStartScreen()) }
 
     LaunchedEffect(Unit) {
         viewModel.navigationScreen.observe { screen ->
             if (navController.currentDestination?.route != screen.id) {
                 navController.navigate(screen.id)
+                if (screen is Screen.NavigationBarItem) {
+                    currentNavigationBarItem = screen
+                }
             }
         }
     }
@@ -48,7 +53,7 @@ fun MainAppUI(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             ToolbarWidget(
-                currentRoute = currentRoute,
+                titleRes = currentNavigationBarItem.titleRes,
                 actionHandler = viewModel,
                 colors = ToolbarWidgetColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -65,7 +70,7 @@ fun MainAppUI(
                     activeItemColor = MaterialTheme.colorScheme.secondary,
                     inactiveItemColor = MaterialTheme.colorScheme.primary,
                 ),
-                isNavigationBarItemSelected = { item -> currentRoute == item.id },
+                isNavigationBarItemSelected = { item -> currentNavigationBarItem.id == item.id },
             )
         },
     ) { innerPadding ->

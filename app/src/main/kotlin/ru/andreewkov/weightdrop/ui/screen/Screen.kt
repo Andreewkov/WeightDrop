@@ -38,7 +38,7 @@ sealed class Screen(
 
     companion object {
 
-        fun getStartScreen() = Info
+        fun getStartScreen(): NavigationBarItem = Info
 
         fun findScreen(id: String?): Screen {
             return getAll().find { it.id == id } ?: getStartScreen()

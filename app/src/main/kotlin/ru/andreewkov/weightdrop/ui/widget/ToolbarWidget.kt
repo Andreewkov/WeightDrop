@@ -37,7 +37,7 @@ data class ToolbarWidgetColors(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToolbarWidget(
-    currentRoute: String?,
+    titleRes: Int,
     actionHandler: AppActionHandler,
     colors: ToolbarWidgetColors,
 ) {
@@ -45,7 +45,7 @@ fun ToolbarWidget(
         navigationIcon = {},
         title = {
             Text(
-                text = stringResource(Screen.findScreen(currentRoute).titleRes),
+                text = stringResource(titleRes),
                 style = TextStyle(
                     fontSize = 22.sp,
                     textAlign = TextAlign.Center,
