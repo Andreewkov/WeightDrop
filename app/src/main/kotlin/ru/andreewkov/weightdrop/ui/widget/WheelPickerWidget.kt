@@ -1,5 +1,6 @@
 package ru.andreewkov.weightdrop.ui.widget
 
+import androidx.annotation.FloatRange
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.stopScroll
@@ -24,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.BlendMode
@@ -41,31 +43,24 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import ru.andreewkov.weightdrop.ui.util.inRange
 import ru.andreewkov.weightdrop.ui.util.pxToDp
 
 data class IndexWithScrollTime(
     val index: Int,
-    val scrollMs: Int,
-) {
-
-    companion object {
-        val default = IndexWithScrollTime(0, 0)
-    }
-}
+    val scrollMs: Int = 0,
+)
 
 @Composable
 fun WheelPickerWidget(
     items: List<String>,
     color: Color,
-    scrollIndexFlow: StateFlow<IndexWithScrollTime> = MutableStateFlow(IndexWithScrollTime.default),
-    displayCount: Int = 5,
     modifier: Modifier = Modifier,
+    displayCount: Int = 5,
+    scrollIndexFlow: MutableStateFlow<IndexWithScrollTime> = createDefaultScrollIndexFlow(),
     contentBrush: Brush = createDefaultContentBrush(),
+    @FloatRange(from = 0.1, to = 1.0) textFactor: Float = 0.8f,
     textAlign: TextAlign = TextAlign.Center,
-    onItemSelected: (Int, String) -> Unit = { _, _ -> },
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
     val scrollState = rememberLazyListState()
@@ -82,7 +77,7 @@ fun WheelPickerWidget(
         onPostFling = {
             val index = scrollState.findCurrentIndex(itemHeightPx)
             scrollState.animateScrollToItem(index)
-            onItemSelected(index, items[index])
+            scrollIndexFlow.emit(IndexWithScrollTime(index))
         },
     )
     var isScrolled by remember {
@@ -101,7 +96,7 @@ fun WheelPickerWidget(
                 scrollState.animateScrollBy(
                     value = diffItems * itemHeightPx,
                     animationSpec = tween(
-                        durationMillis = scrollIndex.scrollMs.inRange(400, 2000), // (50 * scrollValue.maxDiff).inRange(400, 2000),
+                        durationMillis = scrollIndex.scrollMs,
                     ),
                 )
                 scrollState.animateScrollToItem(scrollIndex.index)
@@ -115,7 +110,7 @@ fun WheelPickerWidget(
             derivedStateOf {
                 TextStyle(
                     color = color,
-                    fontSize = itemHeightPx.toSp() * 0.8f,
+                    fontSize = itemHeightPx.toSp() * textFactor,
                     textAlign = textAlign,
                 )
             }
@@ -135,6 +130,7 @@ fun WheelPickerWidget(
         state = scrollState,
         userScrollEnabled = !isScrolled,
         contentPadding = PaddingValues(vertical = itemHeightPx.pxToDp() * (displayCount - 1) / 2f),
+        overscrollEffect = null,
         modifier = modifier
             .fillMaxSize()
             .onSizeChanged { size = it }
@@ -149,23 +145,35 @@ fun WheelPickerWidget(
             .nestedScroll(nestedScrollConnection),
     ) {
         items(if (size == IntSize.Zero) emptyList() else items) { item ->
-            Text(
-                text = item,
-                style = textStyle,
+            Box(
                 modifier = itemModifier,
-            )
+            ) {
+                Text(
+                    text = item,
+                    style = textStyle,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center),
+                )
+            }
         }
     }
 }
 
 private fun createDefaultContentBrush(): Brush {
     return Brush.verticalGradient(
-        listOf(
-            Color.Transparent,
-            Color.Black,
-            Color.Transparent,
+        colorStops = arrayOf(
+            0.05f to Color.Transparent,
+            0.4f to Color.Black.copy(alpha = 0.7f),
+            0.5f to Color.Black,
+            0.6f to Color.Black.copy(alpha = 0.7f),
+            0.95f to Color.Transparent,
         ),
     )
+}
+
+private fun createDefaultScrollIndexFlow(): MutableStateFlow<IndexWithScrollTime> {
+    return MutableStateFlow(IndexWithScrollTime(0, 0))
 }
 
 @Composable

@@ -5,6 +5,7 @@ import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
+import kotlin.math.roundToInt
 
 fun String.capitalizeFirstChar(): String {
     return this.replaceFirstChar {
@@ -32,6 +33,10 @@ fun Float.roundToDecimals(): Float {
     return round(this * 10) / 10
 }
 
-fun Float.getDecimals(): Float {
-    return this * 10 % 10
+fun Float.getInteger(): Int {
+    return floorToStep(1f).roundToInt()
+}
+
+fun Float.getFraction(): Int {
+    return (this * 10 % 10).roundToInt()
 }
