@@ -6,6 +6,7 @@ import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.repeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -58,12 +59,13 @@ import java.time.Month
 @Composable
 fun HistoryScreenUI() {
     val viewModel: HistoryViewModel = hiltViewModel()
-    val screenState by viewModel.screenState.collectAsState()
+    val screenState by viewModel.screenState.get().collectAsState()
 
     when (val state = screenState) {
         is HistoryViewModel.ScreenState.History -> {
             HistoryScreenContent(
                 weightings = state.weightings,
+                onCardClick = viewModel::onWeightingClick,
                 onDelete = viewModel::onWeightingDeleted,
             )
         }
@@ -74,6 +76,7 @@ fun HistoryScreenUI() {
 @Composable
 fun HistoryScreenContent(
     weightings: List<Weighting>,
+    onCardClick: (Float, LocalDate) -> Unit,
     onDelete: (Float, LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -119,6 +122,7 @@ fun HistoryScreenContent(
                     },
                     showAnimation = showAnimation && !isAnimationRun,
                     onAnimationRun = ::onAnimationRun,
+                    modifier = Modifier.clickable {  }
                 )
                 if (index != itemSize - 1) {
                     WeightingDivider()
@@ -302,6 +306,7 @@ fun HistoryScreenContentPreview() {
             HistoryScreenContent(
                 weightings = stubWeightingsMediumThird,
                 modifier = Modifier.padding(innerPading),
+                onCardClick = { _, _ -> },
                 onDelete = { _, _ -> },
             )
         }

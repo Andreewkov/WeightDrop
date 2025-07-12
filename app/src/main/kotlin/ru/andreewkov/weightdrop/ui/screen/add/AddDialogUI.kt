@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -27,43 +28,53 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.ui.WeightingFormatter
-import ru.andreewkov.weightdrop.ui.screen.dialog.DatePickerDialogUI
+import ru.andreewkov.weightdrop.ui.screen.AppAction
+import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
+import ru.andreewkov.weightdrop.ui.screen.Route
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
 import ru.andreewkov.weightdrop.ui.widget.ValuePanelWidget
 import ru.andreewkov.weightdrop.ui.widget.WeightWheelPickerWidget
 import java.time.LocalDate
+import javax.inject.Provider
 
 @Composable
-fun AddScreenUI(
-    navController: NavHostController,
+fun AddDialogUI(
+    paramsProvider: Provider<Route.AddDialog.Params>,
+    actionHandler: AppActionHandler,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: AddViewModel = hiltViewModel()
-    val state by viewModel.screenState.collectAsState()
-    val showDateDialog by viewModel.showDateDialog.collectAsState()
+    val state by viewModel.screenState.get().collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.setInitialDate(paramsProvider.get().date)
+    }
 
     Card {
         AddDialogContent(
             date = state.date,
             weight = state.weight,
-            onDateClick = viewModel::onDatePickerDialogRequest,
+            onDateClick = {
+                actionHandler.handleAction(
+                    AppAction.NavigateToRoute(
+                        route = Route.DateDialog(
+                            params = Route.DateDialog.Params(
+                                date = LocalDate.now(),
+                                resultHandler = viewModel,
+                            )
+                        ),
+                    ),
+                )
+            },
             onWeightChanged = viewModel::onWeightChanged,
             onAddClick = {
                 viewModel.onWeightAddClick()
-                navController.popBackStack()
+                actionHandler.handleAction(AppAction.NavigateOnBack)
             },
             modifier = modifier,
-        )
-    }
-
-    if (showDateDialog) {
-        DatePickerDialogUI(
-            onDismissRequest = viewModel::onDatePickerDialogDismissRequest,
-            onConfirmClick = viewModel::onDatePickerDialogConfirm,
         )
     }
 }
@@ -135,7 +146,7 @@ private fun AddDialogContent(
 
 @Composable
 @WeightDropPreview
-private fun AddScreenContentPreview() {
+private fun AddSDialogContentPreview() {
     WeightDropTheme {
         Scaffold { padding ->
             Dialog(
@@ -156,7 +167,7 @@ private fun AddScreenContentPreview() {
 
 @Composable
 @WeightDropPreview
-private fun AddScreenContentEmpty() {
+private fun AddDialogContentEmpty() {
     WeightDropTheme {
         Scaffold { padding ->
             Dialog(

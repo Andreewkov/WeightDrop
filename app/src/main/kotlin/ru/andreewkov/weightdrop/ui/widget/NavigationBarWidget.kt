@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.ui.screen.AppAction
 import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
-import ru.andreewkov.weightdrop.ui.screen.Screen
+import ru.andreewkov.weightdrop.ui.screen.Route
 import ru.andreewkov.weightdrop.ui.screen.appActionHandlerStub
 import ru.andreewkov.weightdrop.ui.util.isPortrait
 
@@ -51,9 +51,9 @@ data class NavigationBarColors(
 @Composable
 fun NavigationBarWidget(
     actionHandler: AppActionHandler,
-    items: List<Screen.NavigationBarItem>,
+    items: List<Route.BarScreen>,
     colors: NavigationBarColors,
-    isNavigationBarItemSelected: (Screen.NavigationBarItem) -> Boolean,
+    isNavigationBarItemSelected: (Route.BarScreen) -> Boolean,
     modifier: Modifier = Modifier,
     showLabels: Boolean = isPortrait(),
 ) {
@@ -92,7 +92,7 @@ fun NavigationBarWidget(
                             .align(Alignment.Center)
                             .clip(RoundedCornerShape(8.dp))
                             .clickable {
-                                actionHandler.handleAction(AppAction.NavigationCLick(item))
+                                actionHandler.handleAction(AppAction.NavigateToRoute(item))
                             }
                             .padding(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -126,13 +126,13 @@ private fun NavigationBarWidgetPreviewOne() {
     MaterialTheme {
         NavigationBarWidget(
             actionHandler = appActionHandlerStub,
-            items = listOf(Screen.Info, Screen.History),
+            items = listOf(Route.InfoScreen, Route.HistoryScreen, Route.SettingsScreen),
             colors = NavigationBarColors(
                 containerColor = MaterialTheme.colorScheme.background,
                 activeItemColor = MaterialTheme.colorScheme.primary,
                 inactiveItemColor = MaterialTheme.colorScheme.secondary,
             ),
-            isNavigationBarItemSelected = { false },
+            isNavigationBarItemSelected = { it is Route.InfoScreen },
         )
     }
 }

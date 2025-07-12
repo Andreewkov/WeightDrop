@@ -6,11 +6,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -19,9 +18,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import ru.andreewkov.weightdrop.ui.screen.Screen
-import ru.andreewkov.weightdrop.ui.screen.Screen.Companion.getStartScreen
-import ru.andreewkov.weightdrop.ui.screen.add.AddScreenUI
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import ru.andreewkov.weightdrop.ui.screen.NavigationRoute
+import ru.andreewkov.weightdrop.ui.screen.Route
+import ru.andreewkov.weightdrop.ui.screen.RouteParams
+import ru.andreewkov.weightdrop.ui.screen.add.AddDialogUI
+import ru.andreewkov.weightdrop.ui.screen.dialog.DatePickerDialogUI
 import ru.andreewkov.weightdrop.ui.screen.history.HistoryScreenUI
 import ru.andreewkov.weightdrop.ui.screen.info.InfoScreenUI
 import ru.andreewkov.weightdrop.ui.screen.settings.SettingsScreenUI
@@ -29,31 +32,29 @@ import ru.andreewkov.weightdrop.ui.widget.NavigationBarColors
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarWidget
 import ru.andreewkov.weightdrop.ui.widget.ToolbarWidget
 import ru.andreewkov.weightdrop.ui.widget.ToolbarWidgetColors
-import ru.andreewkov.weightdrop.util.observe
 
 @Composable
 fun MainAppUI(
     navController: NavHostController = rememberNavController(),
 ) {
     val viewModel: MainAppViewModel = hiltViewModel()
-    var currentNavigationBarItem by remember { mutableStateOf(getStartScreen()) }
+    val toolbarTitleRes by viewModel.currentToolbarTitleRes.get().collectAsState()
+    val selectedNavigationScreenId by viewModel.selectedNavigationScreenId.get().collectAsState()
+    var currentRouteParams: RouteParams? = remember { null }
 
-    LaunchedEffect(Unit) {
-        viewModel.navigationScreen.observe { screen ->
-            if (navController.currentDestination?.route != screen.id) {
-                navController.navigate(screen.id)
-                if (screen is Screen.NavigationBarItem) {
-                    currentNavigationBarItem = screen
-                }
-            }
-        }
-    }
+    Init(
+        viewModel = viewModel,
+        navController = navController,
+        onRouteParamsChanged = { parans ->
+            currentRouteParams = parans
+        },
+    )
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             ToolbarWidget(
-                titleRes = currentNavigationBarItem.titleRes,
+                titleRes = toolbarTitleRes,
                 actionHandler = viewModel,
                 colors = ToolbarWidgetColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -64,33 +65,72 @@ fun MainAppUI(
         bottomBar = {
             NavigationBarWidget(
                 actionHandler = viewModel,
-                items = Screen.getNavigationBarItems(),
+                items = Route.getBarItems(),
                 colors = NavigationBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     activeItemColor = MaterialTheme.colorScheme.secondary,
                     inactiveItemColor = MaterialTheme.colorScheme.primary,
                 ),
-                isNavigationBarItemSelected = { item -> currentNavigationBarItem.id == item.id },
+                isNavigationBarItemSelected = { item -> selectedNavigationScreenId == item.id },
             )
         },
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = viewModel.getStartNavigationScreen().id,
+            startDestination = viewModel.getStartBarItem().id,
             modifier = Modifier.padding(innerPadding),
         ) {
-            composable(route = Screen.Info.id) {
+            composable(route = NavigationRoute.Info.destination) {
                 InfoScreenUI()
             }
-            composable(route = Screen.History.id) {
+            composable(route = NavigationRoute.History.destination) {
                 HistoryScreenUI()
             }
-            composable(route = Screen.Settings.id) {
+            composable(route = NavigationRoute.Settings.destination) {
                 SettingsScreenUI()
             }
-            dialog(route = Screen.Add.id) {
-                AddScreenUI(navController = navController)
+            dialog(route = NavigationRoute.AddDialog.destination) { backStackEntry ->
+                AddDialogUI(
+                    paramsProvider = { currentRouteParams as Route.AddDialog.Params },
+                    actionHandler = viewModel,
+                )
+            }
+            dialog(route = NavigationRoute.DateDialog.destination) { backStackEntry ->
+                DatePickerDialogUI(
+                    paramsProvider = { currentRouteParams as Route.DateDialog.Params },
+                    actionHandler = viewModel,
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun Init(
+    viewModel: MainAppViewModel,
+    navController: NavHostController,
+    onRouteParamsChanged: (RouteParams?) -> Unit,
+) {
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(backStackEntry) {
+        viewModel.onCurrentRouteChanged(backStackEntry?.destination?.route)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationRoute.get().onEach { route ->
+            if (route.id == backStackEntry?.destination?.route) return@onEach
+
+            onRouteParamsChanged(route.params)
+            navController.navigate(route = route.id) {
+                launchSingleTop = true
+                restoreState = true
+            }
+        }.launchIn(coroutineScope)
+
+        viewModel.navigationOnBack.get().onEach { route ->
+            navController.popBackStack()
+        }.launchIn(coroutineScope)
     }
 }

@@ -6,9 +6,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -18,6 +15,7 @@ import ru.andreewkov.weightdrop.domain.settings.GetSettingsUseCase
 import ru.andreewkov.weightdrop.domain.weighting.GetWeightingsUseCase
 import ru.andreewkov.weightdrop.ui.WeightChart
 import ru.andreewkov.weightdrop.ui.WeightChartCalculator
+import ru.andreewkov.weightdrop.util.StateHiddenFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,8 +25,7 @@ class InfoViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val weightChartCalculator = WeightChartCalculator()
-    private val _screenState = MutableStateFlow<ScreenState>(ScreenState.Loading)
-    val screenState: StateFlow<ScreenState> get() = _screenState.asStateFlow()
+    val screenState = StateHiddenFlow<ScreenState>(ScreenState.Loading)
 
     init {
         initData()
@@ -52,13 +49,14 @@ class InfoViewModel @Inject constructor(
 
     private fun handleCombine(weightings: List<Weighting>, settings: Settings) {
         val target = settings.targetWeight
-        _screenState.value = if (weightings.isEmpty()) {
+        val value = if (weightings.isEmpty()) {
             ScreenState.Empty
         } else {
             ScreenState.Chart(
                 weightChart = weightChartCalculator.calculateWeightChart(target, weightings),
             )
         }
+        screenState.update(value)
     }
 
     private fun handleError() {

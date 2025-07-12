@@ -3,12 +3,11 @@ package ru.andreewkov.weightdrop.ui.screen.history
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.weighting.DeleteWeightingUseCase
 import ru.andreewkov.weightdrop.domain.weighting.GetWeightingsUseCase
+import ru.andreewkov.weightdrop.util.StateHiddenFlow
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -18,14 +17,24 @@ class HistoryViewModel @Inject constructor(
     private val deleteWeightingUseCase: DeleteWeightingUseCase,
 ) : ViewModel() {
 
-    private val _screenState: MutableStateFlow<ScreenState> = MutableStateFlow(ScreenState.Loading)
-    val screenState get() = _screenState.asStateFlow()
+    val screenState = StateHiddenFlow<ScreenState>(ScreenState.Loading)
 
     init {
         loadHistory()
     }
 
     fun onWeightingDeleted(value: Float, date: LocalDate) {
+        viewModelScope.launch {
+            deleteWeightingUseCase(
+                Weighting(
+                    value = value,
+                    date = date,
+                ),
+            )
+        }
+    }
+
+    fun onWeightingClick(value: Float, date: LocalDate) {
         viewModelScope.launch {
             deleteWeightingUseCase(
                 Weighting(
@@ -51,7 +60,7 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun handleHistory(weightings: List<Weighting>) {
-        _screenState.value = ScreenState.History(weightings)
+        screenState.update(ScreenState.History(weightings))
     }
 
     sealed class ScreenState {

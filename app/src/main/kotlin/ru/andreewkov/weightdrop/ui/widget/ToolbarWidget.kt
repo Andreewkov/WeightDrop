@@ -27,7 +27,8 @@ import androidx.compose.ui.unit.sp
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.ui.screen.AppAction
 import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
-import ru.andreewkov.weightdrop.ui.screen.Screen
+import ru.andreewkov.weightdrop.ui.screen.Route
+import java.time.LocalDate
 
 data class ToolbarWidgetColors(
     val containerColor: Color,
@@ -69,7 +70,10 @@ fun ToolbarWidget(
                     .padding(horizontal = 16.dp)
                     .size(36.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable { actionHandler.handleAction(AppAction.NavigationCLick(Screen.Add)) }
+                    .clickable {
+                        actionHandler.handleAction(AppAction.NavigateToRoute(Route.AddDialog(Route.AddDialog.Params(
+                            LocalDate.now()))))
+                    }
                     .padding(8.dp),
             )
         },
