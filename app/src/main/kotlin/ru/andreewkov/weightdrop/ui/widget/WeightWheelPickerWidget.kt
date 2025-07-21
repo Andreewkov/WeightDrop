@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,9 +17,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.MutableStateFlow
+import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.drawHorizontalLine
 import ru.andreewkov.weightdrop.ui.util.getFraction
 import ru.andreewkov.weightdrop.ui.util.getInteger
@@ -33,6 +33,7 @@ import kotlin.math.max
 fun WeightWheelPickerWidget(
     color: Color,
     weight: Float,
+    requiredHeight: Dp,
     onWeightChanged: (Float) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -85,16 +86,19 @@ fun WeightWheelPickerWidget(
                 }
             },
     ) {
-        val contentBrush = createBackgroundBrush()
+        val contentBrush = remember { createBackgroundBrush() }
 
         WheelPickerWidget(
             items = integerItems.map { it.toString() },
-            color = Color.White,
+            requiredHeight = requiredHeight,
+            textStyle = TextStyle(
+                color = Color.White,
+                textAlign = TextAlign.End,
+                fontSize = 24.sp,
+            ), // TODO
             displayCount = 7,
             scrollIndexFlow = integerFlow,
             contentBrush = contentBrush,
-            textAlign = TextAlign.End,
-            textFactor = 0.85f,
             modifier = Modifier.weight(1f),
         )
 
@@ -112,11 +116,15 @@ fun WeightWheelPickerWidget(
 
         WheelPickerWidget(
             items = fractionItems.map { it.toString() },
-            color = Color.White,
+            requiredHeight = requiredHeight,
+            textStyle = TextStyle(
+                color = Color.White,
+                textAlign = TextAlign.Start,
+                fontSize = 24.sp,
+            ),
             displayCount = 7,
             scrollIndexFlow = fractionFlow,
             contentBrush = contentBrush,
-            textAlign = TextAlign.Start,
             modifier = Modifier.weight(1f),
         )
     }
@@ -140,7 +148,7 @@ private fun createBackgroundBrush(): Brush {
 @Composable
 @Preview
 private fun WheelPickerWidgetPreviewNumsRect() {
-    MaterialTheme {
+    WeightDropTheme {
         Box(
             modifier = Modifier
                 .width(200.dp)
@@ -149,6 +157,7 @@ private fun WheelPickerWidgetPreviewNumsRect() {
             WeightWheelPickerWidget(
                 color = Color.White,
                 weight = 98.8f,
+                requiredHeight = 200.dp,
                 onWeightChanged = { },
             )
         }

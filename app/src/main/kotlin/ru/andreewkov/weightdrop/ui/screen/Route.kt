@@ -17,7 +17,7 @@ sealed class Route(
         override val navigationRoute: NavigationRoute,
         open val titleRes: Int,
         override val params: RouteParams? = null,
-    ): Route(id, navigationRoute, params)
+    ) : Route(id, navigationRoute, params)
 
     sealed class BarScreen(
         override val id: String,
@@ -31,7 +31,7 @@ sealed class Route(
         override val id: String,
         override val navigationRoute: NavigationRoute,
         override val params: RouteParams? = null,
-    ): Route(id, navigationRoute, params)
+    ) : Route(id, navigationRoute, params)
 
     data object InfoScreen : BarScreen(
         id = "info",

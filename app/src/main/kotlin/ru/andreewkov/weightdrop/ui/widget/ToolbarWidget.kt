@@ -71,8 +71,11 @@ fun ToolbarWidget(
                     .size(36.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .clickable {
-                        actionHandler.handleAction(AppAction.NavigateToRoute(Route.AddDialog(Route.AddDialog.Params(
-                            LocalDate.now()))))
+                        val params = Route.AddDialog.Params(LocalDate.now())
+                        val dialog = Route.AddDialog(params)
+                        actionHandler.handleAction(
+                            AppAction.NavigateToRoute(dialog),
+                        )
                     }
                     .padding(8.dp),
             )

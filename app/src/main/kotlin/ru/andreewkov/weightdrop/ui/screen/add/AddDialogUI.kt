@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -57,14 +56,14 @@ fun AddDialogUI(
         AddDialogContent(
             date = state.date,
             weight = state.weight,
-            onDateClick = {
+            onDateClick = { date ->
                 actionHandler.handleAction(
                     AppAction.NavigateToRoute(
                         route = Route.DateDialog(
                             params = Route.DateDialog.Params(
-                                date = LocalDate.now(),
+                                date = date,
                                 resultHandler = viewModel,
-                            )
+                            ),
                         ),
                     ),
                 )
@@ -83,7 +82,7 @@ fun AddDialogUI(
 private fun AddDialogContent(
     date: LocalDate,
     weight: Float,
-    onDateClick: () -> Unit,
+    onDateClick: (LocalDate) -> Unit,
     onWeightChanged: (Float) -> Unit,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -99,9 +98,10 @@ private fun AddDialogContent(
         WeightWheelPickerWidget(
             color = Color.White,
             weight = weight,
+            requiredHeight = 200.dp,
             onWeightChanged = onWeightChanged,
             modifier = Modifier
-                .heightIn(max = 200.dp)
+                .height(200.dp)
                 .fillMaxWidth(),
         )
 
@@ -113,7 +113,7 @@ private fun AddDialogContent(
             tintColor = MaterialTheme.colorScheme.primary,
             iconPainter = painterResource(R.drawable.ic_calendar),
             onClick = {
-                onDateClick()
+                onDateClick(date)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -133,7 +133,7 @@ private fun AddDialogContent(
                 .fillMaxWidth(),
         ) {
             Text(
-                text = stringResource(R.string.add_dialog_add_button),
+                text = stringResource(R.string.dialog_add_button),
                 color = MaterialTheme.colorScheme.surface,
                 style = TextStyle(
                     fontSize = 16.sp,

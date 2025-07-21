@@ -70,6 +70,7 @@ fun HistoryScreenUI() {
             )
         }
         HistoryViewModel.ScreenState.Loading -> Unit
+        HistoryViewModel.ScreenState.Empty -> Unit
     }
 }
 
@@ -122,7 +123,7 @@ fun HistoryScreenContent(
                     },
                     showAnimation = showAnimation && !isAnimationRun,
                     onAnimationRun = ::onAnimationRun,
-                    modifier = Modifier.clickable {  }
+                    modifier = Modifier.clickable { },
                 )
                 if (index != itemSize - 1) {
                     WeightingDivider()

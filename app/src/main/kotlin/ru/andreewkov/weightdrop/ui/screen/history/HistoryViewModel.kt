@@ -60,12 +60,18 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun handleHistory(weightings: List<Weighting>) {
-        screenState.update(ScreenState.History(weightings))
+        if (weightings.isNotEmpty()) {
+            screenState.update(ScreenState.History(weightings))
+        } else {
+            screenState.update(ScreenState.Empty)
+        }
     }
 
     sealed class ScreenState {
 
         data object Loading : ScreenState()
+
+        data object Empty : ScreenState()
 
         data class History(val weightings: List<Weighting>) : ScreenState()
     }

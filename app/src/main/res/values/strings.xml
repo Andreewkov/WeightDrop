@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">WeightDrop</string>
-    <string name="add_dialog_add_button">Добавить</string>
 
     <string name="screen_info">Обзор</string>
     <string name="screen_history">История</string>
@@ -8,5 +7,6 @@
     <string name="screen_add_date_title">Дата</string>
     <string name="screen_add_button">Добавить</string>
 
+    <string name="dialog_add_button">Добавить</string>
     <string name="dialog_date_picker_button">Выбрать</string>
 </resources>
