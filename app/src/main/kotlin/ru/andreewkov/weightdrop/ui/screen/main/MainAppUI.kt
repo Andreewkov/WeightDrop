@@ -84,7 +84,7 @@ fun MainAppUI(
                 InfoScreenUI()
             }
             composable(route = NavigationRoute.History.destination) {
-                HistoryScreenUI()
+                HistoryScreenUI(actionHandler = viewModel)
             }
             composable(route = NavigationRoute.Settings.destination) {
                 SettingsScreenUI()

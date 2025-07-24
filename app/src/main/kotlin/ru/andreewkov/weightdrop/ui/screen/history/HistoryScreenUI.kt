@@ -50,6 +50,9 @@ import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.ui.WeightingFormatter
 import ru.andreewkov.weightdrop.ui.WeightingHistoryCalculator
+import ru.andreewkov.weightdrop.ui.screen.AppAction
+import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
+import ru.andreewkov.weightdrop.ui.screen.Route
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
 import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumThird
@@ -57,7 +60,9 @@ import java.time.LocalDate
 import java.time.Month
 
 @Composable
-fun HistoryScreenUI() {
+fun HistoryScreenUI(
+    actionHandler: AppActionHandler,
+) {
     val viewModel: HistoryViewModel = hiltViewModel()
     val screenState by viewModel.screenState.get().collectAsState()
 
@@ -65,7 +70,13 @@ fun HistoryScreenUI() {
         is HistoryViewModel.ScreenState.History -> {
             HistoryScreenContent(
                 weightings = state.weightings,
-                onCardClick = viewModel::onWeightingClick,
+                onCardClick = { weight, date ->
+                    actionHandler.handleAction(
+                        AppAction.NavigateToRoute(Route.AddDialog(
+                            params = Route.AddDialog.Params(date)
+                        ))
+                    )
+                },
                 onDelete = viewModel::onWeightingDeleted,
             )
         }
@@ -123,7 +134,12 @@ fun HistoryScreenContent(
                     },
                     showAnimation = showAnimation && !isAnimationRun,
                     onAnimationRun = ::onAnimationRun,
-                    modifier = Modifier.clickable { },
+                    modifier = Modifier.clickable {
+                        onCardClick(
+                            item.weighting.value,
+                            item.weighting.date,
+                        )
+                    },
                 )
                 if (index != itemSize - 1) {
                     WeightingDivider()
