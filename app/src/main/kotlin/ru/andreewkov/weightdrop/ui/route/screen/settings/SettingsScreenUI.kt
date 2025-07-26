@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.screen.settings
+package ru.andreewkov.weightdrop.ui.route.screen.settings
 
 import androidx.compose.runtime.Composable
 

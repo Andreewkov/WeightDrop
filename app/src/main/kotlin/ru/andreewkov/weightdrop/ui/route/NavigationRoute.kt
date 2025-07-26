@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.screen
+package ru.andreewkov.weightdrop.ui.route
 
 enum class NavigationRoute(val destination: String) {
     Info("info"),

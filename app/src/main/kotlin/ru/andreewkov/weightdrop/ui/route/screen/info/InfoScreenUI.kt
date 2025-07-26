@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.screen.info
+package ru.andreewkov.weightdrop.ui.route.screen.info
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

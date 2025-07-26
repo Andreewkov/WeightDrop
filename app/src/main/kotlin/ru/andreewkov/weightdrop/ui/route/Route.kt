@@ -1,7 +1,6 @@
-package ru.andreewkov.weightdrop.ui.screen
+package ru.andreewkov.weightdrop.ui.route
 
 import ru.andreewkov.weightdrop.R
-import ru.andreewkov.weightdrop.ui.screen.Route.AddDialog.Params
 import java.time.LocalDate
 
 interface RouteParams

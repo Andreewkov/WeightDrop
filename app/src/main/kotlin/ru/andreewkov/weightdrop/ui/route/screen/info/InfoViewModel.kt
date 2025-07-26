@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.screen.info
+package ru.andreewkov.weightdrop.ui.route.screen.info
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

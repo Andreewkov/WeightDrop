@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.screen.add
+package ru.andreewkov.weightdrop.ui.route.dialog.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
 import ru.andreewkov.weightdrop.domain.weighting.UpdateWeightingUseCase
-import ru.andreewkov.weightdrop.ui.screen.Route
+import ru.andreewkov.weightdrop.ui.route.Route
 import ru.andreewkov.weightdrop.util.StateHiddenFlow
 import java.time.LocalDate
 import javax.inject.Inject

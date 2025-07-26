@@ -36,10 +36,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.andreewkov.weightdrop.R
-import ru.andreewkov.weightdrop.ui.screen.AppAction
-import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
-import ru.andreewkov.weightdrop.ui.screen.Route
-import ru.andreewkov.weightdrop.ui.screen.appActionHandlerStub
+import ru.andreewkov.weightdrop.ui.route.AppAction
+import ru.andreewkov.weightdrop.ui.route.AppActionHandler
+import ru.andreewkov.weightdrop.ui.route.Route
+import ru.andreewkov.weightdrop.ui.route.appActionHandlerStub
 import ru.andreewkov.weightdrop.ui.util.isPortrait
 
 data class NavigationBarColors(

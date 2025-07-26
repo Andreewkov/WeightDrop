@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.screen.main
+package ru.andreewkov.weightdrop.ui.route.main
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,14 +20,14 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import ru.andreewkov.weightdrop.ui.screen.NavigationRoute
-import ru.andreewkov.weightdrop.ui.screen.Route
-import ru.andreewkov.weightdrop.ui.screen.RouteParams
-import ru.andreewkov.weightdrop.ui.screen.add.AddDialogUI
-import ru.andreewkov.weightdrop.ui.screen.dialog.DatePickerDialogUI
-import ru.andreewkov.weightdrop.ui.screen.history.HistoryScreenUI
-import ru.andreewkov.weightdrop.ui.screen.info.InfoScreenUI
-import ru.andreewkov.weightdrop.ui.screen.settings.SettingsScreenUI
+import ru.andreewkov.weightdrop.ui.route.NavigationRoute
+import ru.andreewkov.weightdrop.ui.route.Route
+import ru.andreewkov.weightdrop.ui.route.RouteParams
+import ru.andreewkov.weightdrop.ui.route.dialog.add.AddDialogUI
+import ru.andreewkov.weightdrop.ui.route.dialog.date.DatePickerDialogUI
+import ru.andreewkov.weightdrop.ui.route.screen.history.HistoryScreenUI
+import ru.andreewkov.weightdrop.ui.route.screen.info.InfoScreenUI
+import ru.andreewkov.weightdrop.ui.route.screen.settings.SettingsScreenUI
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarColors
 import ru.andreewkov.weightdrop.ui.widget.NavigationBarWidget
 import ru.andreewkov.weightdrop.ui.widget.ToolbarWidget

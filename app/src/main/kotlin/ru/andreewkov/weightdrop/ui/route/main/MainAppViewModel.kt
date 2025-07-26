@@ -1,10 +1,10 @@
-package ru.andreewkov.weightdrop.ui.screen.main
+package ru.andreewkov.weightdrop.ui.route.main
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ru.andreewkov.weightdrop.ui.screen.AppAction
-import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
-import ru.andreewkov.weightdrop.ui.screen.Route
+import ru.andreewkov.weightdrop.ui.route.AppAction
+import ru.andreewkov.weightdrop.ui.route.AppActionHandler
+import ru.andreewkov.weightdrop.ui.route.Route
 import ru.andreewkov.weightdrop.util.ShareHiddenFlow
 import ru.andreewkov.weightdrop.util.SignalFlow
 import ru.andreewkov.weightdrop.util.StateHiddenFlow

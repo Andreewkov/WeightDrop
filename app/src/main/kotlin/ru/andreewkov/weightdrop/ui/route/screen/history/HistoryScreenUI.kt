@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.screen.history
+package ru.andreewkov.weightdrop.ui.route.screen.history
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
@@ -50,9 +50,9 @@ import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.ui.WeightingFormatter
 import ru.andreewkov.weightdrop.ui.WeightingHistoryCalculator
-import ru.andreewkov.weightdrop.ui.screen.AppAction
-import ru.andreewkov.weightdrop.ui.screen.AppActionHandler
-import ru.andreewkov.weightdrop.ui.screen.Route
+import ru.andreewkov.weightdrop.ui.route.AppAction
+import ru.andreewkov.weightdrop.ui.route.AppActionHandler
+import ru.andreewkov.weightdrop.ui.route.Route
 import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.ui.util.WeightDropPreview
 import ru.andreewkov.weightdrop.ui.util.stubWeightingsMediumThird

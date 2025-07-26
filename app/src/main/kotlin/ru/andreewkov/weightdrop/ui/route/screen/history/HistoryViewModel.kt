@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.ui.screen.history
+package ru.andreewkov.weightdrop.ui.route.screen.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
