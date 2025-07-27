@@ -6,8 +6,8 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
-import ru.andreewkov.weightdrop.ui.route.main.MainAppUI
-import ru.andreewkov.weightdrop.ui.theme.WeightDropTheme
+import ru.andreewkov.weightdrop.route.main.MainAppUI
+import ru.andreewkov.weightdrop.theme.WeightDropTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
