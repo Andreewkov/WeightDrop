@@ -46,7 +46,7 @@ import ru.andreewkov.weightdrop.widget.WeightChartColor
 @Composable
 fun InfoScreenUI() {
     val viewModel: InfoViewModel = hiltViewModel()
-    val screenState by viewModel.screenState.get().collectAsState()
+    val screenState by viewModel.screenState.collectAsState()
 
     when (val state = screenState) {
         is InfoViewModel.ScreenState.Chart -> {

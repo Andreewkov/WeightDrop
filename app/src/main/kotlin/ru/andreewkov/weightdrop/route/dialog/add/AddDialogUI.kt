@@ -23,34 +23,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.WeightingFormatter
-import ru.andreewkov.weightdrop.route.AppAction
-import ru.andreewkov.weightdrop.route.AppActionHandler
-import ru.andreewkov.weightdrop.route.Route
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.WeightDropPreview
 import ru.andreewkov.weightdrop.widget.ValuePanelWidget
 import ru.andreewkov.weightdrop.widget.WeightWheelPickerWidget
 import java.time.LocalDate
-import javax.inject.Provider
 
 @Composable
 fun AddDialogUI(
-    paramsProvider: Provider<Route.AddDialog.Params>,
-    actionHandler: AppActionHandler,
+    date: LocalDate?,
+    onDateClick: (LocalDate) -> Unit,
+    onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: AddViewModel = hiltViewModel()
-    val state by viewModel.screenState.get().collectAsState()
+    val state by viewModel.screenState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.setInitialDate(paramsProvider.get().date)
+    LaunchedEffect(date) {
+        viewModel.setDate(date ?: LocalDate.now())
     }
 
     Card(
@@ -59,22 +55,11 @@ fun AddDialogUI(
         Content(
             date = state.date,
             weight = state.weight,
-            onDateClick = { date ->
-                actionHandler.handleAction(
-                    AppAction.NavigateToRoute(
-                        route = Route.DateDialog(
-                            params = Route.DateDialog.Params(
-                                date = date,
-                                resultHandler = viewModel,
-                            ),
-                        ),
-                    ),
-                )
-            },
+            onDateClick = onDateClick,
             onWeightChanged = viewModel::onWeightChanged,
             onAddClick = {
                 viewModel.onWeightAddClick()
-                actionHandler.handleAction(AppAction.NavigateOnBack)
+                onButtonClick()
             },
         )
     }

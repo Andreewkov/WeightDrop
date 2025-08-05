@@ -36,10 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.andreewkov.weightdrop.R
-import ru.andreewkov.weightdrop.route.AppAction
-import ru.andreewkov.weightdrop.route.AppActionHandler
 import ru.andreewkov.weightdrop.route.Route
-import ru.andreewkov.weightdrop.route.appActionHandlerStub
 import ru.andreewkov.weightdrop.util.isPortrait
 
 data class NavigationBarColors(
@@ -50,10 +47,10 @@ data class NavigationBarColors(
 
 @Composable
 fun NavigationBarWidget(
-    actionHandler: AppActionHandler,
     items: List<Route.BarScreen>,
     colors: NavigationBarColors,
-    isNavigationBarItemSelected: (Route.BarScreen) -> Boolean,
+    onBarItemClick: (Route.BarScreen) -> Unit,
+    isBarItemSelected: (Route.BarScreen) -> Boolean,
     modifier: Modifier = Modifier,
     showLabels: Boolean = isPortrait(),
 ) {
@@ -75,7 +72,7 @@ fun NavigationBarWidget(
                     modifier = Modifier.weight(1f),
                 ) {
                     val isSelected by remember {
-                        derivedStateOf { isNavigationBarItemSelected(item) }
+                        derivedStateOf { isBarItemSelected(item) }
                     }
                     val color by remember {
                         derivedStateOf {
@@ -91,9 +88,7 @@ fun NavigationBarWidget(
                             .widthIn(min = 80.dp)
                             .align(Alignment.Center)
                             .clip(RoundedCornerShape(8.dp))
-                            .clickable {
-                                actionHandler.handleAction(AppAction.NavigateToRoute(item))
-                            }
+                            .clickable { onBarItemClick(item) }
                             .padding(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -125,14 +120,14 @@ fun NavigationBarWidget(
 private fun NavigationBarWidgetPreviewOne() {
     MaterialTheme {
         NavigationBarWidget(
-            actionHandler = appActionHandlerStub,
             items = listOf(Route.InfoScreen, Route.HistoryScreen, Route.SettingsScreen),
             colors = NavigationBarColors(
                 containerColor = MaterialTheme.colorScheme.background,
                 activeItemColor = MaterialTheme.colorScheme.primary,
                 inactiveItemColor = MaterialTheme.colorScheme.secondary,
             ),
-            isNavigationBarItemSelected = { it is Route.InfoScreen },
+            onBarItemClick = { },
+            isBarItemSelected = { it is Route.InfoScreen },
         )
     }
 }

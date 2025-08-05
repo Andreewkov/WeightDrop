@@ -27,30 +27,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import ru.andreewkov.weightdrop.R
-import ru.andreewkov.weightdrop.route.AppAction
-import ru.andreewkov.weightdrop.route.AppActionHandler
-import ru.andreewkov.weightdrop.route.Route
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.WeightDropPreview
 import ru.andreewkov.weightdrop.widget.DateWheelPickerWidget
 import java.time.LocalDate
-import javax.inject.Provider
 
 @Composable
 fun DatePickerDialogUI(
-    paramsProvider: Provider<Route.DateDialog.Params>,
-    actionHandler: AppActionHandler,
+    date: LocalDate?,
+    onButtonClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
     ) {
         Content(
-            date = paramsProvider.get().date,
-            onButtonClick = { date ->
-                paramsProvider.get().resultHandler.onDateDialogResult(date)
-                actionHandler.handleAction(AppAction.NavigateOnBack)
-            },
+            date = date ?: LocalDate.now(),
+            onButtonClick = { onButtonClick(it) },
         )
     }
 }

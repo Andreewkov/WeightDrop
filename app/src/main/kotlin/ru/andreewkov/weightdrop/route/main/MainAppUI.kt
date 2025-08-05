@@ -20,9 +20,9 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import ru.andreewkov.weightdrop.navigation.Navigation
 import ru.andreewkov.weightdrop.route.NavigationRoute
 import ru.andreewkov.weightdrop.route.Route
-import ru.andreewkov.weightdrop.route.RouteParams
 import ru.andreewkov.weightdrop.route.dialog.add.AddDialogUI
 import ru.andreewkov.weightdrop.route.dialog.date.DatePickerDialogUI
 import ru.andreewkov.weightdrop.route.screen.history.HistoryScreenUI
@@ -38,16 +38,13 @@ fun MainAppUI(
     navController: NavHostController = rememberNavController(),
 ) {
     val viewModel: MainAppViewModel = hiltViewModel()
-    val toolbarTitleRes by viewModel.currentToolbarTitleRes.get().collectAsState()
-    val selectedNavigationScreenId by viewModel.selectedNavigationScreenId.get().collectAsState()
-    var currentRouteParams: RouteParams? = remember { null }
+    val navigation = remember { viewModel.navigation }
+    val toolbarTitleRes by navigation.toolbarTitleRes.collectAsState()
+    val selectedNavigationRoute by navigation.selectedNavigationRoute.collectAsState()
 
     Init(
-        viewModel = viewModel,
+        navigation = navigation,
         navController = navController,
-        onRouteParamsChanged = { parans ->
-            currentRouteParams = parans
-        },
     )
 
     Scaffold(
@@ -55,50 +52,71 @@ fun MainAppUI(
         topBar = {
             ToolbarWidget(
                 titleRes = toolbarTitleRes,
-                actionHandler = viewModel,
                 colors = ToolbarWidgetColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     contentColor = MaterialTheme.colorScheme.primary,
                 ),
+                onAddClick = {
+                    navigation.openAddDialog()
+                }
             )
         },
         bottomBar = {
             NavigationBarWidget(
-                actionHandler = viewModel,
                 items = Route.getBarItems(),
                 colors = NavigationBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     activeItemColor = MaterialTheme.colorScheme.secondary,
                     inactiveItemColor = MaterialTheme.colorScheme.primary,
                 ),
-                isNavigationBarItemSelected = { item -> selectedNavigationScreenId == item.id },
+                onBarItemClick = { barScreen ->
+                    navigation.apply {
+                        when (barScreen) {
+                            Route.InfoScreen -> openInfoScreen()
+                            Route.HistoryScreen -> openHistoryScreen()
+                            Route.SettingsScreen -> openSettingsScreen()
+                        }
+                    }
+                },
+                isBarItemSelected = { item -> selectedNavigationRoute.destination == item.navigationRoute.destination },
             )
         },
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = viewModel.getStartBarItem().id,
+            startDestination = navigation.getStartBarScreen().id,
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(route = NavigationRoute.Info.destination) {
                 InfoScreenUI()
             }
             composable(route = NavigationRoute.History.destination) {
-                HistoryScreenUI(actionHandler = viewModel)
+                HistoryScreenUI(
+                    onCardClick = { date ->
+                        navigation.openAddDialog(date)
+                    }
+                )
             }
             composable(route = NavigationRoute.Settings.destination) {
                 SettingsScreenUI()
             }
             dialog(route = NavigationRoute.AddDialog.destination) { backStackEntry ->
                 AddDialogUI(
-                    paramsProvider = { currentRouteParams as Route.AddDialog.Params },
-                    actionHandler = viewModel,
+                    date = (navigation.currentRouteParams as? Route.AddDialog.Params)?.date,
+                    onDateClick = { date ->
+                        navigation.openDatePickerDialog(date)
+                    },
+                    onButtonClick = {
+                        navigation.back()
+                    }
                 )
             }
             dialog(route = NavigationRoute.DateDialog.destination) { backStackEntry ->
                 DatePickerDialogUI(
-                    paramsProvider = { currentRouteParams as Route.DateDialog.Params },
-                    actionHandler = viewModel,
+                    date = (navigation.currentRouteParams as? Route.DateDialog.Params)?.date,
+                    onButtonClick = { date ->
+                        navigation.back(Route.DateDialog.Result(date))
+                    }
                 )
             }
         }
@@ -107,29 +125,23 @@ fun MainAppUI(
 
 @Composable
 private fun Init(
-    viewModel: MainAppViewModel,
+    navigation: Navigation,
     navController: NavHostController,
-    onRouteParamsChanged: (RouteParams?) -> Unit,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(backStackEntry) {
-        viewModel.onCurrentRouteChanged(backStackEntry?.destination?.route)
-    }
-
     LaunchedEffect(Unit) {
-        viewModel.navigationRoute.get().onEach { route ->
-            if (route.id == backStackEntry?.destination?.route) return@onEach
+        navigation.navigateToRoute.onEach { navigationRoute ->
+            if (navigationRoute.destination == backStackEntry?.destination?.route) return@onEach
 
-            onRouteParamsChanged(route.params)
-            navController.navigate(route = route.id) {
+            navController.navigate(route = navigationRoute.destination) {
                 launchSingleTop = true
                 restoreState = true
             }
         }.launchIn(coroutineScope)
 
-        viewModel.navigationOnBack.get().onEach { route ->
+        navigation.navigateOnBack.onEach {
             navController.popBackStack()
         }.launchIn(coroutineScope)
     }

@@ -4,12 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
 import ru.andreewkov.weightdrop.domain.weighting.UpdateWeightingUseCase
-import ru.andreewkov.weightdrop.route.Route
-import ru.andreewkov.weightdrop.util.StateHiddenFlow
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -17,16 +18,12 @@ import javax.inject.Inject
 class AddViewModel @Inject constructor(
     private val getWeightingUseCase: GetWeightingUseCase,
     private val updateWeightingUseCase: UpdateWeightingUseCase,
-) : ViewModel(), Route.DateDialog.ResultHandler {
+) : ViewModel() {
 
-    val screenState = StateHiddenFlow(createDefaultScreenState())
+    private val _screenState = MutableStateFlow(createDefaultScreenState())
+    val screenState get() = _screenState.asStateFlow()
 
-    fun setInitialDate(date: LocalDate) {
-        updateScreenState(date = date)
-        updateWeight(date)
-    }
-
-    override fun onDateDialogResult(date: LocalDate) {
+    fun setDate(date: LocalDate) {
         updateScreenState(date = date)
         updateWeight(date)
     }
@@ -65,7 +62,7 @@ class AddViewModel @Inject constructor(
         date: LocalDate = screenState.value.date,
         weight: Float = screenState.value.weight,
     ) {
-        screenState.update(ScreenState(date, weight))
+        _screenState.value = ScreenState(date, weight)
     }
 
     data class ScreenState(

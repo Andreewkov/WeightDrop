@@ -5,32 +5,34 @@ import java.time.LocalDate
 
 interface RouteParams
 
+interface RouteResult
+
 sealed class Route(
     open val id: String,
     open val navigationRoute: NavigationRoute,
-    open val params: RouteParams? = null,
 ) {
+
+    open val params: RouteParams? = null
+
+    open fun tryUpdateParams(result: RouteResult?) = Unit
 
     sealed class Screen(
         override val id: String,
         override val navigationRoute: NavigationRoute,
         open val titleRes: Int,
-        override val params: RouteParams? = null,
-    ) : Route(id, navigationRoute, params)
+    ) : Route(id, navigationRoute)
 
     sealed class BarScreen(
         override val id: String,
         override val navigationRoute: NavigationRoute,
         override val titleRes: Int,
         val iconRes: Int,
-        override val params: RouteParams? = null,
-    ) : Screen(id, navigationRoute, titleRes, params)
+    ) : Screen(id, navigationRoute, titleRes)
 
     sealed class Dialog(
         override val id: String,
         override val navigationRoute: NavigationRoute,
-        override val params: RouteParams? = null,
-    ) : Route(id, navigationRoute, params)
+    ) : Route(id, navigationRoute)
 
     data object InfoScreen : BarScreen(
         id = "info",
@@ -53,31 +55,32 @@ sealed class Route(
         iconRes = R.drawable.ic_settings,
     )
 
-    data class AddDialog(
-        override val params: Params,
-    ) : Dialog(
+    data object AddDialog : Dialog(
         id = "add_dialog",
         navigationRoute = NavigationRoute.AddDialog,
-        params = params,
     ) {
+
         data class Params(val date: LocalDate) : RouteParams
+
+        override var params = Params(LocalDate.now())
+
+        override fun tryUpdateParams(result: RouteResult?) {
+            when (result) {
+                is DateDialog.Result -> params = Params(result.date)
+            }
+        }
     }
 
-    data class DateDialog(
-        override val params: Params,
-    ) : Dialog(
+    data object DateDialog : Dialog(
         id = "date_dialog",
         navigationRoute = NavigationRoute.DateDialog,
-        params = params,
     ) {
-        data class Params(
-            val date: LocalDate,
-            val resultHandler: ResultHandler,
-        ) : RouteParams
 
-        interface ResultHandler {
-            fun onDateDialogResult(date: LocalDate)
-        }
+        data class Params(val date: LocalDate) : RouteParams
+
+        data class Result(val date: LocalDate) : RouteResult
+
+        override var params = Params(LocalDate.now())
     }
 
     companion object {

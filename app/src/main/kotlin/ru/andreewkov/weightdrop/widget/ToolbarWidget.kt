@@ -25,10 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.andreewkov.weightdrop.R
-import ru.andreewkov.weightdrop.route.AppAction
-import ru.andreewkov.weightdrop.route.AppActionHandler
-import ru.andreewkov.weightdrop.route.Route
-import java.time.LocalDate
 
 data class ToolbarWidgetColors(
     val containerColor: Color,
@@ -39,8 +35,8 @@ data class ToolbarWidgetColors(
 @Composable
 fun ToolbarWidget(
     titleRes: Int,
-    actionHandler: AppActionHandler,
     colors: ToolbarWidgetColors,
+    onAddClick: () -> Unit,
 ) {
     CenterAlignedTopAppBar(
         navigationIcon = {},
@@ -70,13 +66,7 @@ fun ToolbarWidget(
                     .padding(horizontal = 16.dp)
                     .size(36.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable {
-                        val params = Route.AddDialog.Params(LocalDate.now())
-                        val dialog = Route.AddDialog(params)
-                        actionHandler.handleAction(
-                            AppAction.NavigateToRoute(dialog),
-                        )
-                    }
+                    .clickable { onAddClick() }
                     .padding(8.dp),
             )
         },

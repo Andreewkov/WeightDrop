@@ -50,9 +50,6 @@ import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.WeightingFormatter
 import ru.andreewkov.weightdrop.WeightingHistoryCalculator
-import ru.andreewkov.weightdrop.route.AppAction
-import ru.andreewkov.weightdrop.route.AppActionHandler
-import ru.andreewkov.weightdrop.route.Route
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.WeightDropPreview
 import ru.andreewkov.weightdrop.util.stubWeightingsMediumThird
@@ -61,22 +58,17 @@ import java.time.Month
 
 @Composable
 fun HistoryScreenUI(
-    actionHandler: AppActionHandler,
+    onCardClick: (LocalDate) -> Unit
 ) {
     val viewModel: HistoryViewModel = hiltViewModel()
-    val screenState by viewModel.screenState.get().collectAsState()
+    val screenState by viewModel.screenState.collectAsState()
 
     when (val state = screenState) {
         is HistoryViewModel.ScreenState.History -> {
             Content(
                 weightings = state.weightings,
                 onCardClick = { weight, date ->
-                    actionHandler.handleAction(
-                        AppAction.NavigateToRoute(
-                            Route.AddDialog(
-                            params = Route.AddDialog.Params(date)
-                        ))
-                    )
+                    onCardClick(date)
                 },
                 onDelete = viewModel::onWeightingDeleted,
             )
