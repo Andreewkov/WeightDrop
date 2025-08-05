@@ -47,9 +47,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.R
-import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.WeightingFormatter
 import ru.andreewkov.weightdrop.WeightingHistoryCalculator
+import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.WeightDropPreview
 import ru.andreewkov.weightdrop.util.stubWeightingsMediumThird
@@ -58,13 +58,13 @@ import java.time.Month
 
 @Composable
 fun HistoryScreenUI(
-    onCardClick: (LocalDate) -> Unit
+    onCardClick: (LocalDate) -> Unit,
 ) {
-    val viewModel: HistoryViewModel = hiltViewModel()
+    val viewModel: HistoryScreenViewModel = hiltViewModel()
     val screenState by viewModel.screenState.collectAsState()
 
     when (val state = screenState) {
-        is HistoryViewModel.ScreenState.History -> {
+        is HistoryScreenState.History -> {
             Content(
                 weightings = state.weightings,
                 onCardClick = { weight, date ->
@@ -73,8 +73,8 @@ fun HistoryScreenUI(
                 onDelete = viewModel::onWeightingDeleted,
             )
         }
-        HistoryViewModel.ScreenState.Loading -> Unit
-        HistoryViewModel.ScreenState.Empty -> Unit
+        HistoryScreenState.Loading -> Unit
+        HistoryScreenState.Empty -> Unit
     }
 }
 

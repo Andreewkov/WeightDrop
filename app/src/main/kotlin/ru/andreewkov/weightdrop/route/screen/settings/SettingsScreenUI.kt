@@ -5,3 +5,7 @@ import androidx.compose.runtime.Composable
 @Composable
 fun SettingsScreenUI() {
 }
+
+@Composable
+private fun Content() {
+}

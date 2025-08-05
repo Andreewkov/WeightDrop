@@ -42,7 +42,7 @@ fun AddDialogUI(
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: AddViewModel = hiltViewModel()
+    val viewModel: AddDialogViewModel = hiltViewModel()
     val state by viewModel.screenState.collectAsState()
 
     LaunchedEffect(date) {
@@ -139,7 +139,7 @@ private fun ContentPreview() {
                 onDismissRequest = {},
             ) {
                 Card(
-                    modifier = Modifier.padding(padding)
+                    modifier = Modifier.padding(padding),
                 ) {
                     Content(
                         date = LocalDate.now(),
@@ -163,7 +163,7 @@ private fun ContentEmptyPreview() {
                 onDismissRequest = {},
             ) {
                 Card(
-                    modifier = Modifier.padding(padding)
+                    modifier = Modifier.padding(padding),
                 ) {
                     Content(
                         date = LocalDate.now().minusWeeks(24),

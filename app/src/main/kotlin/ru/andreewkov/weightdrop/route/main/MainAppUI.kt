@@ -58,7 +58,7 @@ fun MainAppUI(
                 ),
                 onAddClick = {
                     navigation.openAddDialog()
-                }
+                },
             )
         },
         bottomBar = {
@@ -94,7 +94,7 @@ fun MainAppUI(
                 HistoryScreenUI(
                     onCardClick = { date ->
                         navigation.openAddDialog(date)
-                    }
+                    },
                 )
             }
             composable(route = NavigationRoute.Settings.destination) {
@@ -108,7 +108,7 @@ fun MainAppUI(
                     },
                     onButtonClick = {
                         navigation.back()
-                    }
+                    },
                 )
             }
             dialog(route = NavigationRoute.DateDialog.destination) { backStackEntry ->
@@ -116,7 +116,7 @@ fun MainAppUI(
                     date = (navigation.currentRouteParams as? Route.DateDialog.Params)?.date,
                     onButtonClick = { date ->
                         navigation.back(Route.DateDialog.Result(date))
-                    }
+                    },
                 )
             }
         }

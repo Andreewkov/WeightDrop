@@ -105,7 +105,7 @@ private fun ContentPreview() {
                 onDismissRequest = {},
             ) {
                 Card(
-                    modifier = Modifier.padding(padding)
+                    modifier = Modifier.padding(padding),
                 ) {
                     Content(
                         date = LocalDate.now(),

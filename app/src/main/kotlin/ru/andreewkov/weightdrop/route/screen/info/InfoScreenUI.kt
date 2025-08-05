@@ -25,9 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import ru.andreewkov.weightdrop.model.ProgressWidgetValue
 import ru.andreewkov.weightdrop.WeightChart
 import ru.andreewkov.weightdrop.WeightChartCalculator
+import ru.andreewkov.weightdrop.model.ProgressWidgetValue
 import ru.andreewkov.weightdrop.theme.Dark
 import ru.andreewkov.weightdrop.theme.Grey
 import ru.andreewkov.weightdrop.theme.Peach
@@ -45,17 +45,17 @@ import ru.andreewkov.weightdrop.widget.WeightChartColor
 
 @Composable
 fun InfoScreenUI() {
-    val viewModel: InfoViewModel = hiltViewModel()
+    val viewModel: InfoScreenViewModel = hiltViewModel()
     val screenState by viewModel.screenState.collectAsState()
 
     when (val state = screenState) {
-        is InfoViewModel.ScreenState.Chart -> {
+        is InfoScreenState.Chart -> {
             Content(
                 weightChart = state.weightChart,
             )
         }
-        InfoViewModel.ScreenState.Empty -> Unit
-        InfoViewModel.ScreenState.Loading -> Loading()
+        InfoScreenState.Empty -> Unit
+        InfoScreenState.Loading -> Loading()
     }
 }
 
@@ -156,8 +156,8 @@ private fun Chart(
     )
 }
 
-context(RowScope)
 @Composable
+context(RowScope)
 private fun ButtonsWeightPortraitContent() {
     Column {
         ResultsWidget(
@@ -170,8 +170,8 @@ private fun ButtonsWeightPortraitContent() {
     }
 }
 
-context(RowScope)
 @Composable
+context(RowScope)
 private fun ButtonsWeightLandscapeContent() {
     ResultsWidget(
         results = createResultsWidgetItems(),

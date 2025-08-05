@@ -11,22 +11,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import ru.andreewkov.weightdrop.WeightChartCalculator
 import ru.andreewkov.weightdrop.domain.model.Settings
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.settings.GetSettingsUseCase
 import ru.andreewkov.weightdrop.domain.weighting.GetWeightingsUseCase
-import ru.andreewkov.weightdrop.WeightChart
-import ru.andreewkov.weightdrop.WeightChartCalculator
 import javax.inject.Inject
 
 @HiltViewModel
-class InfoViewModel @Inject constructor(
+class InfoScreenViewModel @Inject constructor(
     private val getWeightingsUseCase: GetWeightingsUseCase,
     private val getSettingsUseCase: GetSettingsUseCase,
 ) : ViewModel() {
 
     private val weightChartCalculator = WeightChartCalculator()
-    private val _screenState = MutableStateFlow<ScreenState>(ScreenState.Loading)
+    private val _screenState = MutableStateFlow<InfoScreenState>(InfoScreenState.Loading)
     val screenState get() = _screenState.asStateFlow()
 
     init {
@@ -52,9 +51,9 @@ class InfoViewModel @Inject constructor(
     private fun handleCombine(weightings: List<Weighting>, settings: Settings) {
         val target = settings.targetWeight
         val value = if (weightings.isEmpty()) {
-            ScreenState.Empty
+            InfoScreenState.Empty
         } else {
-            ScreenState.Chart(
+            InfoScreenState.Chart(
                 weightChart = weightChartCalculator.calculateWeightChart(target, weightings),
             )
         }
@@ -63,14 +62,5 @@ class InfoViewModel @Inject constructor(
 
     private fun handleError() {
         // TODO
-    }
-
-    sealed class ScreenState {
-
-        data object Loading : ScreenState()
-
-        data object Empty : ScreenState()
-
-        data class Chart(val weightChart: WeightChart) : ScreenState()
     }
 }

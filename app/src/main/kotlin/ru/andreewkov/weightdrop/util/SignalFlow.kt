@@ -8,7 +8,7 @@ typealias SignalFlow = SharedFlow<Signal>
 
 typealias MutableSignalFlow = MutableSharedFlow<Signal>
 
-fun MutableSignalFlow() : MutableSignalFlow {
+fun MutableSignalFlow(): MutableSignalFlow {
     return MutableSharedFlow()
 }
 

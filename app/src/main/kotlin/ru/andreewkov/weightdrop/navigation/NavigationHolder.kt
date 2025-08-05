@@ -26,7 +26,7 @@ class NavigationHolder @Inject constructor() : Navigation {
     private val _navigateOnBack = MutableSignalFlow()
     override val navigateOnBack get() = _navigateOnBack.asSignalFlow()
 
-    private val _toolbarTitleRes  =  MutableStateFlow(getStartBarScreen().titleRes)
+    private val _toolbarTitleRes = MutableStateFlow(getStartBarScreen().titleRes)
     override val toolbarTitleRes get() = _toolbarTitleRes.asStateFlow()
 
     private val _selectedNavigationRoute = MutableStateFlow(getStartBarScreen().navigationRoute)
@@ -35,7 +35,7 @@ class NavigationHolder @Inject constructor() : Navigation {
     private var _currentRouteParams: RouteParams? = null
     override val currentRouteParams get() = _currentRouteParams
 
-    private val routeStack= ArrayDeque<Route>()
+    private val routeStack = ArrayDeque<Route>()
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     init {
@@ -102,7 +102,6 @@ class NavigationHolder @Inject constructor() : Navigation {
         route.tryUpdateParams(result)
         _currentRouteParams = route.params
     }
-
 
     private fun Route.putToStack() = routeStack.addLast(this)
 

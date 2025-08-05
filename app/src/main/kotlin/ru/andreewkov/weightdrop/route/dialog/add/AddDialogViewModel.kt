@@ -6,7 +6,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
@@ -15,7 +14,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class AddViewModel @Inject constructor(
+class AddDialogViewModel @Inject constructor(
     private val getWeightingUseCase: GetWeightingUseCase,
     private val updateWeightingUseCase: UpdateWeightingUseCase,
 ) : ViewModel() {
@@ -51,8 +50,8 @@ class AddViewModel @Inject constructor(
         }
     }
 
-    private fun createDefaultScreenState(): ScreenState {
-        return ScreenState(
+    private fun createDefaultScreenState(): AddDialogState {
+        return AddDialogState(
             date = LocalDate.now(),
             weight = 0f,
         )
@@ -62,11 +61,6 @@ class AddViewModel @Inject constructor(
         date: LocalDate = screenState.value.date,
         weight: Float = screenState.value.weight,
     ) {
-        _screenState.value = ScreenState(date, weight)
+        _screenState.value = AddDialogState(date, weight)
     }
-
-    data class ScreenState(
-        val date: LocalDate,
-        val weight: Float,
-    )
 }

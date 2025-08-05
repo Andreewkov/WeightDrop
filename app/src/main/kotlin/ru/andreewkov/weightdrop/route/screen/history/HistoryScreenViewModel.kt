@@ -13,12 +13,12 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class HistoryViewModel @Inject constructor(
+class HistoryScreenViewModel @Inject constructor(
     private val getWeightingsUseCase: GetWeightingsUseCase,
     private val deleteWeightingUseCase: DeleteWeightingUseCase,
 ) : ViewModel() {
 
-    private val _screenState = MutableStateFlow<ScreenState>(ScreenState.Loading)
+    private val _screenState = MutableStateFlow<HistoryScreenState>(HistoryScreenState.Loading)
     val screenState get() = _screenState.asStateFlow()
 
     init {
@@ -63,18 +63,9 @@ class HistoryViewModel @Inject constructor(
 
     private fun handleHistory(weightings: List<Weighting>) {
         _screenState.value = if (weightings.isNotEmpty()) {
-             ScreenState.History(weightings)
+            HistoryScreenState.History(weightings)
         } else {
-            ScreenState.Empty
+            HistoryScreenState.Empty
         }
-    }
-
-    sealed class ScreenState {
-
-        data object Loading : ScreenState()
-
-        data object Empty : ScreenState()
-
-        data class History(val weightings: List<Weighting>) : ScreenState()
     }
 }
