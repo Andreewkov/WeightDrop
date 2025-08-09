@@ -156,8 +156,8 @@ private fun Chart(
     )
 }
 
-@Composable
 context(RowScope)
+@Composable
 private fun ButtonsWeightPortraitContent() {
     Column {
         ResultsWidget(
@@ -170,8 +170,8 @@ private fun ButtonsWeightPortraitContent() {
     }
 }
 
-@Composable
 context(RowScope)
+@Composable
 private fun ButtonsWeightLandscapeContent() {
     ResultsWidget(
         results = createResultsWidgetItems(),
