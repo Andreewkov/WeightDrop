@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -74,19 +75,23 @@ private fun Content(
 
         Spacer(modifier = Modifier.size(24.dp))
 
+        val isButtonEnabled by remember {
+            derivedStateOf { !currentDate.isAfter(LocalDate.now()) }
+        }
         Button(
             onClick = { onButtonClick(currentDate) },
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors().copy(
                 containerColor = MaterialTheme.colorScheme.secondary,
+                disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
             ),
+            enabled = isButtonEnabled,
             modifier = Modifier
                 .height(42.dp)
                 .fillMaxWidth(),
         ) {
             Text(
                 text = stringResource(R.string.dialog_date_picker_button),
-                color = MaterialTheme.colorScheme.surface,
                 style = TextStyle(
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.onSecondary,
