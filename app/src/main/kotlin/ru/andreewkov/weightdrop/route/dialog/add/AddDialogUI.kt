@@ -7,13 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,15 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.WeightingFormatter
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.WeightDropPreview
+import ru.andreewkov.weightdrop.widget.AppButton
 import ru.andreewkov.weightdrop.widget.ValuePanelWidget
 import ru.andreewkov.weightdrop.widget.WeightWheelPickerWidget
 import java.time.LocalDate
@@ -108,25 +103,10 @@ private fun Content(
 
         Spacer(modifier = Modifier.size(24.dp))
 
-        Button(
+        AppButton(
+            text = stringResource(R.string.dialog_add_button),
             onClick = onAddClick,
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors().copy(
-                containerColor = MaterialTheme.colorScheme.secondary,
-            ),
-            modifier = Modifier
-                .height(42.dp)
-                .fillMaxWidth(),
-        ) {
-            Text(
-                text = stringResource(R.string.dialog_add_button),
-                color = MaterialTheme.colorScheme.surface,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onSecondary,
-                ),
-            )
-        }
+        )
     }
 }
 

@@ -9,4 +9,8 @@
 
     <string name="dialog_add_button">Добавить</string>
     <string name="dialog_date_picker_button">Выбрать</string>
+
+    <string name="settings_height_title">Рост</string>
+    <string name="settings_start_weight_title">Рост</string>
+    <string name="settings_target_weight_title">Рост</string>
 </resources>

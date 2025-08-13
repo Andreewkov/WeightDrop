@@ -30,6 +30,8 @@ import androidx.compose.ui.window.Dialog
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.WeightDropPreview
+import ru.andreewkov.weightdrop.util.drawHorizontalWheelLines
+import ru.andreewkov.weightdrop.widget.AppButton
 import ru.andreewkov.weightdrop.widget.DateWheelPickerWidget
 import java.time.LocalDate
 
@@ -67,9 +69,10 @@ private fun Content(
             date = date,
             color = Color.White, // TODO
             onDateChanged = { currentDate = it },
-            requiredHeight = 140.dp,
+            requiredHeight = 200.dp,
             modifier = Modifier
-                .height(140.dp)
+                .height(200.dp)
+                .drawHorizontalWheelLines(7)
                 .padding(horizontal = 12.dp),
         )
 
@@ -78,26 +81,11 @@ private fun Content(
         val isButtonEnabled by remember {
             derivedStateOf { !currentDate.isAfter(LocalDate.now()) }
         }
-        Button(
+        AppButton(
+            text = stringResource(R.string.dialog_date_picker_button),
+            isEnabled = isButtonEnabled,
             onClick = { onButtonClick(currentDate) },
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors().copy(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
-            ),
-            enabled = isButtonEnabled,
-            modifier = Modifier
-                .height(42.dp)
-                .fillMaxWidth(),
-        ) {
-            Text(
-                text = stringResource(R.string.dialog_date_picker_button),
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onSecondary,
-                ),
-            )
-        }
+        )
     }
 }
 

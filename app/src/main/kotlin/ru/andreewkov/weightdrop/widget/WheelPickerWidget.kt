@@ -41,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import ru.andreewkov.weightdrop.util.createWheelBrush
+import ru.andreewkov.weightdrop.util.drawHorizontalWheelLines
 
 data class IndexWithScrollTime(
     val index: Int,
@@ -54,8 +56,7 @@ fun WheelPickerWidget(
     textStyle: TextStyle,
     scrollIndexFlow: MutableStateFlow<IndexWithScrollTime>,
     modifier: Modifier = Modifier,
-    displayCount: Int = 5,
-    contentBrush: Brush = createDefaultContentBrush(),
+    displayCount: Int = 7,
 ) {
     val scrollIndex by scrollIndexFlow.collectAsState()
     val scrollState = rememberLazyListState(
@@ -105,6 +106,7 @@ fun WheelPickerWidget(
             .height(requiredHeight / displayCount)
     }
 
+    val contentBrush = remember { createWheelBrush(displayCount) }
     LazyColumn(
         state = scrollState,
         userScrollEnabled = !isScrolled,
@@ -179,6 +181,21 @@ private fun LazyListState.findCurrentIndex(itemHeight: Float): Int {
     } else {
         firstVisibleItemIndex
     }
+}
+
+private fun createBackgroundBrush(): Brush {
+    return Brush.verticalGradient(
+        colorStops = arrayOf(
+            0.05f to Color.Transparent,
+            0.15f to Color(0x4D000000),
+            1f / 7 * 2.7f to Color(0x66000000),
+            1f / 7 * 2.71f to Color.Black,
+            1f / 7 * 4.311f to Color.Black,
+            1f / 7 * 4.3f to Color(0x66000000),
+            0.85f to Color(0x4D000000),
+            0.95f to Color.Transparent,
+        ),
+    )
 }
 
 @Composable

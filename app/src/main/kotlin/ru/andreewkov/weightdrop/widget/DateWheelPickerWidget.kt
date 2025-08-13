@@ -104,7 +104,7 @@ fun DateWheelPickerWidget(
         TextStyle(
             color = color,
             textAlign = TextAlign.Center,
-            fontSize = 22.sp,
+            fontSize = 20.sp,
         )
     }
 

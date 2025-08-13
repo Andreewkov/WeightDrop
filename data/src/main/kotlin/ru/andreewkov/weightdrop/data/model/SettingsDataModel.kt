@@ -1,6 +1,7 @@
 package ru.andreewkov.weightdrop.data.model
 
 data class SettingsDataModel(
-    val targetWeight: Float?,
     val height: Int?,
+    val startWeight: Float?,
+    val targetWeight: Float?,
 )

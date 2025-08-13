@@ -18,8 +18,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import ru.andreewkov.weightdrop.model.SettingsUpdateValue
 import ru.andreewkov.weightdrop.navigation.Navigation
 import ru.andreewkov.weightdrop.route.NavigationRoute
 import ru.andreewkov.weightdrop.route.Route
@@ -98,7 +100,12 @@ fun MainAppUI(
                 )
             }
             composable(route = NavigationRoute.Settings.destination) {
-                SettingsScreenUI()
+                SettingsScreenUI(
+                    valueUpdatedFlow = MutableStateFlow(SettingsUpdateValue.HeightValue(1)),
+                    onSettingItemClick = {
+
+                    }
+                )
             }
             dialog(route = NavigationRoute.AddDialog.destination) { backStackEntry ->
                 AddDialogUI(

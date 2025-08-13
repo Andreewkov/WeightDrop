@@ -2,8 +2,10 @@ package ru.andreewkov.weightdrop.widget
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.MutableStateFlow
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
+import ru.andreewkov.weightdrop.util.createWheelBrush
 import ru.andreewkov.weightdrop.util.drawHorizontalLine
+import ru.andreewkov.weightdrop.util.drawHorizontalWheelLines
 import ru.andreewkov.weightdrop.util.getFraction
 import ru.andreewkov.weightdrop.util.getInteger
 import ru.andreewkov.weightdrop.util.inRange
@@ -34,8 +38,8 @@ fun WeightWheelPickerWidget(
     color: Color,
     weight: Float,
     requiredHeight: Dp,
-    onWeightChanged: (Float) -> Unit,
     modifier: Modifier = Modifier,
+    onWeightChanged: (Float) -> Unit = { },
 ) {
     val integerItems = (0..199).toList()
     val fractionItems = (0..9).toList()
@@ -68,26 +72,9 @@ fun WeightWheelPickerWidget(
     }
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .drawWithCache {
-                val itemHeight = size.height / 7f
-                val topY = itemHeight * 2.7f
-                val bottomY = itemHeight * 4.3f
-                onDrawWithContent {
-                    drawContent()
-                    drawHorizontalLine(
-                        color = color,
-                        y = topY,
-                    )
-                    drawHorizontalLine(
-                        color = color,
-                        y = bottomY,
-                    )
-                }
-            },
+            .fillMaxSize()
+            .drawHorizontalWheelLines(7),
     ) {
-        val contentBrush = remember { createBackgroundBrush() }
-
         WheelPickerWidget(
             items = integerItems.map { it.toString() },
             requiredHeight = requiredHeight,
@@ -98,7 +85,6 @@ fun WeightWheelPickerWidget(
             ), // TODO
             displayCount = 7,
             scrollIndexFlow = integerFlow,
-            contentBrush = contentBrush,
             modifier = Modifier.weight(1f),
         )
 
@@ -124,7 +110,6 @@ fun WeightWheelPickerWidget(
             ),
             displayCount = 7,
             scrollIndexFlow = fractionFlow,
-            contentBrush = contentBrush,
             modifier = Modifier.weight(1f),
         )
     }
@@ -158,7 +143,6 @@ private fun WheelPickerWidgetPreviewNumsRect() {
                 color = Color.White,
                 weight = 98.8f,
                 requiredHeight = 200.dp,
-                onWeightChanged = { },
             )
         }
     }

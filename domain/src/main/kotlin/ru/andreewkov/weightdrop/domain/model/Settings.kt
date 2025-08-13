@@ -5,12 +5,13 @@ import kotlinx.coroutines.flow.map
 import ru.andreewkov.weightdrop.data.model.SettingsDataModel
 
 data class Settings(
-    val targetWeight: Float?,
     val height: Int?,
+    val startWeight: Float?,
+    val targetWeight: Float?,
 )
 
 internal fun SettingsDataModel.toSettings(): Settings {
-    return Settings(targetWeight, height)
+    return Settings(height, startWeight, targetWeight)
 }
 
 internal fun Flow<SettingsDataModel>.toSettingsFlow(): Flow<Settings> {

@@ -6,11 +6,11 @@ import ru.andreewkov.weightdrop.domain.model.Settings
 import ru.andreewkov.weightdrop.domain.model.toSettingsFlow
 import javax.inject.Inject
 
-class GetSettingsUseCase @Inject constructor(
+class ObserveSettingsUseCase @Inject constructor(
     private val settingsRepository: SettingsRepository,
 ) {
 
     operator fun invoke(): Result<Flow<Settings>> {
-        return settingsRepository.getSettings().map { it.toSettingsFlow() }
+        return settingsRepository.observeSettings().map { it.toSettingsFlow() }
     }
 }
