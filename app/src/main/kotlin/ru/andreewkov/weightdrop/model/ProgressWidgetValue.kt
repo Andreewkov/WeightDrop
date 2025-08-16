@@ -3,14 +3,14 @@ package ru.andreewkov.weightdrop.model
 import ru.andreewkov.weightdrop.util.roundToDecimals
 
 data class ProgressWidgetValue(
+    val start: Float,
     val target: Float,
-    val max: Float,
     val current: Float,
 ) {
 
-    fun isNegative() = current > max
+    fun isNegative() = current > start
 
-    fun getDiff() = (current - max).roundToDecimals()
+    fun getDiff() = (start - current).roundToDecimals()
 
-    fun getFactor() = (max - current) / (max - target)
+    fun getFactor() = (start - current) / (start - target)
 }

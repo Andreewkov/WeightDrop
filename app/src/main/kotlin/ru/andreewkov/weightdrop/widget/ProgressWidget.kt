@@ -64,12 +64,6 @@ fun ProgressWidget(
     val lineWidth by remember {
         derivedStateOf { size.width / 8f }
     }
-    val primaryColor = remember {
-        if (value.isNegative()) color.negativePrimaryColor else color.positivePrimaryColor
-    }
-    val secondaryColor = remember {
-        if (value.isNegative()) color.negativeSecondaryColor else color.positiveSecondaryColor
-    }
     Box(
         modifier = modifier
             .aspectRatio(1f)
@@ -93,7 +87,7 @@ fun ProgressWidget(
                 .background(color.inactiveColor)
                 .drawWithCache {
                     val progressBrush = createProgressBrush(
-                        color = primaryColor,
+                        color = getPrimaryColor(value, color),
                         width = size.width / 16f,
                         ratio = 6f,
                     )
@@ -107,10 +101,10 @@ fun ProgressWidget(
             Text(
                 text = value.getDiff().roundToDecimals().absoluteValue.toString(),
                 style = TextStyle(
-                    color = primaryColor,
+                    color = getPrimaryColor(value, color),
                     fontSize = 28.sp,
                     shadow = Shadow(
-                        color = secondaryColor,
+                        color = getSecondaryColor(value, color),
                         offset = Offset(2f, 2f),
                         blurRadius = 2f,
                     ),
@@ -182,6 +176,22 @@ private fun createProgressBrush(
     )
 }
 
+private fun getPrimaryColor(value: ProgressWidgetValue, color: ProgressWidgetColor): Color {
+    return if (value.isNegative()) {
+        color.negativePrimaryColor
+    } else {
+        color.positivePrimaryColor
+    }
+}
+
+private fun getSecondaryColor(value: ProgressWidgetValue, color: ProgressWidgetColor): Color {
+    return if (value.isNegative()) {
+        color.negativeSecondaryColor
+    } else {
+        color.positiveSecondaryColor
+    }
+}
+
 @Preview
 @Composable
 private fun ProgressWidgetPreview() {
@@ -201,8 +211,8 @@ private fun ProgressWidgetPreview() {
                 negativeSecondaryColor = Color(0xFFAD2E0D),
             ),
             value = ProgressWidgetValue(
+                start = 90.2f,
                 target = 80f,
-                max = 90.2f,
                 current = 84.4f,
             ),
             modifier = Modifier.size(150.dp),

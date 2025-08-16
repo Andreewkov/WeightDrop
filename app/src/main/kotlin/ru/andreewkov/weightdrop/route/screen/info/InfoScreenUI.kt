@@ -15,11 +15,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -77,14 +80,13 @@ private fun Content(
     weightChart: WeightChart,
     modifier: Modifier = Modifier,
 ) {
-    val maxWeight by remember {
-        derivedStateOf {
-            weightChart.weightPoints.maxBy { it.weightValue ?: -1f }.weightValue
-        }
-    }
-    val currentWeight by remember {
-        derivedStateOf {
-            weightChart.weightPoints.last { it.weightValue != null }.weightValue
+    var startWeight by remember { mutableStateOf(0f) }
+    var currentWeight by remember { mutableStateOf(0f) }
+
+    LaunchedEffect(weightChart) {
+        weightChart.weightPoints.run {
+            startWeight = requireNotNull(first { it.weightValue != null }.weightValue)
+            currentWeight = requireNotNull(last { it.weightValue != null }.weightValue)
         }
     }
     Column(
@@ -93,9 +95,9 @@ private fun Content(
             .fillMaxSize(),
     ) {
         ResultsPanel(
+            start = startWeight,
             target = weightChart.scope.targetWeight ?: weightChart.scope.bottomWeight,
-            max = requireNotNull(maxWeight),
-            current = requireNotNull(currentWeight),
+            current = currentWeight,
         )
         Spacer(modifier = Modifier.size(10.dp))
         Chart(weightChart)
@@ -104,8 +106,8 @@ private fun Content(
 
 @Composable
 private fun ResultsPanel(
+    start: Float,
     target: Float,
-    max: Float,
     current: Float,
 ) {
     Row(
@@ -125,8 +127,8 @@ private fun ResultsPanel(
                 negativeSecondaryColor = Color(0xFFAD2E0D),
             ),
             value = ProgressWidgetValue(
+                start = start,
                 target = target,
-                max = max,
                 current = current,
             ),
             modifier = Modifier.fillMaxHeight(),
