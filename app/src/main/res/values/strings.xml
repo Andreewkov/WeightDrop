@@ -4,13 +4,15 @@
     <string name="screen_info">Обзор</string>
     <string name="screen_history">История</string>
     <string name="screen_settings">Настройки</string>
-    <string name="screen_add_date_title">Дата</string>
-    <string name="screen_add_button">Добавить</string>
-
-    <string name="dialog_add_button">Добавить</string>
-    <string name="dialog_date_picker_button">Выбрать</string>
 
     <string name="settings_height_title">Рост</string>
-    <string name="settings_start_weight_title">Рост</string>
-    <string name="settings_target_weight_title">Рост</string>
+    <string name="settings_start_weight_title">Начальный вес</string>
+    <string name="settings_target_weight_title">Желаемый вес</string>
+
+    <string name="dialog_add_title">Добавить</string>
+    <string name="dialog_add_date_title">Дата</string>
+    <string name="dialog_add_button">Добавить</string>
+
+    <string name="dialog_date_picker_title">Дата</string>
+    <string name="dialog_date_picker_button">Выбрать</string>
 </resources>

@@ -11,6 +11,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,6 +35,7 @@ import ru.andreewkov.weightdrop.util.WeightDropPreview
 import ru.andreewkov.weightdrop.util.drawHorizontalWheelLines
 import ru.andreewkov.weightdrop.widget.AppButton
 import ru.andreewkov.weightdrop.widget.DateWheelPickerWidget
+import ru.andreewkov.weightdrop.widget.DialogContainer
 import java.time.LocalDate
 
 @Composable
@@ -43,6 +46,9 @@ fun DatePickerDialogUI(
 ) {
     Card(
         modifier = modifier,
+        colors = cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        )
     ) {
         Content(
             date = date ?: LocalDate.now(),
@@ -57,13 +63,12 @@ private fun Content(
     onButtonClick: (LocalDate) -> Unit,
 ) {
     var currentDate by remember { mutableStateOf(date) }
-    Column(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .padding(
-                horizontal = 32.dp,
-                vertical = 16.dp,
-            ),
+
+    DialogContainer(
+        titleRes = R.string.dialog_date_picker_title,
+        buttonTextRes = R.string.dialog_date_picker_button,
+        onButtonClick = { onButtonClick(currentDate) },
+        isButtonEnabled = { !currentDate.isAfter(LocalDate.now()) }
     ) {
         DateWheelPickerWidget(
             date = date,
@@ -74,17 +79,6 @@ private fun Content(
                 .height(200.dp)
                 .drawHorizontalWheelLines(7)
                 .padding(horizontal = 12.dp),
-        )
-
-        Spacer(modifier = Modifier.size(24.dp))
-
-        val isButtonEnabled by remember {
-            derivedStateOf { !currentDate.isAfter(LocalDate.now()) }
-        }
-        AppButton(
-            text = stringResource(R.string.dialog_date_picker_button),
-            isEnabled = isButtonEnabled,
-            onClick = { onButtonClick(currentDate) },
         )
     }
 }
@@ -99,6 +93,9 @@ private fun ContentPreview() {
             ) {
                 Card(
                     modifier = Modifier.padding(padding),
+                    colors = cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    )
                 ) {
                     Content(
                         date = LocalDate.now(),

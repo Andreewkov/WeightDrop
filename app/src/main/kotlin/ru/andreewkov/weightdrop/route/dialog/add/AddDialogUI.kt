@@ -1,13 +1,12 @@
 package ru.andreewkov.weightdrop.route.dialog.add
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -25,7 +24,7 @@ import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.WeightingFormatter
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.WeightDropPreview
-import ru.andreewkov.weightdrop.widget.AppButton
+import ru.andreewkov.weightdrop.widget.DialogContainer
 import ru.andreewkov.weightdrop.widget.ValuePanelWidget
 import ru.andreewkov.weightdrop.widget.WeightWheelPickerWidget
 import java.time.LocalDate
@@ -46,6 +45,9 @@ fun AddDialogUI(
 
     Card(
         modifier = modifier,
+        colors = cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        )
     ) {
         Content(
             date = state.date,
@@ -68,13 +70,9 @@ private fun Content(
     onWeightChanged: (Float) -> Unit,
     onAddClick: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .padding(
-                horizontal = 32.dp,
-                vertical = 16.dp,
-            ),
+    DialogContainer(
+        buttonTextRes = R.string.dialog_add_button,
+        onButtonClick = { onAddClick() },
     ) {
         WeightWheelPickerWidget(
             color = Color.White,
@@ -89,7 +87,7 @@ private fun Content(
         Spacer(modifier = Modifier.size(12.dp))
 
         ValuePanelWidget(
-            title = stringResource(R.string.screen_add_date_title),
+            title = stringResource(R.string.dialog_add_date_title),
             text = WeightingFormatter.formatDateLong(date),
             tintColor = MaterialTheme.colorScheme.primary,
             iconPainter = painterResource(R.drawable.ic_calendar),
@@ -99,13 +97,6 @@ private fun Content(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(54.dp),
-        )
-
-        Spacer(modifier = Modifier.size(24.dp))
-
-        AppButton(
-            text = stringResource(R.string.dialog_add_button),
-            onClick = onAddClick,
         )
     }
 }
@@ -120,6 +111,9 @@ private fun ContentPreview() {
             ) {
                 Card(
                     modifier = Modifier.padding(padding),
+                    colors = cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    )
                 ) {
                     Content(
                         date = LocalDate.now(),
@@ -144,6 +138,9 @@ private fun ContentEmptyPreview() {
             ) {
                 Card(
                     modifier = Modifier.padding(padding),
+                    colors = cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    )
                 ) {
                     Content(
                         date = LocalDate.now().minusWeeks(24),

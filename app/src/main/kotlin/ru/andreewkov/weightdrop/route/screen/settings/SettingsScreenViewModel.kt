@@ -70,16 +70,16 @@ class SettingsScreenViewModel @Inject constructor(
                     iconRes = R.drawable.ic_man,
                 ),
                 SettingItem(
-                    type = SettingsItemType.Height,
-                    titleRes = R.string.settings_height_title,
+                    type = SettingsItemType.StartWeight,
+                    titleRes = R.string.settings_start_weight_title,
                     text = height?.toString() ?: "-",
-                    iconRes = R.drawable.ic_man,
+                    iconRes = R.drawable.ic_floor_scales,
                 ),
                 SettingItem(
-                    type = SettingsItemType.Height,
-                    titleRes = R.string.settings_height_title,
+                    type = SettingsItemType.TargetWeight,
+                    titleRes = R.string.settings_target_weight_title,
                     text = height?.toString() ?: "-",
-                    iconRes = R.drawable.ic_man,
+                    iconRes = R.drawable.ic_weight_scales,
                 ),
             ),
         )

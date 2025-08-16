@@ -36,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -91,11 +92,10 @@ fun Panel(
     val textMeasurer = rememberTextMeasurer()
     val textLayoutResult: TextLayoutResult = textMeasurer.measure(
         text = AnnotatedString(title),
-        style =
-            TextStyle(
-                color = tintColor,
-                textAlign = TextAlign.Center,
-            ),
+        style = TextStyle(
+            color = tintColor,
+            textAlign = TextAlign.Center,
+        ),
     )
     var textSize by remember { mutableStateOf(IntSize.Zero) }
     val textBoxRectSize by with(LocalDensity.current) {
@@ -108,7 +108,7 @@ fun Panel(
     val textLeftOffset = 8.dp.dpToPx()
     Box(modifier = modifier) {
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(vertical = (textLayoutResult.size.height / 2f).pxToDp() - 1.dp)
                 .drawWithContent {
@@ -124,7 +124,7 @@ fun Panel(
                 .clip(RoundedCornerShape(8.dp))
                 .clickable(onClick = onClick)
                 .border(
-                    width = 2.dp,
+                    width = 1.dp,
                     color = tintColor,
                     shape = RoundedCornerShape(8.dp),
                 ),
@@ -135,6 +135,7 @@ fun Panel(
                     color = tintColor,
                     textAlign = TextAlign.Center,
                     fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
                 ),
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.align(Alignment.Center),
@@ -145,7 +146,8 @@ fun Panel(
             style = TextStyle(
                 color = tintColor,
                 textAlign = TextAlign.Center,
-                fontSize = 14.sp,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
             ),
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier
@@ -166,7 +168,7 @@ private fun ValuePanelWidgetPreview() {
             modifier = Modifier
                 .padding(5.dp)
                 .width(240.dp)
-                .height(48.dp),
+                .height(60.dp),
             iconPainter = painterResource(R.drawable.ic_calendar),
         )
     }
