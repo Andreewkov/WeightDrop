@@ -15,7 +15,7 @@ class HistoryScreenViewModel @Inject constructor(
     private val getWeightingsUseCase: GetWeightingsUseCase,
     private val deleteWeightingUseCase: DeleteWeightingUseCase,
 ) : BaseViewModel<HistoryScreenState>(
-    defaultStateProvider = { HistoryScreenState.Loading }
+    defaultState = HistoryScreenState.Loading,
 ) {
 
     init {

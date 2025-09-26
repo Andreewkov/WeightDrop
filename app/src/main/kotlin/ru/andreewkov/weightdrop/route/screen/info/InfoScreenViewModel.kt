@@ -22,7 +22,7 @@ class InfoScreenViewModel @Inject constructor(
     private val getWeightingsUseCase: GetWeightingsUseCase,
     private val observeSettingsUseCase: ObserveSettingsUseCase,
 ) : BaseViewModel<InfoScreenState>(
-    defaultStateProvider = { InfoScreenState.Loading }
+    defaultState = InfoScreenState.Loading,
 ) {
 
     private val weightChartCalculator = WeightChartCalculator()

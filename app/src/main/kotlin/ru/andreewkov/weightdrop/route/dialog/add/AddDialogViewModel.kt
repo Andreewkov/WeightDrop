@@ -18,7 +18,7 @@ class AddDialogViewModel @Inject constructor(
     private val getWeightingUseCase: GetWeightingUseCase,
     private val updateWeightingUseCase: UpdateWeightingUseCase,
 ) : BaseViewModel<AddDialogState>(
-    defaultStateProvider = AddDialogState::createDefault
+    defaultState = AddDialogState.createDefault(),
 ) {
 
     private val _datePickerRequestState = MutableStateFlow(AddDialogDatePickerRequestState(show = false))

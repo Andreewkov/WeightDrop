@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainAppViewModel @Inject constructor() : BaseViewModel<MainAppState>(
-    defaultStateProvider = MainAppState::createDefault,
+    defaultState = MainAppState.createDefault(),
 ) {
 
     private val _navigateToRouteId = MutableSharedFlow<String>()

@@ -22,7 +22,7 @@ class SettingsScreenViewModel @Inject constructor(
     private val updateStartWeightUseCase: UpdateStartWeightUseCase,
     private val updateTargetWeightUseCase: UpdateTargetWeightUseCase,
 ) : BaseViewModel<SettingsScreenState>(
-    defaultStateProvider = { SettingsScreenState.Loading }
+    defaultState = SettingsScreenState.Loading,
 ) {
 
     init {
