@@ -49,8 +49,8 @@ data class NavigationBarColors(
 fun NavigationBarWidget(
     items: List<Route.BarScreen>,
     colors: NavigationBarColors,
-    onBarItemClick: (Route.BarScreen) -> Unit,
-    isBarItemSelected: (Route.BarScreen) -> Boolean,
+    onBarScreenClick: (Route.BarScreen) -> Unit,
+    isBarScreenSelected: (Route.BarScreen) -> Boolean,
     modifier: Modifier = Modifier,
     showLabels: Boolean = isPortrait(),
 ) {
@@ -72,7 +72,7 @@ fun NavigationBarWidget(
                     modifier = Modifier.weight(1f),
                 ) {
                     val isSelected by remember {
-                        derivedStateOf { isBarItemSelected(item) }
+                        derivedStateOf { isBarScreenSelected(item) }
                     }
                     val color by remember {
                         derivedStateOf {
@@ -88,7 +88,7 @@ fun NavigationBarWidget(
                             .widthIn(min = 80.dp)
                             .align(Alignment.Center)
                             .clip(RoundedCornerShape(8.dp))
-                            .clickable { onBarItemClick(item) }
+                            .clickable { onBarScreenClick(item) }
                             .padding(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -126,8 +126,8 @@ private fun NavigationBarWidgetPreviewOne() {
                 activeItemColor = MaterialTheme.colorScheme.primary,
                 inactiveItemColor = MaterialTheme.colorScheme.secondary,
             ),
-            onBarItemClick = { },
-            isBarItemSelected = { it is Route.InfoScreen },
+            onBarScreenClick = { },
+            isBarScreenSelected = { it is Route.InfoScreen },
         )
     }
 }

@@ -22,42 +22,52 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.WeightingFormatter
+import ru.andreewkov.weightdrop.route.dialog.date.DatePickerDialogUI
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.WeightDropPreview
-import ru.andreewkov.weightdrop.widget.DialogContainer
+import ru.andreewkov.weightdrop.widget.ButtonContent
+import ru.andreewkov.weightdrop.widget.DialogCard
 import ru.andreewkov.weightdrop.widget.ValuePanelWidget
 import ru.andreewkov.weightdrop.widget.WeightWheelPickerWidget
 import java.time.LocalDate
 
 @Composable
 fun AddDialogUI(
-    date: LocalDate?,
-    onDateClick: (LocalDate) -> Unit,
-    onButtonClick: () -> Unit,
-    modifier: Modifier = Modifier,
+    initialDate: LocalDate,
+    onDismissRequest: () -> Unit,
 ) {
     val viewModel: AddDialogViewModel = hiltViewModel()
     val state by viewModel.screenState.collectAsState()
+    val datePickerRequestState by viewModel.datePickerRequestState.collectAsState()
 
-    LaunchedEffect(date) {
-        viewModel.setDate(date ?: LocalDate.now())
+    LaunchedEffect(initialDate) {
+        viewModel.onDateChanged(initialDate)
     }
 
-    Card(
-        modifier = modifier,
-        colors = cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-        )
+    DialogCard(
+        onDismissRequest = {
+            viewModel.dispose()
+            onDismissRequest()
+        },
     ) {
         Content(
             date = state.date,
             weight = state.weight,
-            onDateClick = onDateClick,
+            onDateClick = viewModel::onDateClick,
             onWeightChanged = viewModel::onWeightChanged,
             onAddClick = {
                 viewModel.onWeightAddClick()
-                onButtonClick()
+                viewModel.dispose()
+                onDismissRequest()
             },
+        )
+    }
+
+    if (datePickerRequestState.show) {
+        DatePickerDialogUI(
+            initialDate = datePickerRequestState.date,
+            onDateChanged = viewModel::onDateChanged,
+            onDismissRequest = viewModel::onDatePickerDismissRequest,
         )
     }
 }
@@ -70,7 +80,7 @@ private fun Content(
     onWeightChanged: (Float) -> Unit,
     onAddClick: () -> Unit,
 ) {
-    DialogContainer(
+    ButtonContent(
         buttonTextRes = R.string.dialog_add_button,
         onButtonClick = { onAddClick() },
     ) {

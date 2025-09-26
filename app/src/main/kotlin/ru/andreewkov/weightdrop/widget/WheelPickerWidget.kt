@@ -222,5 +222,5 @@ private fun WheelPickerWidgetPreviewNumsRect() {
 }
 
 private fun createPreviewScrollIndexFlow(): MutableStateFlow<IndexWithScrollTime> {
-    return MutableStateFlow(IndexWithScrollTime(0, 0))
+    return MutableStateFlow(IndexWithScrollTime(6, 0))
 }

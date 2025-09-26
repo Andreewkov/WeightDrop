@@ -1,11 +1,7 @@
 package ru.andreewkov.weightdrop.route.screen.settings
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.domain.model.Settings
@@ -16,6 +12,7 @@ import ru.andreewkov.weightdrop.domain.settings.UpdateTargetWeightUseCase
 import ru.andreewkov.weightdrop.model.SettingItem
 import ru.andreewkov.weightdrop.model.SettingsItemType
 import ru.andreewkov.weightdrop.model.SettingsUpdateValue
+import ru.andreewkov.weightdrop.route.base.BaseViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,10 +21,9 @@ class SettingsScreenViewModel @Inject constructor(
     private val updateHeightUseCase: UpdateHeightUseCase,
     private val updateStartWeightUseCase: UpdateStartWeightUseCase,
     private val updateTargetWeightUseCase: UpdateTargetWeightUseCase,
-) : ViewModel() {
-
-    private val _screenState = MutableStateFlow<SettingsScreenState>(SettingsScreenState.Loading)
-    val screenState get() = _screenState.asStateFlow()
+) : BaseViewModel<SettingsScreenState>(
+    defaultStateProvider = { SettingsScreenState.Loading }
+) {
 
     init {
         loadData()
@@ -42,7 +38,7 @@ class SettingsScreenViewModel @Inject constructor(
                     is SettingsUpdateValue.TargetWeightValue -> updateTargetWeightUseCase(settingsValue.value)
                 }
             }.onFailure {
-                _screenState.update { SettingsScreenState.Failure }
+                updateState { SettingsScreenState.Failure }
             }
         }
     }
@@ -55,7 +51,7 @@ class SettingsScreenViewModel @Inject constructor(
                     settings.handle()
                 }
             }.onFailure {
-                _screenState.update { SettingsScreenState.Failure }
+                updateState { SettingsScreenState.Failure }
             }
         }
     }
@@ -83,6 +79,6 @@ class SettingsScreenViewModel @Inject constructor(
                 ),
             ),
         )
-        _screenState.update { state }
+        updateState { state }
     }
 }

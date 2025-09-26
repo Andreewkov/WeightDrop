@@ -1,6 +1,5 @@
 package ru.andreewkov.weightdrop.route.dialog.add
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -10,6 +9,7 @@ import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
 import ru.andreewkov.weightdrop.domain.weighting.UpdateWeightingUseCase
+import ru.andreewkov.weightdrop.route.base.BaseViewModel
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -17,25 +17,46 @@ import javax.inject.Inject
 class AddDialogViewModel @Inject constructor(
     private val getWeightingUseCase: GetWeightingUseCase,
     private val updateWeightingUseCase: UpdateWeightingUseCase,
-) : ViewModel() {
+) : BaseViewModel<AddDialogState>(
+    defaultStateProvider = AddDialogState::createDefault
+) {
 
-    private val _screenState = MutableStateFlow(createDefaultScreenState())
-    val screenState get() = _screenState.asStateFlow()
-
-    fun setDate(date: LocalDate) {
-        updateScreenState(date = date)
-        updateWeight(date)
-    }
+    private val _datePickerRequestState = MutableStateFlow(AddDialogDatePickerRequestState(show = false))
+    val datePickerRequestState get() = _datePickerRequestState.asStateFlow()
 
     private fun updateWeight(date: LocalDate) {
         viewModelScope.launch {
-            val weighting = getWeightingUseCase(date).getOrElse { return@launch } // TODO
-            updateScreenState(date = weighting.date, weight = weighting.value)
+            val weighting = getWeightingUseCase(date).getOrElse {
+                updateState { copy(weight = 0f) }
+                return@launch
+            } // TODO
+            updateState {
+                copy(
+                    date = weighting.date,
+                    weight = weighting.value,
+                )
+            }
         }
     }
 
+    fun onDateChanged(date: LocalDate) {
+        updateState { copy(date = date) }
+        updateWeight(date)
+    }
+
+    fun onDateClick(date: LocalDate) {
+        _datePickerRequestState.value = AddDialogDatePickerRequestState(
+            show = true,
+            date = date,
+        )
+    }
+
+    fun onDatePickerDismissRequest() {
+        _datePickerRequestState.value = AddDialogDatePickerRequestState(show = false)
+    }
+
     fun onWeightChanged(weight: Float) {
-        updateScreenState(weight = weight)
+        updateState { copy(weight = weight) }
     }
 
     fun onWeightAddClick() {
@@ -50,17 +71,8 @@ class AddDialogViewModel @Inject constructor(
         }
     }
 
-    private fun createDefaultScreenState(): AddDialogState {
-        return AddDialogState(
-            date = LocalDate.now(),
-            weight = 0f,
-        )
-    }
-
-    private fun updateScreenState(
-        date: LocalDate = screenState.value.date,
-        weight: Float = screenState.value.weight,
-    ) {
-        _screenState.value = AddDialogState(date, weight)
+    fun dispose() {
+        resetState()
+        _datePickerRequestState.value = AddDialogDatePickerRequestState(show = false)
     }
 }

@@ -16,17 +16,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.andreewkov.weightdrop.model.SettingsUpdateValue
-import ru.andreewkov.weightdrop.navigation.Navigation
-import ru.andreewkov.weightdrop.route.NavigationRoute
 import ru.andreewkov.weightdrop.route.Route
 import ru.andreewkov.weightdrop.route.dialog.add.AddDialogUI
-import ru.andreewkov.weightdrop.route.dialog.date.DatePickerDialogUI
 import ru.andreewkov.weightdrop.route.screen.history.HistoryScreenUI
 import ru.andreewkov.weightdrop.route.screen.info.InfoScreenUI
 import ru.andreewkov.weightdrop.route.screen.settings.SettingsScreenUI
@@ -40,27 +36,33 @@ fun MainAppUI(
     navController: NavHostController = rememberNavController(),
 ) {
     val viewModel: MainAppViewModel = hiltViewModel()
-    val navigation = remember { viewModel.navigation }
-    val toolbarTitleRes by navigation.toolbarTitleRes.collectAsState()
-    val selectedNavigationRoute by navigation.selectedNavigationRoute.collectAsState()
+    val state by viewModel.screenState.collectAsState()
+    val addRequestState by viewModel.addRequestState.collectAsState()
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
 
-    Init(
-        navigation = navigation,
-        navController = navController,
-    )
+    LaunchedEffect(currentBackStackEntry) {
+        val id = currentBackStackEntry?.destination?.route ?: return@LaunchedEffect
+        viewModel.onRouteIdUpdated(id = id)
+
+        viewModel.navigateToRouteId.onEach { id ->
+            navController.navigate(id)
+        }.launchIn(this)
+
+        viewModel.navigateOnBack.onEach {
+            navController.popBackStack()
+        }.launchIn(this)
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             ToolbarWidget(
-                titleRes = toolbarTitleRes,
+                titleRes = state.toolbarTitleRes,
                 colors = ToolbarWidgetColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     contentColor = MaterialTheme.colorScheme.primary,
                 ),
-                onAddClick = {
-                    navigation.openAddDialog()
-                },
+                onAddClick = viewModel::onAddClick,
             )
         },
         bottomBar = {
@@ -71,35 +73,29 @@ fun MainAppUI(
                     activeItemColor = MaterialTheme.colorScheme.secondary,
                     inactiveItemColor = MaterialTheme.colorScheme.primary,
                 ),
-                onBarItemClick = { barScreen ->
-                    navigation.apply {
-                        when (barScreen) {
-                            Route.InfoScreen -> openInfoScreen()
-                            Route.HistoryScreen -> openHistoryScreen()
-                            Route.SettingsScreen -> openSettingsScreen()
-                        }
-                    }
+                onBarScreenClick = { barScreen ->
+                    viewModel.onBarScreenClick(barScreen)
                 },
-                isBarItemSelected = { item -> selectedNavigationRoute.destination == item.navigationRoute.destination },
+                isBarScreenSelected = { item -> state.selectedBarScreen.id == item.id },
             )
         },
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = navigation.getStartBarScreen().id,
+            startDestination = Route.startScreen.id,
             modifier = Modifier.padding(innerPadding),
         ) {
-            composable(route = NavigationRoute.Info.destination) {
+            composable(route = Route.InfoScreen.id) {
                 InfoScreenUI()
             }
-            composable(route = NavigationRoute.History.destination) {
+            composable(route = Route.HistoryScreen.id) {
                 HistoryScreenUI(
                     onCardClick = { date ->
-                        navigation.openAddDialog(date)
+                        viewModel.onHistoryCardClick(date)
                     },
                 )
             }
-            composable(route = NavigationRoute.Settings.destination) {
+            composable(route = Route.SettingsScreen.id) {
                 SettingsScreenUI(
                     valueUpdatedFlow = MutableStateFlow(SettingsUpdateValue.HeightValue(1)),
                     onSettingItemClick = {
@@ -107,49 +103,13 @@ fun MainAppUI(
                     }
                 )
             }
-            dialog(route = NavigationRoute.AddDialog.destination) { backStackEntry ->
-                AddDialogUI(
-                    date = (navigation.currentRouteParams as? Route.AddDialog.Params)?.date,
-                    onDateClick = { date ->
-                        navigation.openDatePickerDialog(date)
-                    },
-                    onButtonClick = {
-                        navigation.back()
-                    },
-                )
-            }
-            dialog(route = NavigationRoute.DateDialog.destination) { backStackEntry ->
-                DatePickerDialogUI(
-                    date = (navigation.currentRouteParams as? Route.DateDialog.Params)?.date,
-                    onButtonClick = { date ->
-                        navigation.back(Route.DateDialog.Result(date))
-                    },
-                )
-            }
         }
     }
-}
 
-@Composable
-private fun Init(
-    navigation: Navigation,
-    navController: NavHostController,
-) {
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(Unit) {
-        navigation.navigateToRoute.onEach { navigationRoute ->
-            if (navigationRoute.destination == backStackEntry?.destination?.route) return@onEach
-
-            navController.navigate(route = navigationRoute.destination) {
-                launchSingleTop = true
-                restoreState = true
-            }
-        }.launchIn(coroutineScope)
-
-        navigation.navigateOnBack.onEach {
-            navController.popBackStack()
-        }.launchIn(coroutineScope)
+    if (addRequestState.show) {
+        AddDialogUI(
+            initialDate = addRequestState.date,
+            onDismissRequest = viewModel::onAddDismissRequest,
+        )
     }
 }

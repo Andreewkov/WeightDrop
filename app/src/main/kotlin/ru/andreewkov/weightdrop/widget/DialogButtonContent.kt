@@ -26,7 +26,7 @@ import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 
 @Composable
-fun DialogContainer(
+fun ButtonContent(
     @StringRes buttonTextRes: Int,
     onButtonClick: () -> Unit,
     @StringRes titleRes: Int? = null,
@@ -67,14 +67,14 @@ fun DialogContainer(
 
 @Preview
 @Composable
-private fun DialogContainerPreview() {
+private fun DialogButtonContentPreview() {
     WeightDropTheme {
         Card(
             colors = cardColors(
                 containerColor = MaterialTheme.colorScheme.surface,
             )
         ) {
-            DialogContainer(
+            ButtonContent(
                 titleRes = R.string.dialog_date_picker_title,
                 buttonTextRes = R.string.dialog_date_picker_button,
                 onButtonClick = { },

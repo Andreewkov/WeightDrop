@@ -24,54 +24,53 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.WeightDropPreview
 import ru.andreewkov.weightdrop.util.drawHorizontalWheelLines
-import ru.andreewkov.weightdrop.widget.AppButton
+import ru.andreewkov.weightdrop.widget.ButtonContent
 import ru.andreewkov.weightdrop.widget.DateWheelPickerWidget
-import ru.andreewkov.weightdrop.widget.DialogContainer
+import ru.andreewkov.weightdrop.widget.DialogCard
 import java.time.LocalDate
 
 @Composable
 fun DatePickerDialogUI(
-    date: LocalDate?,
-    onButtonClick: (LocalDate) -> Unit,
-    modifier: Modifier = Modifier,
+    initialDate: LocalDate,
+    onDateChanged: (LocalDate) -> Unit,
+    onDismissRequest: () -> Unit,
 ) {
-    Card(
-        modifier = modifier,
-        colors = cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-        )
+    DialogCard(
+        onDismissRequest = onDismissRequest,
     ) {
         Content(
-            date = date ?: LocalDate.now(),
-            onButtonClick = { onButtonClick(it) },
+            initialDate = initialDate,
+            onButtonClick = { date ->
+                onDateChanged(date)
+                onDismissRequest()
+            }
         )
     }
 }
 
 @Composable
 private fun Content(
-    date: LocalDate,
+    initialDate: LocalDate,
     onButtonClick: (LocalDate) -> Unit,
 ) {
-    var currentDate by remember { mutableStateOf(date) }
+    var currentDate by remember { mutableStateOf(initialDate) }
 
-    DialogContainer(
+    ButtonContent(
         titleRes = R.string.dialog_date_picker_title,
         buttonTextRes = R.string.dialog_date_picker_button,
-        onButtonClick = { onButtonClick(currentDate) },
+        onButtonClick = {
+            onButtonClick(currentDate)
+        },
         isButtonEnabled = { !currentDate.isAfter(LocalDate.now()) }
     ) {
         DateWheelPickerWidget(
-            date = date,
+            date = currentDate,
             color = Color.White, // TODO
             onDateChanged = { currentDate = it },
             requiredHeight = 200.dp,
@@ -98,7 +97,7 @@ private fun ContentPreview() {
                     )
                 ) {
                     Content(
-                        date = LocalDate.now(),
+                        initialDate = LocalDate.now(),
                         onButtonClick = { },
                     )
                 }
