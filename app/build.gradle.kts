@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "ru.andreewkov.weightdrop"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "ru.andreewkov.weightdrop"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
