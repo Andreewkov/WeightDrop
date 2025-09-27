@@ -72,13 +72,13 @@ class SettingsScreenViewModel @Inject constructor(
                 SettingItem(
                     type = SettingsItemType.StartWeight,
                     titleRes = R.string.settings_start_weight_title,
-                    text = height?.toString() ?: "-",
+                    text = startWeight?.toString() ?: "-",
                     iconRes = R.drawable.ic_floor_scales,
                 ),
                 SettingItem(
                     type = SettingsItemType.TargetWeight,
                     titleRes = R.string.settings_target_weight_title,
-                    text = height?.toString() ?: "-",
+                    text = targetWeight?.toString() ?: "-",
                     iconRes = R.drawable.ic_weight_scales,
                 ),
                 SettingItem(

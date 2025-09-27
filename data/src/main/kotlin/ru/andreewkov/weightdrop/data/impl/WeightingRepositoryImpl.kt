@@ -25,7 +25,7 @@ class WeightingRepositoryImpl @Inject constructor(
     private val logger = loggerProvider.get("SettingsRepositoryImpl")
 
     override fun getWeightings(): Result<Flow<List<WeightingDataModel>>> {
-        return runCatching(logger, errorMessage = "Error at getting weightings") {
+        return ru.andreewkov.weightdrop.data.util.runCatching(logger, errorMessage = "Error at getting weightings") {
             weightingDao.getWeightings().flowOn(databaseDispatcher).map { weightings ->
                 weightings.toWeightingDataModels()
             }
@@ -35,7 +35,10 @@ class WeightingRepositoryImpl @Inject constructor(
     override suspend fun getWeighting(
         date: LocalDate,
     ): Result<WeightingDataModel> = withContext(databaseDispatcher) {
-        return@withContext runCatching(logger, errorMessage = "Error at getting weighting $date") {
+        return@withContext ru.andreewkov.weightdrop.data.util.runCatching(
+            logger,
+            errorMessage = "Error at getting weighting $date"
+        ) {
             weightingDao.getWeighting(date).toWeightingDataModel()
         }
     }
@@ -43,7 +46,7 @@ class WeightingRepositoryImpl @Inject constructor(
     override suspend fun updateWeighting(
         weighting: WeightingDataModel,
     ): Result<Unit> = withContext(databaseDispatcher) {
-        runCatching(logger, errorMessage = "Error at updating weightings") {
+        ru.andreewkov.weightdrop.data.util.runCatching(logger, errorMessage = "Error at updating weightings") {
             weightingDao.insertWeighting(
                 dbo = weighting.toWeightingDBO(),
             )
@@ -53,7 +56,10 @@ class WeightingRepositoryImpl @Inject constructor(
     override suspend fun deleteWeighting(
         weighting: WeightingDataModel,
     ): Result<Unit> = withContext(databaseDispatcher) {
-        return@withContext runCatching(logger, errorMessage = "Error at deleting weighting") {
+        return@withContext ru.andreewkov.weightdrop.data.util.runCatching(
+            logger,
+            errorMessage = "Error at deleting weighting"
+        ) {
             weightingDao.deleteWeighting(
                 dbo = weighting.toWeightingDBO(),
             )

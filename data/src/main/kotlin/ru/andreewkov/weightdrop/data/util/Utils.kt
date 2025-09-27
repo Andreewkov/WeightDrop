@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.data.impl
+package ru.andreewkov.weightdrop.data.util
 
 import ru.andreewkov.weightdrop.utils.api.Logger
 
