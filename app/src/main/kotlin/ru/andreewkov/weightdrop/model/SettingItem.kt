@@ -2,6 +2,7 @@ package ru.andreewkov.weightdrop.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import java.time.LocalDate
 
 data class SettingItem(
     val type: SettingsItemType,
@@ -14,19 +15,24 @@ enum class SettingsItemType {
     Height,
     StartWeight,
     TargetWeight,
+    StartDate,
 }
 
-sealed class SettingsUpdateValue {
+sealed class SettingsUpdateValue<T>(open val value: T) {
 
     data class HeightValue(
-        val value: Int,
-    ) : SettingsUpdateValue()
+        override val value: Int,
+    ) : SettingsUpdateValue<Int>(value)
 
     data class StartWeightValue(
-        val value: Float,
-    ) : SettingsUpdateValue()
+        override val value: Float,
+    ) : SettingsUpdateValue<Float>(value)
 
     data class TargetWeightValue(
-        val value: Float,
-    ) : SettingsUpdateValue()
+        override val value: Float,
+    ) : SettingsUpdateValue<Float>(value)
+
+    data class StartDateValue(
+        override val value: LocalDate,
+    ) : SettingsUpdateValue<LocalDate>(value)
 }

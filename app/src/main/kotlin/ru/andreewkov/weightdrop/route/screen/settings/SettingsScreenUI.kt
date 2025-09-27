@@ -33,7 +33,7 @@ import ru.andreewkov.weightdrop.widget.ValuePanelWidget
 
 @Composable
 fun SettingsScreenUI(
-    valueUpdatedFlow: SharedFlow<SettingsUpdateValue>,
+    valueUpdatedFlow: SharedFlow<SettingsUpdateValue<*>>,
     onSettingItemClick: (SettingsItemType) -> Unit,
 ) {
     val viewModel: SettingsScreenViewModel = hiltViewModel()
@@ -111,6 +111,12 @@ private fun ContentPreview() {
                         R.string.settings_height_title,
                         "80.0",
                         R.drawable.ic_weight_scales,
+                    ),
+                    SettingItem(
+                        SettingsItemType.StartDate,
+                        R.string.settings_start_date_title,
+                        "27.09.2025",
+                        R.drawable.ic_calendar,
                     ),
                 ),
                 onItemClick = { },

@@ -12,10 +12,16 @@ import ru.andreewkov.weightdrop.data.di.SettingsPreferencesQualifier
 import ru.andreewkov.weightdrop.data.model.SettingsDataModel
 import ru.andreewkov.weightdrop.utils.api.LoggerProvider
 import javax.inject.Inject
+import androidx.core.content.edit
+import java.sql.Date
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
-private const val HEIGHT_NAME = "target_weight"
+private const val HEIGHT_NAME = "height"
 private const val TARGET_WEIGHT_NAME = "target_weight"
 private const val START_WEIGHT_NAME = "start_weight"
+private const val START_DATE_NAME = "start_date"
 
 class SettingsRepositoryImpl @Inject constructor(
     @SettingsPreferencesQualifier private val settingsPreferences: SharedPreferences,
@@ -30,6 +36,7 @@ class SettingsRepositoryImpl @Inject constructor(
             height = getHeight(),
             startWeight = getStartWeight(),
             targetWeight = getTargetWeight(),
+            startDate = getStartDate(),
         ),
     )
 
@@ -41,7 +48,7 @@ class SettingsRepositoryImpl @Inject constructor(
         height: Int,
     ): Result<Unit> = withContext(settingsDispatcher) {
         return@withContext runCatching(logger, "Exception at updating height") {
-            settingsPreferences.edit().apply {
+            settingsPreferences.edit {
                 putInt(HEIGHT_NAME, height)
             }
             currentSettings.value = currentSettings.value.copy(height = height)
@@ -52,9 +59,9 @@ class SettingsRepositoryImpl @Inject constructor(
         weight: Float,
     ): Result<Unit> = withContext(settingsDispatcher) {
         return@withContext runCatching(logger, "Exception at updating target weight") {
-            settingsPreferences.edit().apply {
+            settingsPreferences.edit {
                 putFloat(START_WEIGHT_NAME, weight)
-            }.apply()
+            }
             currentSettings.value = currentSettings.value.copy(startWeight = weight)
         }
     }
@@ -63,10 +70,22 @@ class SettingsRepositoryImpl @Inject constructor(
         weight: Float,
     ): Result<Unit> = withContext(settingsDispatcher) {
         return@withContext runCatching(logger, "Exception at updating target weight") {
-            settingsPreferences.edit().apply {
+            settingsPreferences.edit {
                 putFloat(TARGET_WEIGHT_NAME, weight)
-            }.apply()
+            }
             currentSettings.value = currentSettings.value.copy(targetWeight = weight)
+        }
+    }
+
+    override suspend fun updateStartDate(
+        date: LocalDate,
+    ): Result<Unit> = withContext(settingsDispatcher) {
+        val mills = date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        return@withContext runCatching(logger, "Exception at updating target weight") {
+            settingsPreferences.edit {
+                putLong(START_DATE_NAME, mills)
+            }
+            currentSettings.value = currentSettings.value.copy(startDate = date)
         }
     }
 
@@ -94,6 +113,15 @@ class SettingsRepositoryImpl @Inject constructor(
             null
         } else {
             value
+        }
+    }
+
+    private fun getStartDate(): LocalDate? {
+        val value = settingsPreferences.getLong(START_DATE_NAME, -1L)
+        return if (value == -1L) {
+            null
+        } else {
+            Instant.ofEpochMilli(value).atZone(ZoneId.systemDefault()).toLocalDate()
         }
     }
 }

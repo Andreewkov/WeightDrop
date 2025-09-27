@@ -4,9 +4,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.R
+import ru.andreewkov.weightdrop.WeightingFormatter
 import ru.andreewkov.weightdrop.domain.model.Settings
 import ru.andreewkov.weightdrop.domain.settings.ObserveSettingsUseCase
 import ru.andreewkov.weightdrop.domain.settings.UpdateHeightUseCase
+import ru.andreewkov.weightdrop.domain.settings.UpdateStartDateUseCase
 import ru.andreewkov.weightdrop.domain.settings.UpdateStartWeightUseCase
 import ru.andreewkov.weightdrop.domain.settings.UpdateTargetWeightUseCase
 import ru.andreewkov.weightdrop.model.SettingItem
@@ -21,6 +23,7 @@ class SettingsScreenViewModel @Inject constructor(
     private val updateHeightUseCase: UpdateHeightUseCase,
     private val updateStartWeightUseCase: UpdateStartWeightUseCase,
     private val updateTargetWeightUseCase: UpdateTargetWeightUseCase,
+    private val updateStartDateUseCase: UpdateStartDateUseCase,
 ) : BaseViewModel<SettingsScreenState>(
     defaultState = SettingsScreenState.Loading,
 ) {
@@ -29,13 +32,14 @@ class SettingsScreenViewModel @Inject constructor(
         loadData()
     }
 
-    fun updateSettingsValue(settingsValue: SettingsUpdateValue) {
+    fun updateSettingsValue(settingsValue: SettingsUpdateValue<*>) {
         viewModelScope.launch {
             runCatching {
                 when (settingsValue) {
                     is SettingsUpdateValue.HeightValue -> updateHeightUseCase(settingsValue.value)
                     is SettingsUpdateValue.StartWeightValue -> updateStartWeightUseCase(settingsValue.value)
                     is SettingsUpdateValue.TargetWeightValue -> updateTargetWeightUseCase(settingsValue.value)
+                    is SettingsUpdateValue.StartDateValue -> updateStartDateUseCase(settingsValue.value)
                 }
             }.onFailure {
                 updateState { SettingsScreenState.Failure }
@@ -76,6 +80,12 @@ class SettingsScreenViewModel @Inject constructor(
                     titleRes = R.string.settings_target_weight_title,
                     text = height?.toString() ?: "-",
                     iconRes = R.drawable.ic_weight_scales,
+                ),
+                SettingItem(
+                    type = SettingsItemType.StartDate,
+                    titleRes = R.string.settings_start_date_title,
+                    text = startDate?.let { WeightingFormatter.formatDateLong(it) } ?: "-",
+                    iconRes = R.drawable.ic_calendar,
                 ),
             ),
         )

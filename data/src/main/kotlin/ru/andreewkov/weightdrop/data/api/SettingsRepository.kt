@@ -2,6 +2,7 @@ package ru.andreewkov.weightdrop.data.api
 
 import kotlinx.coroutines.flow.Flow
 import ru.andreewkov.weightdrop.data.model.SettingsDataModel
+import java.time.LocalDate
 
 interface SettingsRepository {
 
@@ -12,4 +13,6 @@ interface SettingsRepository {
     suspend fun updateStartWeight(weight: Float): Result<Unit>
 
     suspend fun updateTargetWeight(weight: Float): Result<Unit>
+
+    suspend fun updateStartDate(date: LocalDate): Result<Unit>
 }
