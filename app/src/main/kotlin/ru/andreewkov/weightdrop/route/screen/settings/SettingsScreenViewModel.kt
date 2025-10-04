@@ -84,6 +84,8 @@ class SettingsScreenViewModel @Inject constructor(
             runCatching {
                 val settingsFlow = observeSettingsUseCase()
                 settingsFlow.collect { settings ->
+                    if (settings.isLoading) return@collect
+
                     currentSettings = settings
                 }
             }.onFailure {

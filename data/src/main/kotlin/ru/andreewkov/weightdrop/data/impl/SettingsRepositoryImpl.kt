@@ -2,11 +2,16 @@ package ru.andreewkov.weightdrop.data.impl
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.andreewkov.weightdrop.data.api.SettingsRepository
+import ru.andreewkov.weightdrop.data.di.SettingsDispatcherQualifier
 import ru.andreewkov.weightdrop.data.di.SettingsPreferencesQualifier
 import ru.andreewkov.weightdrop.data.model.SettingsDataModel
 import java.time.Instant
@@ -23,27 +28,39 @@ private const val START_DATE_NAME = "start_date"
 @Singleton
 class SettingsRepositoryImpl @Inject constructor(
     @SettingsPreferencesQualifier private val settingsPreferences: SharedPreferences,
+    @SettingsDispatcherQualifier private val dispatcher: CoroutineDispatcher,
 ) : SettingsRepository {
 
+    private val scope = CoroutineScope(dispatcher)
+
     private val currentSettings = MutableStateFlow(
-        settingsPreferences.run {
-            SettingsDataModel(
-                height = getInt(HEIGHT_NAME),
-                startWeight = getFloat(START_WEIGHT_NAME),
-                targetWeight = getFloat(TARGET_WEIGHT_NAME),
-                startDate = getLocalDate(START_DATE_NAME),
-            )
-        },
+        SettingsDataModel(isLoading = true),
     )
+
+    init {
+        scope.launch {
+            currentSettings.update {
+                settingsPreferences.run {
+                    SettingsDataModel(
+                        isLoading = false,
+                        height = getInt(HEIGHT_NAME),
+                        startWeight = getFloat(START_WEIGHT_NAME),
+                        targetWeight = getFloat(TARGET_WEIGHT_NAME),
+                        startDate = getLocalDate(START_DATE_NAME),
+                    )
+                }
+            }
+        }
+    }
 
     override fun observeSettings(): Flow<SettingsDataModel> {
         return currentSettings.asStateFlow()
     }
 
-    override fun updateHeight(
+    override suspend fun updateHeight(
         height: Int,
-    ): Result<Unit> {
-        return settingsPreferences.updateValue {
+    ): Result<Unit> = withContext(dispatcher) {
+        settingsPreferences.updateValue {
             putInt(HEIGHT_NAME, height)
         }.onSuccess {
             currentSettings.update { settings ->
@@ -52,10 +69,10 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun updateStartWeight(
+    override suspend fun updateStartWeight(
         weight: Float,
-    ): Result<Unit> {
-        return settingsPreferences.updateValue {
+    ): Result<Unit> = withContext(dispatcher) {
+        settingsPreferences.updateValue {
             putFloat(START_WEIGHT_NAME, weight)
         }.onSuccess {
             currentSettings.update { settings ->
@@ -64,10 +81,10 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun updateTargetWeight(
+    override suspend fun updateTargetWeight(
         weight: Float,
-    ): Result<Unit> {
-        return settingsPreferences.updateValue {
+    ): Result<Unit> = withContext(dispatcher) {
+        settingsPreferences.updateValue {
             putFloat(TARGET_WEIGHT_NAME, weight)
         }.onSuccess {
             currentSettings.update { settings ->
@@ -76,9 +93,11 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun updateStartDate(date: LocalDate): Result<Unit> {
+    override suspend fun updateStartDate(
+        date: LocalDate,
+    ): Result<Unit> = withContext(dispatcher) {
         val mills = date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        return settingsPreferences.updateValue {
+        settingsPreferences.updateValue {
             putLong(START_DATE_NAME, mills)
         }.onSuccess {
             currentSettings.update { settings ->
@@ -97,27 +116,27 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun SharedPreferences.getInt(name: String): Int? {
+    private suspend fun SharedPreferences.getInt(name: String): Int? = withContext(dispatcher) {
         val value = getInt(name, -1)
-        return if (value == -1) {
+        if (value == -1) {
             null
         } else {
             value
         }
     }
 
-    private fun SharedPreferences.getFloat(name: String): Float? {
+    private suspend fun SharedPreferences.getFloat(name: String): Float? = withContext(dispatcher) {
         val value = getFloat(name, -1F)
-        return if (value == -1F) {
+        if (value == -1F) {
             null
         } else {
             value
         }
     }
 
-    private fun SharedPreferences.getLocalDate(name: String): LocalDate? {
-        val value = getLong(START_DATE_NAME, -1L)
-        return if (value == -1L) {
+    private suspend fun SharedPreferences.getLocalDate(name: String): LocalDate? = withContext(dispatcher) {
+        val value = getLong(name, -1L)
+        if (value == -1L) {
             null
         } else {
             Instant.ofEpochMilli(value).atZone(ZoneId.systemDefault()).toLocalDate()
