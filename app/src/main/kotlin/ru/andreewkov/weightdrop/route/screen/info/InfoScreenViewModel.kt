@@ -40,7 +40,7 @@ class InfoScreenViewModel @Inject constructor(
             val settingsDeferred = async { observeSettingsUseCase() }
             combine(
                 weightingsDeferred.await().getOrThrow(),
-                settingsDeferred.await().getOrThrow(),
+                settingsDeferred.await(),
             ) { weightings, settings ->
                 handleCombine(weightings, settings)
             }.collect()

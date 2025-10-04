@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 interface SettingsRepository {
 
-    fun observeSettings(): Result<Flow<SettingsDataModel>>
+    fun observeSettings(): Flow<SettingsDataModel>
 
     fun updateHeight(height: Int): Result<Unit>
 

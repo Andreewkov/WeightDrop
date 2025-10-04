@@ -22,8 +22,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.WeightingFormatter
-import ru.andreewkov.weightdrop.route.dialog.date.DatePickerDialogUI
+import ru.andreewkov.weightdrop.route.dialog.picker.DatePickerDialogUI
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
+import ru.andreewkov.weightdrop.util.ScaffoldPreview
 import ru.andreewkov.weightdrop.util.WeightDropPreview
 import ru.andreewkov.weightdrop.widget.ButtonContent
 import ru.andreewkov.weightdrop.widget.DialogCard
@@ -66,7 +67,8 @@ fun AddDialogUI(
     if (datePickerRequestState.show) {
         DatePickerDialogUI(
             initialDate = datePickerRequestState.date,
-            onDateChanged = viewModel::onDateChanged,
+            titleRes = R.string.dialog_add_date_title,
+            onDatePicked = viewModel::onDateChanged,
             onDismissRequest = viewModel::onDatePickerDismissRequest,
         )
     }
@@ -115,25 +117,14 @@ private fun Content(
 @WeightDropPreview
 private fun ContentPreview() {
     WeightDropTheme {
-        Scaffold { padding ->
-            Dialog(
-                onDismissRequest = {},
-            ) {
-                Card(
-                    modifier = Modifier.padding(padding),
-                    colors = cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                    )
-                ) {
-                    Content(
-                        date = LocalDate.now(),
-                        weight = 98.8f,
-                        onDateClick = { },
-                        onWeightChanged = { },
-                        onAddClick = { },
-                    )
-                }
-            }
+        ScaffoldPreview {
+            Content(
+                date = LocalDate.now(),
+                weight = 98.8f,
+                onDateClick = { },
+                onWeightChanged = { },
+                onAddClick = { },
+            )
         }
     }
 }
@@ -142,25 +133,14 @@ private fun ContentPreview() {
 @WeightDropPreview
 private fun ContentEmptyPreview() {
     WeightDropTheme {
-        Scaffold { padding ->
-            Dialog(
-                onDismissRequest = {},
-            ) {
-                Card(
-                    modifier = Modifier.padding(padding),
-                    colors = cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                    )
-                ) {
-                    Content(
-                        date = LocalDate.now().minusWeeks(24),
-                        weight = 76.6f,
-                        onDateClick = { },
-                        onWeightChanged = { },
-                        onAddClick = { },
-                    )
-                }
-            }
+        ScaffoldPreview {
+            Content(
+                date = LocalDate.now().minusWeeks(24),
+                weight = 76.6f,
+                onDateClick = { },
+                onWeightChanged = { },
+                onAddClick = { },
+            )
         }
     }
 }

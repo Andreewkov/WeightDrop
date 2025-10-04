@@ -14,6 +14,11 @@
     <string name="dialog_add_date_title">Дата</string>
     <string name="dialog_add_button">Добавить</string>
 
-    <string name="dialog_date_picker_title">Дата</string>
     <string name="dialog_date_picker_button">Выбрать</string>
+    <string name="dialog_height_picker_button">Выбрать</string>
+    <string name="dialog_weight_picker_button">Выбрать</string>
+
+    <string name="weight_wheel_picker_widget_divider">.</string>
+    <string name="weight_wheel_picker_widget_units">кг</string>
+    <string name="height_picker_widget_units">см</string>
 </resources>

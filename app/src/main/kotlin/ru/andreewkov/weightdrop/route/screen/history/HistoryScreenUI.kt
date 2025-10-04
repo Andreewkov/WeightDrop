@@ -51,6 +51,7 @@ import ru.andreewkov.weightdrop.WeightingFormatter
 import ru.andreewkov.weightdrop.WeightingHistoryCalculator
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
+import ru.andreewkov.weightdrop.util.ScaffoldPreview
 import ru.andreewkov.weightdrop.util.WeightDropPreview
 import ru.andreewkov.weightdrop.util.stubWeightingsMediumThird
 import java.time.LocalDate
@@ -312,10 +313,9 @@ fun MonthCardPreview() {
 @WeightDropPreview
 fun ContentPreview() {
     WeightDropTheme {
-        Scaffold { innerPading ->
+        ScaffoldPreview {
             Content(
                 weightings = stubWeightingsMediumThird,
-                modifier = Modifier.padding(innerPading),
                 onCardClick = { _, _ -> },
                 onDelete = { _, _ -> },
             )

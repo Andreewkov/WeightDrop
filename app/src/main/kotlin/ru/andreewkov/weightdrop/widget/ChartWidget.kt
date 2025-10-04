@@ -33,6 +33,7 @@ import ru.andreewkov.weightdrop.model.WeightPoint
 import ru.andreewkov.weightdrop.model.WeightPointPosition
 import ru.andreewkov.weightdrop.model.WeightPointPositionsScope
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
+import ru.andreewkov.weightdrop.util.ScaffoldPreview
 import ru.andreewkov.weightdrop.util.WeightDropPreview
 import ru.andreewkov.weightdrop.util.drawHorizontalLine
 import ru.andreewkov.weightdrop.util.drawVerticalLine
@@ -396,24 +397,18 @@ private fun ChartWidgetPreview() {
     val calculator = WeightChartCalculator()
     val target = 90f
     WeightDropTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize(),
-            ) {
-                ChartWidget(
-                    chart = calculator.calculateWeightChart(target, stubWeightingsMediumFirst),
-                    color = WeightChartColor(
-                        gridColor = MaterialTheme.colorScheme.primary,
-                        textColor = MaterialTheme.colorScheme.primary,
-                        weightLineColor = MaterialTheme.colorScheme.secondary,
-                        pointColor = MaterialTheme.colorScheme.tertiary,
-                        targetLineColor = MaterialTheme.colorScheme.tertiary,
-                    ),
-                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
-                )
-            }
+        ScaffoldPreview {
+            ChartWidget(
+                chart = calculator.calculateWeightChart(target, stubWeightingsMediumFirst),
+                color = WeightChartColor(
+                    gridColor = MaterialTheme.colorScheme.primary,
+                    textColor = MaterialTheme.colorScheme.primary,
+                    weightLineColor = MaterialTheme.colorScheme.secondary,
+                    pointColor = MaterialTheme.colorScheme.tertiary,
+                    targetLineColor = MaterialTheme.colorScheme.tertiary,
+                ),
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+            )
         }
     }
 }
@@ -424,24 +419,18 @@ private fun ChartWidgetPreview2() {
     val calculator = WeightChartCalculator()
     val target = 80f
     WeightDropTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize(),
-            ) {
-                ChartWidget(
-                    chart = calculator.calculateWeightChart(target, stubWeightingsMediumSecond),
-                    color = WeightChartColor(
-                        gridColor = MaterialTheme.colorScheme.primary,
-                        textColor = MaterialTheme.colorScheme.primary,
-                        weightLineColor = MaterialTheme.colorScheme.secondary,
-                        pointColor = MaterialTheme.colorScheme.tertiary,
-                        targetLineColor = MaterialTheme.colorScheme.tertiary,
-                    ),
-                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
-                )
-            }
+        ScaffoldPreview {
+            ChartWidget(
+                chart = calculator.calculateWeightChart(target, stubWeightingsMediumSecond),
+                color = WeightChartColor(
+                    gridColor = MaterialTheme.colorScheme.primary,
+                    textColor = MaterialTheme.colorScheme.primary,
+                    weightLineColor = MaterialTheme.colorScheme.secondary,
+                    pointColor = MaterialTheme.colorScheme.tertiary,
+                    targetLineColor = MaterialTheme.colorScheme.tertiary,
+                ),
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+            )
         }
     }
 }
@@ -452,24 +441,18 @@ private fun ChartWidgetPreview3() {
     val calculator = WeightChartCalculator()
     val target = 88f
     WeightDropTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize(),
-            ) {
-                ChartWidget(
-                    chart = calculator.calculateWeightChart(target, stubWeightingsMediumThird),
-                    color = WeightChartColor(
-                        gridColor = MaterialTheme.colorScheme.primary,
-                        textColor = MaterialTheme.colorScheme.primary,
-                        weightLineColor = MaterialTheme.colorScheme.secondary,
-                        pointColor = MaterialTheme.colorScheme.tertiary,
-                        targetLineColor = MaterialTheme.colorScheme.tertiary,
-                    ),
-                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
-                )
-            }
+        ScaffoldPreview {
+            ChartWidget(
+                chart = calculator.calculateWeightChart(target, stubWeightingsMediumThird),
+                color = WeightChartColor(
+                    gridColor = MaterialTheme.colorScheme.primary,
+                    textColor = MaterialTheme.colorScheme.primary,
+                    weightLineColor = MaterialTheme.colorScheme.secondary,
+                    pointColor = MaterialTheme.colorScheme.tertiary,
+                    targetLineColor = MaterialTheme.colorScheme.tertiary,
+                ),
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+            )
         }
     }
 }

@@ -37,6 +37,7 @@ import ru.andreewkov.weightdrop.theme.Dark
 import ru.andreewkov.weightdrop.theme.Grey
 import ru.andreewkov.weightdrop.theme.Peach
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
+import ru.andreewkov.weightdrop.util.ScaffoldPreview
 import ru.andreewkov.weightdrop.util.WeightDropPreview
 import ru.andreewkov.weightdrop.util.isPortrait
 import ru.andreewkov.weightdrop.util.stubWeightingsMediumFourth
@@ -216,8 +217,8 @@ private fun ContentPreview() {
     val target = 86f
     val chart = calculator.calculateWeightChart(target, stubWeightingsMediumFourth)
     WeightDropTheme {
-        Scaffold { innerPadding ->
-            Content(chart, modifier = Modifier.padding(innerPadding))
+        ScaffoldPreview {
+            Content(chart)
         }
     }
 }
@@ -226,8 +227,8 @@ private fun ContentPreview() {
 @Composable
 private fun LoadingPreview() {
     WeightDropTheme {
-        Scaffold { innerPadding ->
-            Loading(modifier = Modifier.padding(innerPadding))
+        ScaffoldPreview {
+            Loading()
         }
     }
 }

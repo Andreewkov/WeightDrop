@@ -14,6 +14,8 @@ abstract class BaseViewModel<State : BaseScreenState>(
     private val _screenState = MutableStateFlow(defaultState)
     val screenState get() = _screenState.asStateFlow()
 
+    val currentState get() = _screenState.value
+
     protected fun updateState(action: State.() -> State) {
         _screenState.update { state ->
             action(state)

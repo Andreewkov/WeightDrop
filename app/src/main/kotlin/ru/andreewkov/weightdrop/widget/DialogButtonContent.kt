@@ -75,7 +75,7 @@ private fun DialogButtonContentPreview() {
             )
         ) {
             ButtonContent(
-                titleRes = R.string.dialog_date_picker_title,
+                titleRes = R.string.settings_height_title,
                 buttonTextRes = R.string.dialog_date_picker_button,
                 onButtonClick = { },
             ) {

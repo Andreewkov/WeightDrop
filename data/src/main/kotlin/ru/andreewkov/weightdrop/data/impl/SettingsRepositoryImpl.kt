@@ -2,9 +2,13 @@ package ru.andreewkov.weightdrop.data.impl
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import ru.andreewkov.weightdrop.data.api.SettingsRepository
 import ru.andreewkov.weightdrop.data.di.SettingsPreferencesQualifier
@@ -14,12 +18,14 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val HEIGHT_NAME = "height"
 private const val TARGET_WEIGHT_NAME = "target_weight"
 private const val START_WEIGHT_NAME = "start_weight"
 private const val START_DATE_NAME = "start_date"
 
+@Singleton
 class SettingsRepositoryImpl @Inject constructor(
     @SettingsPreferencesQualifier private val settingsPreferences: SharedPreferences,
 ) : SettingsRepository {
@@ -35,8 +41,8 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     )
 
-    override fun observeSettings(): Result<Flow<SettingsDataModel>> {
-        return currentSettings.asStateFlow().asSuccess()
+    override fun observeSettings(): Flow<SettingsDataModel> {
+        return currentSettings.asStateFlow()
     }
 
     override fun updateHeight(
