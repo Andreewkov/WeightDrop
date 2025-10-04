@@ -1,6 +1,5 @@
 package ru.andreewkov.weightdrop.util
 
-import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 

@@ -1,7 +1,6 @@
 package ru.andreewkov.weightdrop.route
 
 import ru.andreewkov.weightdrop.R
-import java.time.LocalDate
 
 interface RouteParams
 

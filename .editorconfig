@@ -9,6 +9,7 @@ ij_kotlin_packages_to_use_import_on_demand = unset
 ktlint_standard = enabled
 ktlint_experimental = enabled
 ktlint_custom-rule-set = enabled
+ktlint_standard_no-unused-imports = enabled
 
 ktlint_standard_annotation = disabled
 ktlint_standard_blank-line-between-when-conditions = disabled

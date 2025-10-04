@@ -2,18 +2,13 @@ package ru.andreewkov.weightdrop.data.impl
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import ru.andreewkov.weightdrop.data.api.SettingsRepository
 import ru.andreewkov.weightdrop.data.di.SettingsPreferencesQualifier
 import ru.andreewkov.weightdrop.data.model.SettingsDataModel
-import ru.andreewkov.weightdrop.data.util.asSuccess
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId

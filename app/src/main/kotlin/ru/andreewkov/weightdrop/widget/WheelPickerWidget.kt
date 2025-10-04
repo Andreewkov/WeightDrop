@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.util.createWheelBrush
-import ru.andreewkov.weightdrop.util.drawHorizontalWheelLines
 
 data class IndexWithScrollTime(
     val index: Int,
