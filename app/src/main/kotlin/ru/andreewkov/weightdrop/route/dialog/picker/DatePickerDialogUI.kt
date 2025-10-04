@@ -41,7 +41,7 @@ fun DatePickerDialogUI(
                 onDatePicked(currentDate)
                 onDismissRequest()
             },
-            isButtonEnabled = { !currentDate.isAfter(LocalDate.now()) }
+            isButtonEnabled = { !currentDate.isAfter(LocalDate.now()) },
         ) {
             DateWheelPickerWidget(
                 date = currentDate,

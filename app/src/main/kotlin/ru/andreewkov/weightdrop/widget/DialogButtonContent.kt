@@ -48,7 +48,7 @@ fun ButtonContent(
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = 20.sp,
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
 
@@ -72,7 +72,7 @@ private fun DialogButtonContentPreview() {
         Card(
             colors = cardColors(
                 containerColor = MaterialTheme.colorScheme.surface,
-            )
+            ),
         ) {
             ButtonContent(
                 titleRes = R.string.settings_height_title,

@@ -14,9 +14,9 @@ import ru.andreewkov.weightdrop.domain.settings.UpdateTargetWeightUseCase
 import ru.andreewkov.weightdrop.model.SettingItem
 import ru.andreewkov.weightdrop.model.SettingsDialogValue
 import ru.andreewkov.weightdrop.model.SettingsDialogValue.HeightValue
+import ru.andreewkov.weightdrop.model.SettingsDialogValue.StartDateValue
 import ru.andreewkov.weightdrop.model.SettingsDialogValue.StartWeightValue
 import ru.andreewkov.weightdrop.model.SettingsDialogValue.TargetWeightValue
-import ru.andreewkov.weightdrop.model.SettingsDialogValue.StartDateValue
 import ru.andreewkov.weightdrop.model.SettingsItemType
 import ru.andreewkov.weightdrop.route.base.BaseViewModel
 import java.time.LocalDate
@@ -87,7 +87,7 @@ class SettingsScreenViewModel @Inject constructor(
                     currentSettings = settings
                 }
             }.onFailure {
-
+                // TODO
             }
         }
     }

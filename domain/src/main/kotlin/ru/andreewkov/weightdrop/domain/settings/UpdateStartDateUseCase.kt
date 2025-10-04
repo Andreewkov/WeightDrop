@@ -12,7 +12,7 @@ class UpdateStartDateUseCase @Inject constructor(
     @SettingsDispatcherQualifier private val settingsDispatcher: CoroutineDispatcher,
 ) {
 
-    suspend operator fun invoke(date: LocalDate): Result<Unit> = withContext(settingsDispatcher)  {
+    suspend operator fun invoke(date: LocalDate): Result<Unit> = withContext(settingsDispatcher) {
         settingsRepository.updateStartDate(date)
     }
 }

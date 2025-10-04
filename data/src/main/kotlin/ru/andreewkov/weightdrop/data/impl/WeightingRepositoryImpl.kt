@@ -37,7 +37,7 @@ class WeightingRepositoryImpl @Inject constructor(
     ): Result<WeightingDataModel> = withContext(databaseDispatcher) {
         return@withContext ru.andreewkov.weightdrop.data.util.runCatching(
             logger,
-            errorMessage = "Error at getting weighting $date"
+            errorMessage = "Error at getting weighting $date",
         ) {
             weightingDao.getWeighting(date).toWeightingDataModel()
         }
@@ -58,7 +58,7 @@ class WeightingRepositoryImpl @Inject constructor(
     ): Result<Unit> = withContext(databaseDispatcher) {
         return@withContext ru.andreewkov.weightdrop.data.util.runCatching(
             logger,
-            errorMessage = "Error at deleting weighting"
+            errorMessage = "Error at deleting weighting",
         ) {
             weightingDao.deleteWeighting(
                 dbo = weighting.toWeightingDBO(),

@@ -38,7 +38,7 @@ class SettingsRepositoryImpl @Inject constructor(
                 targetWeight = getFloat(TARGET_WEIGHT_NAME),
                 startDate = getLocalDate(START_DATE_NAME),
             )
-        }
+        },
     )
 
     override fun observeSettings(): Flow<SettingsDataModel> {

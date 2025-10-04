@@ -37,8 +37,8 @@ fun HeightPickerDialogUI(
     val heightFlow = remember {
         MutableStateFlow(
             IndexWithScrollTime(
-                (initialHeight - 140).coerceIn(0, 80)
-            )
+                index = (initialHeight - 140).coerceIn(0, 80),
+            ),
         )
     }
 

@@ -99,7 +99,7 @@ private fun Dialog(
                 titleRes = R.string.settings_height_title,
                 onHeightPicked = { height ->
                     onValueChanged(
-                        SettingsDialogValue.HeightValue(height)
+                        SettingsDialogValue.HeightValue(height),
                     )
                 },
                 onDismissRequest = onDismissRequest,
@@ -111,7 +111,7 @@ private fun Dialog(
                 titleRes = R.string.settings_start_weight_title,
                 onWeightPicked = { weight ->
                     onValueChanged(
-                        SettingsDialogValue.StartWeightValue(weight)
+                        SettingsDialogValue.StartWeightValue(weight),
                     )
                 },
                 onDismissRequest = onDismissRequest,
@@ -123,7 +123,7 @@ private fun Dialog(
                 titleRes = R.string.settings_target_weight_title,
                 onWeightPicked = { weight ->
                     onValueChanged(
-                        SettingsDialogValue.TargetWeightValue(weight)
+                        SettingsDialogValue.TargetWeightValue(weight),
                     )
                 },
                 onDismissRequest = onDismissRequest,
@@ -135,7 +135,7 @@ private fun Dialog(
                 titleRes = R.string.settings_start_date_title,
                 onDatePicked = { date ->
                     onValueChanged(
-                        SettingsDialogValue.StartDateValue(date)
+                        SettingsDialogValue.StartDateValue(date),
                     )
                 },
                 onDismissRequest = onDismissRequest,
