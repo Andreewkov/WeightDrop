@@ -13,13 +13,13 @@ import ru.andreewkov.weightdrop.WeightChartCalculator
 import ru.andreewkov.weightdrop.domain.model.Settings
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.settings.ObserveSettingsUseCase
-import ru.andreewkov.weightdrop.domain.weighting.GetWeightingsUseCase
+import ru.andreewkov.weightdrop.domain.weighting.ObserveWeightingsUseCase
 import ru.andreewkov.weightdrop.route.base.BaseViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class InfoScreenViewModel @Inject constructor(
-    private val getWeightingsUseCase: GetWeightingsUseCase,
+    private val observeWeightingsUseCase: ObserveWeightingsUseCase,
     private val observeSettingsUseCase: ObserveSettingsUseCase,
 ) : BaseViewModel<InfoScreenState>(
     defaultState = InfoScreenState.Loading,
@@ -36,10 +36,10 @@ class InfoScreenViewModel @Inject constructor(
             handleError()
         }
         viewModelScope.launch(exceptionHandler + Dispatchers.Default) {
-            val weightingsDeferred = async { getWeightingsUseCase() }
+            val weightingsDeferred = async { observeWeightingsUseCase() }
             val settingsDeferred = async { observeSettingsUseCase() }
             combine(
-                weightingsDeferred.await().getOrThrow(),
+                weightingsDeferred.await().getOrThrow(), // TODO
                 settingsDeferred.await(),
             ) { weightings, settings ->
                 handleCombine(weightings, settings)

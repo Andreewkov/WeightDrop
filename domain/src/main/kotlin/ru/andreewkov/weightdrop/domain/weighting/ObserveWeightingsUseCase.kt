@@ -6,11 +6,11 @@ import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.model.toWeightingsFlow
 import javax.inject.Inject
 
-class GetWeightingsUseCase @Inject constructor(
+class ObserveWeightingsUseCase @Inject constructor(
     private val weightingRepository: WeightingRepository,
 ) {
 
     operator fun invoke(): Result<Flow<List<Weighting>>> {
-        return weightingRepository.getWeightings().map { it.toWeightingsFlow() }
+        return weightingRepository.observeWeightings().map { it.toWeightingsFlow() }
     }
 }

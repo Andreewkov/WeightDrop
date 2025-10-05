@@ -12,7 +12,7 @@ import java.time.LocalDate
 interface WeightingDao {
 
     @Query("SELECT * FROM ${WeightingEntity.TABLE_NAME} ORDER BY ${WeightingEntity.DATE_COLUMN}")
-    fun getWeightings(): Flow<List<WeightingEntity>>
+    fun observeWeightings(): Flow<List<WeightingEntity>>
 
     @Query("SELECT * FROM ${WeightingEntity.TABLE_NAME} WHERE ${WeightingEntity.DATE_COLUMN} LIKE :date")
     fun getWeighting(date: LocalDate): WeightingEntity

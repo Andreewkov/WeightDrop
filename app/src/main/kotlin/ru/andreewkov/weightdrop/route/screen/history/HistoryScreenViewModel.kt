@@ -5,14 +5,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.weighting.DeleteWeightingUseCase
-import ru.andreewkov.weightdrop.domain.weighting.GetWeightingsUseCase
+import ru.andreewkov.weightdrop.domain.weighting.ObserveWeightingsUseCase
 import ru.andreewkov.weightdrop.route.base.BaseViewModel
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryScreenViewModel @Inject constructor(
-    private val getWeightingsUseCase: GetWeightingsUseCase,
+    private val observeWeightingsUseCase: ObserveWeightingsUseCase,
     private val deleteWeightingUseCase: DeleteWeightingUseCase,
 ) : BaseViewModel<HistoryScreenState>(
     defaultState = HistoryScreenState.Loading,
@@ -34,7 +34,7 @@ class HistoryScreenViewModel @Inject constructor(
     }
 
     private fun loadHistory() {
-        getWeightingsUseCase()
+        observeWeightingsUseCase()
             .onSuccess {
                 viewModelScope.launch {
                     it.collect {
