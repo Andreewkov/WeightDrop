@@ -18,7 +18,7 @@ class CalculateHistoryBlocksUseCaseTest {
     fun readStringFromContext_LocalizedString() {
         val useCase = CalculateHistoryBlocksUseCase(Dispatchers.Default)
         val weightings = listOf(
-            Weighting(93.7f, LocalDate.of(2025, 10, 25))
+            Weighting(93.7f, LocalDate.of(2025, 10, 25)),
         )
 
         val expected = listOf(
@@ -32,9 +32,9 @@ class CalculateHistoryBlocksUseCaseTest {
                     HistoryBlock.Item(
                         weighting = Weighting(93.7f, LocalDate.of(2025, 10, 25)),
                         diff = 0.0f,
-                    )
-                )
-            )
+                    ),
+                ),
+            ),
         )
         val result = runBlocking {
             useCase.invoke(weightings = weightings)

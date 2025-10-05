@@ -44,11 +44,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.WeightingFormatter
-import ru.andreewkov.weightdrop.WeightingHistoryCalculator
-import ru.andreewkov.weightdrop.domain.model.Weighting
+import ru.andreewkov.weightdrop.domain.model.HistoryBlock
+import ru.andreewkov.weightdrop.domain.weighting.CalculateHistoryBlocksUseCase
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.ScaffoldPreview
 import ru.andreewkov.weightdrop.util.WeightDropPreview
@@ -64,15 +66,16 @@ fun HistoryScreenUI(
     val screenState by viewModel.screenState.collectAsState()
 
     when (val state = screenState) {
-        is HistoryScreenState.History -> {
+        is HistoryScreenState.Success -> {
             Content(
-                weightings = state.weightings,
-                onCardClick = { weight, date ->
+                blocks = state.blocks,
+                onCardClick = { _, date ->
                     onCardClick(date)
                 },
                 onDelete = viewModel::onWeightingDeleted,
             )
         }
+        HistoryScreenState.Failure -> Unit // TODO
         HistoryScreenState.Loading -> Unit
         HistoryScreenState.Empty -> Unit
     }
@@ -80,15 +83,12 @@ fun HistoryScreenUI(
 
 @Composable
 private fun Content(
-    weightings: List<Weighting>,
+    blocks: List<HistoryBlock>,
     onCardClick: (Float, LocalDate) -> Unit,
     onDelete: (Float, LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val historyItems = remember(weightings) {
-        WeightingHistoryCalculator.calculate(weightings)
-    }
     var isAnimationRun by remember { mutableStateOf(false) }
 
     fun onAnimationRun() {
@@ -99,7 +99,7 @@ private fun Content(
         overscrollEffect = null,
         modifier = modifier.fillMaxSize(),
     ) {
-        historyItems.forEachIndexed { headerIndex, headerItem ->
+        blocks.forEachIndexed { headerIndex, headerItem ->
             headerItem.header?.let { header ->
                 stickyHeader {
                     MonthCard(
@@ -313,8 +313,13 @@ fun MonthCardPreview() {
 fun ContentPreview() {
     WeightDropTheme {
         ScaffoldPreview {
+            val blocks = remember {
+                runBlocking {
+                    CalculateHistoryBlocksUseCase(Dispatchers.Default).invoke(stubWeightingsMediumThird)
+                }.getOrThrow()
+            }
             Content(
-                weightings = stubWeightingsMediumThird,
+                blocks = blocks,
                 onCardClick = { _, _ -> },
                 onDelete = { _, _ -> },
             )

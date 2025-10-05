@@ -40,7 +40,7 @@ class HistoryScreenViewModel @Inject constructor(
             .onSuccess {
                 viewModelScope.launch {
                     it.collect {
-                        handleHistory(it)
+                        handleHistory(it) // TODO
                     }
                 }
             }
@@ -50,12 +50,18 @@ class HistoryScreenViewModel @Inject constructor(
     }
 
     private fun handleHistory(weightings: List<Weighting>) {
-        updateState {
-            if (weightings.isNotEmpty()) {
-                HistoryScreenState.History(weightings)
-            } else {
-                HistoryScreenState.Empty
+        if (weightings.isEmpty()) {
+            updateState { HistoryScreenState.Empty }
+            return
+        }
+
+        viewModelScope.launch {
+            val blocks = calculateHistoryBlocksUseCase(weightings).getOrElse {
+                updateState { HistoryScreenState.Failure }
+                return@launch
             }
+
+            updateState { HistoryScreenState.Success(blocks) }
         }
     }
 }
