@@ -42,8 +42,6 @@ class InfoScreenViewModel @Inject constructor(
                 weightingsDeferred.await().getOrThrow(),
                 settingsDeferred.await(),
             ) { weightings, settings ->
-                if (settings.isLoading) return@combine
-
                 handleCombine(weightings, settings)
             }.collect()
         }

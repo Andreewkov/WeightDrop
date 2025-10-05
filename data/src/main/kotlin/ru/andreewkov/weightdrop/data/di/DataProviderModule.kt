@@ -36,6 +36,6 @@ object DataProviderModule {
     @Singleton
     @SettingsDispatcherQualifier
     fun provideSettingsDispatcher(): CoroutineDispatcher {
-        return Dispatchers.IO
+        return Dispatchers.Default
     }
 }

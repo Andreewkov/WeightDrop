@@ -1,6 +1,6 @@
 package ru.andreewkov.weightdrop.data.model
 
-import ru.andreewkov.weightdrop.database.WeightingDBO
+import ru.andreewkov.weightdrop.database.WeightingEntity
 import java.time.LocalDate
 
 data class WeightingDataModel(
@@ -8,19 +8,19 @@ data class WeightingDataModel(
     val date: LocalDate,
 )
 
-internal fun WeightingDBO.toWeightingDataModel(): WeightingDataModel {
+internal fun WeightingEntity.toDataModel(): WeightingDataModel {
     return WeightingDataModel(
         value = weight,
         date = date,
     )
 }
 
-internal fun List<WeightingDBO>.toWeightingDataModels(): List<WeightingDataModel> {
-    return map { it.toWeightingDataModel() }
+internal fun List<WeightingEntity>.toDataModels(): List<WeightingDataModel> {
+    return map { it.toDataModel() }
 }
 
-internal fun WeightingDataModel.toWeightingDBO(): WeightingDBO {
-    return WeightingDBO(
+internal fun WeightingDataModel.toEntity(): WeightingEntity {
+    return WeightingEntity(
         weight = value,
         date = date,
     )

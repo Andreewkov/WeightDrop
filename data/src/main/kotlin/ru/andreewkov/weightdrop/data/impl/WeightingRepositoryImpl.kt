@@ -8,47 +8,42 @@ import kotlinx.coroutines.withContext
 import ru.andreewkov.weightdrop.data.api.WeightingRepository
 import ru.andreewkov.weightdrop.data.di.DatabaseDispatcherQualifier
 import ru.andreewkov.weightdrop.data.model.WeightingDataModel
-import ru.andreewkov.weightdrop.data.model.toWeightingDBO
-import ru.andreewkov.weightdrop.data.model.toWeightingDataModel
-import ru.andreewkov.weightdrop.data.model.toWeightingDataModels
+import ru.andreewkov.weightdrop.data.model.toDataModel
+import ru.andreewkov.weightdrop.data.model.toDataModels
+import ru.andreewkov.weightdrop.data.model.toEntity
 import ru.andreewkov.weightdrop.database.WeightingDao
-import ru.andreewkov.weightdrop.utils.api.LoggerProvider
 import java.time.LocalDate
 import javax.inject.Inject
 
 class WeightingRepositoryImpl @Inject constructor(
     private val weightingDao: WeightingDao,
     @DatabaseDispatcherQualifier private val databaseDispatcher: CoroutineDispatcher,
-    loggerProvider: LoggerProvider,
 ) : WeightingRepository {
 
-    private val logger = loggerProvider.get("SettingsRepositoryImpl")
-
     override fun getWeightings(): Result<Flow<List<WeightingDataModel>>> {
-        return ru.andreewkov.weightdrop.data.util.runCatching(logger, errorMessage = "Error at getting weightings") {
-            weightingDao.getWeightings().flowOn(databaseDispatcher).map { weightings ->
-                weightings.toWeightingDataModels()
-            }
+        return runCatching {
+            weightingDao.getWeightings()
+                .map { weightings ->
+                    weightings.toDataModels()
+                }
+                .flowOn(databaseDispatcher)
         }
     }
 
     override suspend fun getWeighting(
         date: LocalDate,
     ): Result<WeightingDataModel> = withContext(databaseDispatcher) {
-        return@withContext ru.andreewkov.weightdrop.data.util.runCatching(
-            logger,
-            errorMessage = "Error at getting weighting $date",
-        ) {
-            weightingDao.getWeighting(date).toWeightingDataModel()
+        runCatching {
+            weightingDao.getWeighting(date).toDataModel()
         }
     }
 
     override suspend fun updateWeighting(
         weighting: WeightingDataModel,
     ): Result<Unit> = withContext(databaseDispatcher) {
-        ru.andreewkov.weightdrop.data.util.runCatching(logger, errorMessage = "Error at updating weightings") {
+        runCatching {
             weightingDao.insertWeighting(
-                dbo = weighting.toWeightingDBO(),
+                entity = weighting.toEntity(),
             )
         }
     }
@@ -56,12 +51,9 @@ class WeightingRepositoryImpl @Inject constructor(
     override suspend fun deleteWeighting(
         weighting: WeightingDataModel,
     ): Result<Unit> = withContext(databaseDispatcher) {
-        return@withContext ru.andreewkov.weightdrop.data.util.runCatching(
-            logger,
-            errorMessage = "Error at deleting weighting",
-        ) {
+        runCatching {
             weightingDao.deleteWeighting(
-                dbo = weighting.toWeightingDBO(),
+                entity = weighting.toEntity(),
             )
         }
     }

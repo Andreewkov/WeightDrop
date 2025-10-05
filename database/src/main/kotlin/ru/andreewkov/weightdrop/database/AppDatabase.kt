@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 
 @Database(
     version = 1,
-    entities = [WeightingDBO::class],
+    entities = [WeightingEntity::class],
 )
 @TypeConverters(LocalDateTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {

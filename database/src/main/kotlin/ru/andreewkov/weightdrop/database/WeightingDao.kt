@@ -11,15 +11,15 @@ import java.time.LocalDate
 @Dao
 interface WeightingDao {
 
-    @Query("SELECT * FROM weightingdbo ORDER BY date")
-    fun getWeightings(): Flow<List<WeightingDBO>>
+    @Query("SELECT * FROM ${WeightingEntity.TABLE_NAME} ORDER BY ${WeightingEntity.DATE_COLUMN}")
+    fun getWeightings(): Flow<List<WeightingEntity>>
 
-    @Query("SELECT * FROM weightingdbo WHERE date LIKE :date")
-    fun getWeighting(date: LocalDate): WeightingDBO
+    @Query("SELECT * FROM ${WeightingEntity.TABLE_NAME} WHERE ${WeightingEntity.DATE_COLUMN} LIKE :date")
+    fun getWeighting(date: LocalDate): WeightingEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertWeighting(dbo: WeightingDBO)
+    fun insertWeighting(entity: WeightingEntity)
 
     @Delete
-    fun deleteWeighting(dbo: WeightingDBO)
+    fun deleteWeighting(entity: WeightingEntity)
 }

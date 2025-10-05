@@ -3,12 +3,10 @@ package ru.andreewkov.weightdrop.data.impl
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.andreewkov.weightdrop.data.api.SettingsRepository
 import ru.andreewkov.weightdrop.data.di.SettingsDispatcherQualifier
@@ -31,27 +29,16 @@ class SettingsRepositoryImpl @Inject constructor(
     @SettingsDispatcherQualifier private val dispatcher: CoroutineDispatcher,
 ) : SettingsRepository {
 
-    private val scope = CoroutineScope(dispatcher)
-
     private val currentSettings = MutableStateFlow(
-        SettingsDataModel(isLoading = true),
+        settingsPreferences.run {
+            SettingsDataModel(
+                height = getInt(HEIGHT_NAME),
+                startWeight = getFloat(START_WEIGHT_NAME),
+                targetWeight = getFloat(TARGET_WEIGHT_NAME),
+                startDate = getLocalDate(START_DATE_NAME),
+            )
+        },
     )
-
-    init {
-        scope.launch {
-            currentSettings.update {
-                settingsPreferences.run {
-                    SettingsDataModel(
-                        isLoading = false,
-                        height = getInt(HEIGHT_NAME),
-                        startWeight = getFloat(START_WEIGHT_NAME),
-                        targetWeight = getFloat(TARGET_WEIGHT_NAME),
-                        startDate = getLocalDate(START_DATE_NAME),
-                    )
-                }
-            }
-        }
-    }
 
     override fun observeSettings(): Flow<SettingsDataModel> {
         return currentSettings.asStateFlow()
@@ -116,27 +103,27 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun SharedPreferences.getInt(name: String): Int? = withContext(dispatcher) {
+    private fun SharedPreferences.getInt(name: String): Int? {
         val value = getInt(name, -1)
-        if (value == -1) {
+        return if (value == -1) {
             null
         } else {
             value
         }
     }
 
-    private suspend fun SharedPreferences.getFloat(name: String): Float? = withContext(dispatcher) {
+    private fun SharedPreferences.getFloat(name: String): Float? {
         val value = getFloat(name, -1F)
-        if (value == -1F) {
+        return if (value == -1F) {
             null
         } else {
             value
         }
     }
 
-    private suspend fun SharedPreferences.getLocalDate(name: String): LocalDate? = withContext(dispatcher) {
+    private fun SharedPreferences.getLocalDate(name: String): LocalDate? {
         val value = getLong(name, -1L)
-        if (value == -1L) {
+        return if (value == -1L) {
             null
         } else {
             Instant.ofEpochMilli(value).atZone(ZoneId.systemDefault()).toLocalDate()
