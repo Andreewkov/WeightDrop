@@ -19,6 +19,9 @@ navigationComposeHilt = "1.2.0"
 navigationRuntimeKtx = "2.9.0"
 ksp = "2.1.20-2.0.0"
 recyclerview = "1.4.0"
+testVersion = "1.7.0"
+mockito = "5.20.0"
+mockitoKotlin = "6.1.0"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -47,8 +50,12 @@ dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref 
 dagger-hilt-kapt = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "daggerHilt"}
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test = { group = "androidx.test", name = "core", version.ref = "testVersion"}
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito"}
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
