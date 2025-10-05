@@ -30,8 +30,8 @@ class SettingsScreenViewModel @Inject constructor(
     private val updateTargetWeightUseCase: UpdateTargetWeightUseCase,
     private val updateStartDateUseCase: UpdateStartDateUseCase,
 ) : BaseViewModel<SettingsScreenState>(
-    defaultState = SettingsScreenState(content = SettingsContentState.Loading),
-) {
+        defaultState = SettingsScreenState(content = SettingsContentState.Loading),
+    ) {
 
     private var currentSettings: Settings? = null
         set(value) {

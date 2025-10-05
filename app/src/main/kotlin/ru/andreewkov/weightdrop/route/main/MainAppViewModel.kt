@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.route.Route
 import ru.andreewkov.weightdrop.route.base.BaseViewModel
-import ru.andreewkov.weightdrop.util.MutableSignalFlow
-import ru.andreewkov.weightdrop.util.asSignalFlow
+import ru.andreewkov.weightdrop.utils.MutableSignalFlow
+import ru.andreewkov.weightdrop.utils.asSignalFlow
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -22,7 +22,7 @@ class MainAppViewModel @Inject constructor() : BaseViewModel<MainAppState>(
     private val _navigateToRouteId = MutableSharedFlow<String>()
     val navigateToRouteId get() = _navigateToRouteId.asSharedFlow()
 
-    private val _navigateOnBack = MutableSignalFlow()
+    private val _navigateOnBack = ru.andreewkov.weightdrop.utils.MutableSignalFlow()
     val navigateOnBack get() = _navigateOnBack.asSignalFlow()
 
     private val _addRequestState = MutableStateFlow(MainAppAddRequestState(show = false))

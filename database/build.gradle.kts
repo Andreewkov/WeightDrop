@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    api(project(":utils"))
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

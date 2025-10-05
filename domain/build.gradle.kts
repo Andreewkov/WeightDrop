@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "android.template.core.data"
+    namespace = "ru.andreewkov.weightdrop.data"
     compileSdk = 36
 
     defaultConfig {
@@ -36,6 +36,7 @@ android {
 
 dependencies {
     implementation(project(":data"))
+    api(project(":utils"))
 
     // Arch Components
     implementation(libs.hilt.android)

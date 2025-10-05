@@ -23,9 +23,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.drawHorizontalWheelLines
-import ru.andreewkov.weightdrop.util.getFraction
-import ru.andreewkov.weightdrop.util.getInteger
-import ru.andreewkov.weightdrop.util.inRange
+import ru.andreewkov.weightdrop.utils.getFraction
+import ru.andreewkov.weightdrop.utils.getInteger
+import ru.andreewkov.weightdrop.utils.inRange
 import kotlin.math.absoluteValue
 import kotlin.math.max
 

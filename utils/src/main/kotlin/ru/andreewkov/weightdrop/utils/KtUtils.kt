@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.util
+package ru.andreewkov.weightdrop.utils
 
 import kotlin.math.ceil
 import kotlin.math.floor

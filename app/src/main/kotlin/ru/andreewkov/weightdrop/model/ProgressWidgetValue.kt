@@ -1,6 +1,6 @@
 package ru.andreewkov.weightdrop.model
 
-import ru.andreewkov.weightdrop.util.roundToDecimals
+import ru.andreewkov.weightdrop.utils.roundToDecimals
 
 data class ProgressWidgetValue(
     val start: Float,

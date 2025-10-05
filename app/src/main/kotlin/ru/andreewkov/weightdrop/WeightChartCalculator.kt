@@ -2,8 +2,8 @@ package ru.andreewkov.weightdrop
 
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.model.WeightPoint
-import ru.andreewkov.weightdrop.util.cellToStep
-import ru.andreewkov.weightdrop.util.floorToStep
+import ru.andreewkov.weightdrop.utils.cellToStep
+import ru.andreewkov.weightdrop.utils.floorToStep
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import kotlin.math.max

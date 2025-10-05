@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.util
+package ru.andreewkov.weightdrop.utils
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

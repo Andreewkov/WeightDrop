@@ -1,8 +1,8 @@
 package ru.andreewkov.weightdrop
 
-import ru.andreewkov.weightdrop.util.capitalizeFirstChar
-import ru.andreewkov.weightdrop.util.hasDecimals
-import ru.andreewkov.weightdrop.util.roundToDecimals
+import ru.andreewkov.weightdrop.utils.capitalizeFirstChar
+import ru.andreewkov.weightdrop.utils.hasDecimals
+import ru.andreewkov.weightdrop.utils.roundToDecimals
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month

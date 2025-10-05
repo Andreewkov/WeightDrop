@@ -42,7 +42,7 @@ import ru.andreewkov.weightdrop.theme.Dark
 import ru.andreewkov.weightdrop.theme.Grey
 import ru.andreewkov.weightdrop.theme.Peach
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
-import ru.andreewkov.weightdrop.util.roundToDecimals
+import ru.andreewkov.weightdrop.utils.roundToDecimals
 import kotlin.math.absoluteValue
 
 data class ProgressWidgetColor(

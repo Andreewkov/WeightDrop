@@ -1,4 +1,4 @@
-package ru.andreewkov.weightdrop.util
+package ru.andreewkov.weightdrop.utils
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

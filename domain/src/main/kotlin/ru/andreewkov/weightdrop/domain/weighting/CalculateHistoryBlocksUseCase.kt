@@ -1,23 +1,37 @@
-package ru.andreewkov.weightdrop
+package ru.andreewkov.weightdrop.domain.weighting
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+import ru.andreewkov.weightdrop.domain.di.HistoryDispatcherQualifier
+import ru.andreewkov.weightdrop.domain.model.HistoryBlock
 import ru.andreewkov.weightdrop.domain.model.Weighting
-import ru.andreewkov.weightdrop.model.WeightingHistory
-import ru.andreewkov.weightdrop.util.stubWeightingsMediumThird
 import ru.andreewkov.weightdrop.utils.roundToDecimals
 import java.time.LocalDate
+import javax.inject.Inject
 
-object WeightingHistoryCalculator {
+class CalculateHistoryBlocksUseCase @Inject constructor(
+    @HistoryDispatcherQualifier private val dispatcher: CoroutineDispatcher,
+) {
 
-    fun calculate(
+    suspend operator fun invoke(
         weightings: List<Weighting>,
         previous: Weighting? = null,
-    ): List<WeightingHistory> {
+    ): Result<List<HistoryBlock>> = withContext(dispatcher) {
+        runCatching {
+            calculateBlocks(weightings, previous)
+        }
+    }
+
+    private fun calculateBlocks(
+        weightings: List<Weighting>,
+        previous: Weighting? = null,
+    ): List<HistoryBlock> {
         check(weightings.isNotEmpty())
         val sortedWeightings = weightings.sortedBy { it.date }
         var prevWeight = sortedWeightings.first().value
 
         val historyItems = sortedWeightings.map { weighting ->
-            WeightingHistory.Item(
+            HistoryBlock.Item(
                 weighting = weighting,
                 diff = (weighting.value - prevWeight).roundToDecimals(),
             ).also {
@@ -50,14 +64,14 @@ object WeightingHistoryCalculator {
         }.reversed()
     }
 
-    private fun MutableList<WeightingHistory>.addHeader(
+    private fun MutableList<HistoryBlock>.addHeader(
         monthDate: LocalDate,
-        items: List<WeightingHistory.Item>,
+        items: List<HistoryBlock.Item>,
         takeHeader: Boolean,
     ) {
         add(
-            WeightingHistory(
-                header = WeightingHistory.Header(
+            HistoryBlock(
+                header = HistoryBlock.Header(
                     month = monthDate.month,
                     year = monthDate.year,
                     diff = items.map { it.diff }.sum().roundToDecimals(),
@@ -66,17 +80,4 @@ object WeightingHistoryCalculator {
             ),
         )
     }
-}
-
-fun main() {
-    val t3 = System.currentTimeMillis()
-    val result2 = WeightingHistoryCalculator.calculate(stubWeightingsMediumThird)
-    result2.forEach {
-        println(it.header)
-        it.weightingItems.forEach {
-            println(it)
-        }
-    }
-    val t4 = System.currentTimeMillis()
-    println("seconds: " + (t4 - t3))
 }
