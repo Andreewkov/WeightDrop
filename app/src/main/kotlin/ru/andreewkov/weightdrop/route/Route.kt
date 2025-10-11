@@ -2,17 +2,9 @@ package ru.andreewkov.weightdrop.route
 
 import ru.andreewkov.weightdrop.R
 
-interface RouteParams
-
-interface RouteResult
-
 sealed class Route(
     open val id: String,
 ) {
-
-    open val params: RouteParams? = null
-
-    open fun tryUpdateParams(result: RouteResult?) = Unit
 
     sealed class Screen(
         override val id: String,

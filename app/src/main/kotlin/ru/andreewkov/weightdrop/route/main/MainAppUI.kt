@@ -38,7 +38,7 @@ fun MainAppUI(
 
     LaunchedEffect(currentBackStackEntry) {
         val id = currentBackStackEntry?.destination?.route ?: return@LaunchedEffect
-        viewModel.onRouteIdUpdated(id = id)
+        viewModel.onRouteIdChanged(id = id)
 
         viewModel.navigateToRouteId.onEach { id ->
             navController.navigate(id)

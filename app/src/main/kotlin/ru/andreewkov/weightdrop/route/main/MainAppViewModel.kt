@@ -45,7 +45,7 @@ class MainAppViewModel @Inject constructor() : ScreenStateViewModel<MainAppState
         _addRequestState.value = MainAppAddRequestState.Hide
     }
 
-    fun onRouteIdUpdated(id: String) {
+    fun onRouteIdChanged(id: String) {
         val route = Route.findScreenOrNull(id) ?: Route.startScreen
         updateState {
             copy(
