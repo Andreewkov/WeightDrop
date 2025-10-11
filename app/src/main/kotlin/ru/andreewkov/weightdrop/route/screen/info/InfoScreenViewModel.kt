@@ -14,14 +14,14 @@ import ru.andreewkov.weightdrop.domain.model.Settings
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.settings.ObserveSettingsUseCase
 import ru.andreewkov.weightdrop.domain.weighting.ObserveWeightingsUseCase
-import ru.andreewkov.weightdrop.route.base.BaseViewModel
+import ru.andreewkov.weightdrop.route.base.ScreenStateViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class InfoScreenViewModel @Inject constructor(
     private val observeWeightingsUseCase: ObserveWeightingsUseCase,
     private val observeSettingsUseCase: ObserveSettingsUseCase,
-) : BaseViewModel<InfoScreenState>(
+) : ScreenStateViewModel<InfoScreenState>(
         defaultState = InfoScreenState.Loading,
     ) {
 

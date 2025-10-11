@@ -1,9 +1,9 @@
 package ru.andreewkov.weightdrop.route.screen.history
 
 import ru.andreewkov.weightdrop.domain.model.HistoryBlock
-import ru.andreewkov.weightdrop.route.base.BaseScreenState
+import ru.andreewkov.weightdrop.route.base.ScreenState
 
-sealed class HistoryScreenState : BaseScreenState {
+sealed class HistoryScreenState : ScreenState {
 
     data object Loading : HistoryScreenState()
 

@@ -8,14 +8,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.route.Route
-import ru.andreewkov.weightdrop.route.base.BaseViewModel
-import ru.andreewkov.weightdrop.utils.MutableSignalFlow
+import ru.andreewkov.weightdrop.route.base.ScreenStateViewModel
 import ru.andreewkov.weightdrop.utils.asSignalFlow
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class MainAppViewModel @Inject constructor() : BaseViewModel<MainAppState>(
+class MainAppViewModel @Inject constructor() : ScreenStateViewModel<MainAppState>(
     defaultState = MainAppState.createDefault(),
 ) {
 

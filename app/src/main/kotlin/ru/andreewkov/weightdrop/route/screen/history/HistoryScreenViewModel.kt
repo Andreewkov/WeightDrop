@@ -7,7 +7,7 @@ import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.weighting.CalculateHistoryBlocksUseCase
 import ru.andreewkov.weightdrop.domain.weighting.DeleteWeightingUseCase
 import ru.andreewkov.weightdrop.domain.weighting.ObserveWeightingsUseCase
-import ru.andreewkov.weightdrop.route.base.BaseViewModel
+import ru.andreewkov.weightdrop.route.base.ScreenStateViewModel
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -16,7 +16,7 @@ class HistoryScreenViewModel @Inject constructor(
     private val observeWeightingsUseCase: ObserveWeightingsUseCase,
     private val calculateHistoryBlocksUseCase: CalculateHistoryBlocksUseCase,
     private val deleteWeightingUseCase: DeleteWeightingUseCase,
-) : BaseViewModel<HistoryScreenState>(
+) : ScreenStateViewModel<HistoryScreenState>(
         defaultState = HistoryScreenState.Loading,
     ) {
 

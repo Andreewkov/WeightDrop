@@ -2,14 +2,14 @@ package ru.andreewkov.weightdrop.route.screen.settings
 
 import ru.andreewkov.weightdrop.model.SettingItem
 import ru.andreewkov.weightdrop.model.SettingsDialogValue
-import ru.andreewkov.weightdrop.route.base.BaseScreenState
+import ru.andreewkov.weightdrop.route.base.ScreenState
 
 data class SettingsScreenState(
     val content: SettingsContentState,
     val displayedDialog: SettingsDialogValue<*>? = null,
-) : BaseScreenState
+) : ScreenState
 
-sealed class SettingsContentState : BaseScreenState {
+sealed class SettingsContentState : ScreenState {
 
     data object Loading : SettingsContentState()
 

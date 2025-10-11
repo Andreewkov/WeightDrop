@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
 import ru.andreewkov.weightdrop.domain.weighting.UpdateWeightingUseCase
-import ru.andreewkov.weightdrop.route.base.BaseViewModel
+import ru.andreewkov.weightdrop.route.base.ScreenStateViewModel
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class AddDialogViewModel @Inject constructor(
     private val getWeightingUseCase: GetWeightingUseCase,
     private val updateWeightingUseCase: UpdateWeightingUseCase,
-) : BaseViewModel<AddDialogState>(
+) : ScreenStateViewModel<AddDialogState>(
         defaultState = AddDialogState.createDefault(),
     ) {
 

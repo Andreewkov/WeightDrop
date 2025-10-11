@@ -1,12 +1,12 @@
 package ru.andreewkov.weightdrop.route.dialog.add
 
-import ru.andreewkov.weightdrop.route.base.BaseScreenState
+import ru.andreewkov.weightdrop.route.base.ScreenState
 import java.time.LocalDate
 
 data class AddDialogState(
     val date: LocalDate,
     val weight: Float,
-) : BaseScreenState {
+) : ScreenState {
 
     companion object {
         fun createDefault(): AddDialogState {

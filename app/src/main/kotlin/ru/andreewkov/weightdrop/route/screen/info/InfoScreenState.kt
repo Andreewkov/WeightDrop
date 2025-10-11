@@ -1,9 +1,9 @@
 package ru.andreewkov.weightdrop.route.screen.info
 
 import ru.andreewkov.weightdrop.WeightChart
-import ru.andreewkov.weightdrop.route.base.BaseScreenState
+import ru.andreewkov.weightdrop.route.base.ScreenState
 
-sealed class InfoScreenState : BaseScreenState {
+sealed class InfoScreenState : ScreenState {
 
     data object Loading : InfoScreenState()
 

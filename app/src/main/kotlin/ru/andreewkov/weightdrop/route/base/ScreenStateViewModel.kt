@@ -5,16 +5,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-interface BaseScreenState
+interface ScreenState
 
-abstract class BaseViewModel<State : BaseScreenState>(
+abstract class ScreenStateViewModel<State : ScreenState>(
     private val defaultState: State,
 ) : ViewModel() {
 
     private val _screenState = MutableStateFlow(defaultState)
     val screenState get() = _screenState.asStateFlow()
-
-    val currentState get() = _screenState.value
 
     protected fun updateState(action: State.() -> State) {
         _screenState.update { state ->

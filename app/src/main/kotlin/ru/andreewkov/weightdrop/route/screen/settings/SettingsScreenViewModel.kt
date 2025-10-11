@@ -18,7 +18,7 @@ import ru.andreewkov.weightdrop.model.SettingsDialogValue.StartDateValue
 import ru.andreewkov.weightdrop.model.SettingsDialogValue.StartWeightValue
 import ru.andreewkov.weightdrop.model.SettingsDialogValue.TargetWeightValue
 import ru.andreewkov.weightdrop.model.SettingsItemType
-import ru.andreewkov.weightdrop.route.base.BaseViewModel
+import ru.andreewkov.weightdrop.route.base.ScreenStateViewModel
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -29,7 +29,7 @@ class SettingsScreenViewModel @Inject constructor(
     private val updateStartWeightUseCase: UpdateStartWeightUseCase,
     private val updateTargetWeightUseCase: UpdateTargetWeightUseCase,
     private val updateStartDateUseCase: UpdateStartDateUseCase,
-) : BaseViewModel<SettingsScreenState>(
+) : ScreenStateViewModel<SettingsScreenState>(
         defaultState = SettingsScreenState(content = SettingsContentState.Loading),
     ) {
 
