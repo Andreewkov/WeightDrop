@@ -51,13 +51,14 @@ fun InfoScreenUI() {
     val screenState by viewModel.screenState.collectAsState()
 
     when (val state = screenState) {
-        is InfoScreenState.Chart -> {
+        is InfoScreenState.SuccessChart -> {
             Content(
                 weightChart = state.weightChart,
             )
         }
-        InfoScreenState.Empty -> Unit
+        InfoScreenState.SuccessEmpty -> Unit
         InfoScreenState.Loading -> Loading()
+        InfoScreenState.Failure -> Unit
     }
 }
 

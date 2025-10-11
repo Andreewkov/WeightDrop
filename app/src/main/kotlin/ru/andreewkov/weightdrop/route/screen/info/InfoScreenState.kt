@@ -7,7 +7,9 @@ sealed class InfoScreenState : ScreenState {
 
     data object Loading : InfoScreenState()
 
-    data object Empty : InfoScreenState()
+    data object Failure : InfoScreenState()
 
-    data class Chart(val weightChart: WeightChart) : InfoScreenState()
+    data object SuccessEmpty : InfoScreenState()
+
+    data class SuccessChart(val weightChart: WeightChart) : InfoScreenState()
 }

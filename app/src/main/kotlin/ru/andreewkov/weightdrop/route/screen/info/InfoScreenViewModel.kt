@@ -50,10 +50,10 @@ class InfoScreenViewModel @Inject constructor(
     private suspend fun handleCombine(weightings: List<Weighting>, settings: Settings) {
         val target = settings.targetWeight
         val state = if (weightings.isEmpty()) {
-            InfoScreenState.Empty
+            InfoScreenState.SuccessEmpty
         } else {
             withContext(Dispatchers.Default) {
-                InfoScreenState.Chart(
+                InfoScreenState.SuccessChart(
                     weightChart = weightChartCalculator.calculateWeightChart(target, weightings),
                 )
             }
