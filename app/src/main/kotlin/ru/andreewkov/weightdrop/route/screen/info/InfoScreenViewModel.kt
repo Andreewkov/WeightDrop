@@ -22,8 +22,8 @@ class InfoScreenViewModel @Inject constructor(
     private val observeWeightingsUseCase: ObserveWeightingsUseCase,
     private val observeSettingsUseCase: ObserveSettingsUseCase,
 ) : ScreenStateViewModel<InfoScreenState>(
-        defaultState = InfoScreenState.Loading,
-    ) {
+    defaultState = InfoScreenState.Loading,
+) {
 
     private val weightChartCalculator = WeightChartCalculator()
 
