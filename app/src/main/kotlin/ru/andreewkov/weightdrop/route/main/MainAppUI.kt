@@ -97,10 +97,13 @@ fun MainAppUI(
         }
     }
 
-    if (addRequestState.show) {
-        AddDialogUI(
-            initialDate = addRequestState.date,
-            onDismissRequest = viewModel::onAddDismissRequest,
-        )
+    when (val state = addRequestState) {
+        is MainAppAddRequestState.Show -> {
+            AddDialogUI(
+                initialDate = state.date,
+                onDismissRequest = viewModel::onAddDismissRequest,
+            )
+        }
+        MainAppAddRequestState.Hide -> Unit
     }
 }

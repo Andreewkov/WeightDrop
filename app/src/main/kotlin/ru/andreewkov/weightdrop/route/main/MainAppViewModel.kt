@@ -24,7 +24,7 @@ class MainAppViewModel @Inject constructor() : ScreenStateViewModel<MainAppState
     private val _navigateOnBack = ru.andreewkov.weightdrop.utils.MutableSignalFlow()
     val navigateOnBack get() = _navigateOnBack.asSignalFlow()
 
-    private val _addRequestState = MutableStateFlow(MainAppAddRequestState(show = false))
+    private val _addRequestState = MutableStateFlow<MainAppAddRequestState>(MainAppAddRequestState.Hide)
     val addRequestState get() = _addRequestState.asStateFlow()
 
     fun onBarScreenClick(screen: Route.BarScreen) {
@@ -34,18 +34,15 @@ class MainAppViewModel @Inject constructor() : ScreenStateViewModel<MainAppState
     }
 
     fun onAddClick() {
-        _addRequestState.value = MainAppAddRequestState(show = true)
+        _addRequestState.value = MainAppAddRequestState.Show(date = LocalDate.now())
     }
 
     fun onHistoryCardClick(date: LocalDate) {
-        _addRequestState.value = MainAppAddRequestState(
-            show = true,
-            date = date,
-        )
+        _addRequestState.value = MainAppAddRequestState.Show(date = date)
     }
 
     fun onAddDismissRequest() {
-        _addRequestState.value = MainAppAddRequestState(show = false)
+        _addRequestState.value = MainAppAddRequestState.Hide
     }
 
     fun onRouteIdUpdated(id: String) {
