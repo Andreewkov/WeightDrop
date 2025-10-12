@@ -1,41 +1,43 @@
-package ru.andreewkov.weightdrop
+package ru.andreewkov.weightdrop.domain.weighting
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+import ru.andreewkov.weightdrop.domain.di.ChartDispatcherQualifier
 import ru.andreewkov.weightdrop.domain.model.Weighting
-import ru.andreewkov.weightdrop.model.WeightPoint
+import ru.andreewkov.weightdrop.domain.model.WeightingsChart
+import ru.andreewkov.weightdrop.domain.model.WeightingsChartScope
 import ru.andreewkov.weightdrop.utils.cellToStep
 import ru.andreewkov.weightdrop.utils.floorToStep
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.ranges.contains
 
-data class WeightChart(
-    val scope: WeightsScope,
-    val weightPoints: List<WeightPoint>,
-)
+class CalculateWeightingsChartUseCase @Inject constructor(
+    @ChartDispatcherQualifier private val dispatcher: CoroutineDispatcher,
+) {
 
-data class WeightsScope(
-    val bottomWeight: Float,
-    val topWeight: Float,
-    val targetWeight: Float?,
-    val dividers: List<Float>,
-)
-
-class WeightChartCalculator {
-
-    fun calculateWeightChart(targetWeight: Float?, weightings: List<Weighting>): WeightChart {
-        check(weightings.isNotEmpty())
-
-        return WeightChart(
-            scope = calculateWeightsScope(targetWeight, weightings),
-            weightPoints = calculateWeightPoints(weightings),
-        )
-    }
-
-    private fun calculateWeightsScope(
+    suspend operator fun invoke(
         targetWeight: Float?,
         weightings: List<Weighting>,
-    ): WeightsScope {
+    ): Result<WeightingsChart> = withContext(dispatcher) {
+        runCatching {
+            check(weightings.isNotEmpty())
+
+            WeightingsChart(
+                scope = calculateScope(targetWeight, weightings),
+                weightings = weightings,
+            )
+        }
+    }
+
+    private fun calculateScope(
+        targetWeight: Float?,
+        weightings: List<Weighting>,
+    ): WeightingsChartScope {
+        val sortWeightings = weightings.sortedBy { it.date }
         val (minWeight, maxWeight) = weightings.findConfines()
         val minValue = min(minWeight.value, targetWeight ?: minWeight.value)
         val maxValue = max(maxWeight.value, targetWeight ?: maxWeight.value)
@@ -46,36 +48,17 @@ class WeightChartCalculator {
         val bottomValue = minValue.cellToStep(step) - step
         val count = ((topValue - bottomValue) / step).toInt() + 1
 
-        return WeightsScope(
+        return WeightingsChartScope(
             bottomWeight = bottomValue,
             topWeight = topValue,
             targetWeight = targetWeight,
+            startWeighting = sortWeightings.first(),
+            endWeighting = sortWeightings.last(),
             dividers = List(size = count) { index ->
                 bottomValue + step * index
             },
+            dateDividers = findDateDividers(weightings),
         )
-    }
-
-    private fun calculateWeightPoints(weightings: List<Weighting>): List<WeightPoint> {
-        val startLocalDate = weightings.first().date
-        val endLocalDate = weightings.last().date
-
-        val dayCount = ChronoUnit.DAYS.between(startLocalDate, endLocalDate).toInt() + 1
-        val dividers = findDateDividers(weightings)
-
-        var currentWeightingIndex = 0
-        return List(size = dayCount) { index ->
-            val date = startLocalDate.plusDays(index.toLong())
-            val weighting = weightings[currentWeightingIndex]
-                .takeIf { it.date == date }
-                .also { if (it != null) currentWeightingIndex++ }
-
-            WeightPoint(
-                date = date,
-                weightValue = weighting?.value,
-                drawDivider = dividers.any { it == date } || index == 0,
-            )
-        }
     }
 
     private fun findDateDividers(

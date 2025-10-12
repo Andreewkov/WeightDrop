@@ -313,11 +313,9 @@ fun MonthCardPreview() {
 fun ContentPreview() {
     WeightDropTheme {
         ScaffoldPreview {
-            val blocks = remember {
-                runBlocking {
-                    CalculateHistoryBlocksUseCase(Dispatchers.Default).invoke(stubWeightingsMediumThird)
-                }.getOrThrow()
-            }
+            val blocks = runBlocking {
+                CalculateHistoryBlocksUseCase(Dispatchers.Default).invoke(stubWeightingsMediumThird)
+            }.getOrThrow()
             Content(
                 blocks = blocks,
                 onCardClick = { _, _ -> },

@@ -22,13 +22,15 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.andreewkov.weightdrop.WeightChart
-import ru.andreewkov.weightdrop.WeightChartCalculator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import ru.andreewkov.weightdrop.WeightingFormatter
+import ru.andreewkov.weightdrop.domain.model.WeightingsChart
+import ru.andreewkov.weightdrop.domain.weighting.CalculateWeightingsChartUseCase
 import ru.andreewkov.weightdrop.model.WeightLineCubicPositions
-import ru.andreewkov.weightdrop.model.WeightPoint
-import ru.andreewkov.weightdrop.model.WeightPointPosition
-import ru.andreewkov.weightdrop.model.WeightPointPositionsScope
+import ru.andreewkov.weightdrop.model.WeightingPosition
+import ru.andreewkov.weightdrop.model.WeightingPositionsScope
+import ru.andreewkov.weightdrop.model.WeightingsChartColor
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.ScaffoldPreview
 import ru.andreewkov.weightdrop.util.WeightDropPreview
@@ -37,6 +39,7 @@ import ru.andreewkov.weightdrop.util.drawVerticalLine
 import ru.andreewkov.weightdrop.util.stubWeightingsMediumFirst
 import ru.andreewkov.weightdrop.util.stubWeightingsMediumSecond
 import ru.andreewkov.weightdrop.util.stubWeightingsMediumThird
+import java.time.LocalDate
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -45,18 +48,10 @@ private const val TOP_MARGIN_CHART = 0f
 private const val END_MARGIN_CHART = 0f
 private const val BOTTOM_MARGIN_CHART = 60f
 
-data class WeightChartColor(
-    val gridColor: Color,
-    val textColor: Color,
-    val weightLineColor: Color,
-    val pointColor: Color,
-    val targetLineColor: Color,
-)
-
 @Composable
 fun ChartWidget(
-    chart: WeightChart,
-    color: WeightChartColor,
+    chart: WeightingsChart,
+    color: WeightingsChartColor,
     modifier: Modifier = Modifier,
 ) {
     val measurer = rememberTextMeasurer()
@@ -80,7 +75,9 @@ fun ChartWidget(
 
         drawDateDividers(
             textMeasurer = measurer,
-            weightPoints = chart.weightPoints,
+            dividers = chart.scope.dateDividers,
+            startDate = chart.scope.startWeighting.date,
+            endDate = chart.scope.endWeighting.date,
             textStyle = textStyle,
             lineColor = color.gridColor,
         )
@@ -157,7 +154,9 @@ private fun DrawScope.drawWeightDivider(
 
 private fun DrawScope.drawDateDividers(
     textMeasurer: TextMeasurer,
-    weightPoints: List<WeightPoint>,
+    dividers: List<LocalDate>,
+    startDate: LocalDate,
+    endDate: LocalDate,
     textStyle: TextStyle,
     lineColor: Color,
 ) {
@@ -167,18 +166,10 @@ private fun DrawScope.drawDateDividers(
         right = END_MARGIN_CHART,
         bottom = 0f,
     ) {
-        val xStep = size.width / (weightPoints.size - 1)
-
-        weightPoints.mapIndexedNotNull { index, point ->
-            if (point.drawDivider) {
-                index to point.date
-            } else {
-                null
-            }
-        }.forEach { (index, date) ->
-            val currentX = index * xStep
+        val xStepForDay = size.width / (endDate.toEpochDay() - startDate.toEpochDay())
+        dividers.forEach { date ->
             drawDateDivider(
-                x = currentX,
+                x = (date.toEpochDay() - startDate.toEpochDay()) * xStepForDay,
                 title = WeightingFormatter.formatDateShort(date),
                 textMeasurer = textMeasurer,
                 textStyle = textStyle,
@@ -213,7 +204,7 @@ private fun DrawScope.drawDateDivider(
 }
 
 private fun DrawScope.drawWeightChart(
-    chart: WeightChart,
+    chart: WeightingsChart,
     weightLineColor: Color,
     targetLineColor: Color,
     pointColor: Color,
@@ -226,7 +217,7 @@ private fun DrawScope.drawWeightChart(
     ) {
         val positionsScope = calculatePointPositionsScope(chart)
         val targetY = positionsScope.targetY ?: size.height
-        val points = positionsScope.points
+        val points = positionsScope.positions
         val fillWeightPath = Path()
 
         fillWeightPath.moveTo(0f, targetY)
@@ -268,28 +259,27 @@ private fun DrawScope.drawWeightChart(
     }
 }
 
-private fun DrawScope.calculatePointPositionsScope(chart: WeightChart): WeightPointPositionsScope {
-    val weightPoints = chart.weightPoints
+private fun DrawScope.calculatePointPositionsScope(chart: WeightingsChart): WeightingPositionsScope {
     val scope = chart.scope
-    val yStep = size.height / (scope.topWeight - scope.bottomWeight)
-    val xStep = size.width / (weightPoints.size - 1)
+    val startDay = scope.startWeighting.date.toEpochDay()
 
-    return WeightPointPositionsScope(
-        points = weightPoints.mapIndexedNotNull { index, weightPoint ->
-            weightPoint.weightValue?.let { weight ->
-                WeightPointPosition(
-                    x = index * xStep,
-                    y = yStep * (scope.topWeight - weight),
-                    weightPoint = weightPoint,
-                )
-            }
+    val yStep = size.height / (scope.topWeight - scope.bottomWeight)
+    val xStep = size.width / (scope.endWeighting.date.toEpochDay() - startDay)
+
+    return WeightingPositionsScope(
+        positions = chart.weightings.map { weighting ->
+            val offset = weighting.date.toEpochDay() - startDay
+            WeightingPosition(
+                x = offset * xStep,
+                y = yStep * (scope.topWeight - weighting.value),
+            )
         },
-        targetY = scope.targetWeight?.let { (scope.topWeight - scope.targetWeight) * yStep },
+        targetY = scope.targetWeight?.let { (scope.topWeight - it) * yStep },
     )
 }
 
 private fun DrawScope.drawWeightLines(
-    points: List<WeightPointPosition>,
+    points: List<WeightingPosition>,
     lineColor: Color,
     fillWeightChart: (WeightLineCubicPositions) -> Unit,
 ) {
@@ -315,10 +305,10 @@ private fun DrawScope.drawWeightLines(
 }
 
 private fun findLineCubicPositions(
-    prev: WeightPointPosition,
-    start: WeightPointPosition,
-    end: WeightPointPosition,
-    next: WeightPointPosition,
+    prev: WeightingPosition,
+    start: WeightingPosition,
+    end: WeightingPosition,
+    next: WeightingPosition,
 ): WeightLineCubicPositions {
     val prevLineDiffY = start.y - prev.y
     val prevLineDiffX = start.x - prev.x
@@ -391,13 +381,15 @@ private fun Path.cubicTo(positions: WeightLineCubicPositions): Path {
 @WeightDropPreview
 @Composable
 private fun ChartWidgetPreview() {
-    val calculator = WeightChartCalculator()
     val target = 90f
+    val chart = runBlocking {
+        CalculateWeightingsChartUseCase(Dispatchers.Default).invoke(target, stubWeightingsMediumFirst)
+    }.getOrThrow()
     WeightDropTheme {
         ScaffoldPreview {
             ChartWidget(
-                chart = calculator.calculateWeightChart(target, stubWeightingsMediumFirst),
-                color = WeightChartColor(
+                chart = chart,
+                color = WeightingsChartColor(
                     gridColor = MaterialTheme.colorScheme.primary,
                     textColor = MaterialTheme.colorScheme.primary,
                     weightLineColor = MaterialTheme.colorScheme.secondary,
@@ -413,13 +405,15 @@ private fun ChartWidgetPreview() {
 @WeightDropPreview
 @Composable
 private fun ChartWidgetPreview2() {
-    val calculator = WeightChartCalculator()
     val target = 80f
+    val chart = runBlocking {
+        CalculateWeightingsChartUseCase(Dispatchers.Default).invoke(target, stubWeightingsMediumSecond)
+    }.getOrThrow()
     WeightDropTheme {
         ScaffoldPreview {
             ChartWidget(
-                chart = calculator.calculateWeightChart(target, stubWeightingsMediumSecond),
-                color = WeightChartColor(
+                chart = chart,
+                color = WeightingsChartColor(
                     gridColor = MaterialTheme.colorScheme.primary,
                     textColor = MaterialTheme.colorScheme.primary,
                     weightLineColor = MaterialTheme.colorScheme.secondary,
@@ -435,13 +429,15 @@ private fun ChartWidgetPreview2() {
 @WeightDropPreview
 @Composable
 private fun ChartWidgetPreview3() {
-    val calculator = WeightChartCalculator()
     val target = 88f
+    val chart = runBlocking {
+        CalculateWeightingsChartUseCase(Dispatchers.Default).invoke(target, stubWeightingsMediumThird)
+    }.getOrThrow()
     WeightDropTheme {
         ScaffoldPreview {
             ChartWidget(
-                chart = calculator.calculateWeightChart(target, stubWeightingsMediumThird),
-                color = WeightChartColor(
+                chart = chart,
+                color = WeightingsChartColor(
                     gridColor = MaterialTheme.colorScheme.primary,
                     textColor = MaterialTheme.colorScheme.primary,
                     weightLineColor = MaterialTheme.colorScheme.secondary,

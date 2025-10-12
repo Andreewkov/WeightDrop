@@ -14,21 +14,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import ru.andreewkov.weightdrop.WeightChart
-import ru.andreewkov.weightdrop.WeightChartCalculator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import ru.andreewkov.weightdrop.domain.model.WeightingsChart
+import ru.andreewkov.weightdrop.domain.weighting.CalculateWeightingsChartUseCase
 import ru.andreewkov.weightdrop.model.ProgressWidgetValue
+import ru.andreewkov.weightdrop.model.WeightingsChartColor
 import ru.andreewkov.weightdrop.theme.Dark
 import ru.andreewkov.weightdrop.theme.Grey
 import ru.andreewkov.weightdrop.theme.Peach
@@ -43,7 +42,6 @@ import ru.andreewkov.weightdrop.widget.ProgressWidget
 import ru.andreewkov.weightdrop.widget.ProgressWidgetColor
 import ru.andreewkov.weightdrop.widget.ResultsWidget
 import ru.andreewkov.weightdrop.widget.ResultsWidgetItem
-import ru.andreewkov.weightdrop.widget.WeightChartColor
 
 @Composable
 fun InfoScreenUI() {
@@ -53,7 +51,7 @@ fun InfoScreenUI() {
     when (val state = screenState) {
         is InfoScreenState.SuccessChart -> {
             Content(
-                weightChart = state.weightChart,
+                chart = state.chart,
             )
         }
         InfoScreenState.SuccessEmpty -> Unit
@@ -75,30 +73,21 @@ private fun Loading(
 
 @Composable
 private fun Content(
-    weightChart: WeightChart,
+    chart: WeightingsChart,
     modifier: Modifier = Modifier,
 ) {
-    var startWeight by remember { mutableStateOf(0f) }
-    var currentWeight by remember { mutableStateOf(0f) }
-
-    LaunchedEffect(weightChart) {
-        weightChart.weightPoints.run {
-            startWeight = requireNotNull(first { it.weightValue != null }.weightValue)
-            currentWeight = requireNotNull(last { it.weightValue != null }.weightValue)
-        }
-    }
     Column(
         modifier = modifier
             .padding(16.dp)
             .fillMaxSize(),
     ) {
         ResultsPanel(
-            start = startWeight,
-            target = weightChart.scope.targetWeight ?: weightChart.scope.bottomWeight,
-            current = currentWeight,
+            start = chart.scope.startWeighting.value,
+            target = chart.scope.targetWeight ?: chart.scope.bottomWeight,
+            current = chart.scope.endWeighting.value,
         )
         Spacer(modifier = Modifier.size(10.dp))
-        Chart(weightChart)
+        Chart(chart)
     }
 }
 
@@ -144,11 +133,11 @@ private fun ResultsPanel(
 
 @Composable
 private fun Chart(
-    weightChart: WeightChart,
+    chart: WeightingsChart,
 ) {
     ChartWidget(
-        chart = weightChart,
-        color = WeightChartColor(
+        chart = chart,
+        color = WeightingsChartColor(
             gridColor = MaterialTheme.colorScheme.primary,
             textColor = MaterialTheme.colorScheme.primary,
             weightLineColor = MaterialTheme.colorScheme.secondary,
@@ -210,9 +199,10 @@ private fun getContentHeight(): Dp {
 @WeightDropPreview
 @Composable
 private fun ContentPreview() {
-    val calculator = WeightChartCalculator()
     val target = 86f
-    val chart = calculator.calculateWeightChart(target, stubWeightingsMediumFourth)
+    val chart = runBlocking {
+        CalculateWeightingsChartUseCase(Dispatchers.Default).invoke(target, stubWeightingsMediumFourth)
+    }.getOrThrow()
     WeightDropTheme {
         ScaffoldPreview {
             Content(chart)

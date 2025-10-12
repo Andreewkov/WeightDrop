@@ -1,8 +1,8 @@
-package ru.andreewkov.weightdrop.model
+package ru.andreewkov.weightdrop.domain.model
 
 import java.time.LocalDate
 
-data class WeightPoint(
+data class WeightingsChartItem(
     val date: LocalDate,
     val weightValue: Float?,
     val drawDivider: Boolean,

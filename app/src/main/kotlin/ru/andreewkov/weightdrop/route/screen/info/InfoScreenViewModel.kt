@@ -8,11 +8,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import ru.andreewkov.weightdrop.WeightChartCalculator
 import ru.andreewkov.weightdrop.domain.model.Settings
 import ru.andreewkov.weightdrop.domain.model.Weighting
 import ru.andreewkov.weightdrop.domain.settings.ObserveSettingsUseCase
+import ru.andreewkov.weightdrop.domain.weighting.CalculateWeightingsChartUseCase
 import ru.andreewkov.weightdrop.domain.weighting.ObserveWeightingsUseCase
 import ru.andreewkov.weightdrop.route.base.ScreenStateViewModel
 import javax.inject.Inject
@@ -21,11 +20,10 @@ import javax.inject.Inject
 class InfoScreenViewModel @Inject constructor(
     private val observeWeightingsUseCase: ObserveWeightingsUseCase,
     private val observeSettingsUseCase: ObserveSettingsUseCase,
+    private val calculateWeightingsChartUseCase: CalculateWeightingsChartUseCase,
 ) : ScreenStateViewModel<InfoScreenState>(
     defaultState = InfoScreenState.Loading,
 ) {
-
-    private val weightChartCalculator = WeightChartCalculator()
 
     init {
         initData()
@@ -52,12 +50,15 @@ class InfoScreenViewModel @Inject constructor(
         val state = if (weightings.isEmpty()) {
             InfoScreenState.SuccessEmpty
         } else {
-            withContext(Dispatchers.Default) {
+            val chartResult = calculateWeightingsChartUseCase(target, weightings).getOrNull()
+
+            chartResult?.let { chart ->
                 InfoScreenState.SuccessChart(
-                    weightChart = weightChartCalculator.calculateWeightChart(target, weightings),
+                    chart = chartResult,
                 )
-            }
+            } ?: InfoScreenState.Failure
         }
+
         updateState { state }
     }
 

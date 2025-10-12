@@ -18,4 +18,11 @@ class DomainProviderModule {
     fun provideHistoryDispatcher(): CoroutineDispatcher {
         return Dispatchers.Default
     }
+
+    @Provides
+    @Singleton
+    @ChartDispatcherQualifier
+    fun provideChartyDispatcher(): CoroutineDispatcher {
+        return Dispatchers.Default
+    }
 }
