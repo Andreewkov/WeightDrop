@@ -44,6 +44,10 @@ class SettingsRepositoryImpl @Inject constructor(
         return currentSettings.asStateFlow()
     }
 
+    override fun getSettings(): SettingsDataModel {
+        return currentSettings.value
+    }
+
     override suspend fun updateHeight(
         height: Int,
     ): Result<Unit> = withContext(dispatcher) {

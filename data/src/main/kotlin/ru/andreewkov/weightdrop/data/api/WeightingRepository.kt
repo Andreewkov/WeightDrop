@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 interface WeightingRepository {
 
-    fun observeWeightings(): Result<Flow<List<WeightingDataModel>>>
+    fun observeWeightings(): Flow<List<WeightingDataModel>>
 
     suspend fun getWeighting(date: LocalDate): Result<WeightingDataModel>
 

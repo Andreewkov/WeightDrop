@@ -5,16 +5,19 @@
         <error line="22" column="1" source="standard:indent" />
     </file>
     <file name="app/src/main/kotlin/ru/andreewkov/weightdrop/route/screen/history/HistoryScreenViewModel.kt">
-        <error line="20" column="1" source="standard:indent" />
-        <error line="21" column="1" source="standard:indent" />
+        <error line="22" column="1" source="standard:indent" />
+        <error line="23" column="1" source="standard:indent" />
+        <error line="24" column="1" source="standard:indent" />
     </file>
     <file name="app/src/main/kotlin/ru/andreewkov/weightdrop/route/screen/info/InfoScreenViewModel.kt">
-        <error line="25" column="1" source="standard:indent" />
-        <error line="26" column="1" source="standard:indent" />
+        <error line="20" column="1" source="standard:indent" />
+        <error line="21" column="1" source="standard:indent" />
+        <error line="22" column="1" source="standard:indent" />
     </file>
     <file name="app/src/main/kotlin/ru/andreewkov/weightdrop/route/screen/settings/SettingsScreenViewModel.kt">
-        <error line="33" column="1" source="standard:indent" />
-        <error line="34" column="1" source="standard:indent" />
+        <error line="37" column="1" source="standard:indent" />
+        <error line="38" column="1" source="standard:indent" />
+        <error line="39" column="1" source="standard:indent" />
     </file>
     <file name="database/build/generated/ksp/debug/kotlin/ru/andreewkov/weightdrop/database/AppDatabase_Impl.kt">
         <error line="29" column="14" source="standard:class-naming" />
@@ -179,8 +182,5 @@
         <error line="116" column="25" source="standard:backing-property-naming" />
         <error line="119" column="25" source="standard:backing-property-naming" />
         <error line="119" column="25" source="standard:backing-property-naming" />
-    </file>
-    <file name="domain/src/main/kotlin/ru/andreewkov/weightdrop/domain/di/CoroutineDispatcherQualifier.kt">
-        <error line="1" column="1" source="standard:filename" />
     </file>
 </baseline>

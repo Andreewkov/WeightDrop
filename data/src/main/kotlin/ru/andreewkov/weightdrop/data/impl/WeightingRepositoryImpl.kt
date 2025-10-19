@@ -20,14 +20,12 @@ class WeightingRepositoryImpl @Inject constructor(
     @DatabaseDispatcherQualifier private val databaseDispatcher: CoroutineDispatcher,
 ) : WeightingRepository {
 
-    override fun observeWeightings(): Result<Flow<List<WeightingDataModel>>> {
-        return runCatching {
-            weightingDao.observeWeightings()
-                .map { weightings ->
-                    weightings.toDataModels()
-                }
-                .flowOn(databaseDispatcher)
-        }
+    override fun observeWeightings(): Flow<List<WeightingDataModel>> {
+        return weightingDao.observeWeightings()
+            .map { weightings ->
+                weightings.toDataModels()
+            }
+            .flowOn(databaseDispatcher)
     }
 
     override suspend fun getWeighting(

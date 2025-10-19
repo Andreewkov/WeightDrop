@@ -1,7 +1,5 @@
 package ru.andreewkov.weightdrop.domain.model
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import ru.andreewkov.weightdrop.data.model.WeightingDataModel
 import java.time.LocalDate
 
@@ -16,8 +14,4 @@ internal fun WeightingDataModel.toWeighting(): Weighting {
 
 internal fun List<WeightingDataModel>.toWeightings(): List<Weighting> {
     return map { it.toWeighting() }
-}
-
-internal fun Flow<List<WeightingDataModel>>.toWeightingsFlow(): Flow<List<Weighting>> {
-    return map { it.toWeightings() }
 }

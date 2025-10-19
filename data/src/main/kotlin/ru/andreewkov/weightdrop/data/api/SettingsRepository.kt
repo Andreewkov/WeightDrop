@@ -8,6 +8,8 @@ interface SettingsRepository {
 
     fun observeSettings(): Flow<SettingsDataModel>
 
+    fun getSettings(): SettingsDataModel
+
     suspend fun updateHeight(height: Int): Result<Unit>
 
     suspend fun updateStartWeight(weight: Float): Result<Unit>

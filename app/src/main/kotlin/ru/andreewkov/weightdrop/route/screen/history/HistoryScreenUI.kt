@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.WeightingFormatter
@@ -72,7 +71,7 @@ fun HistoryScreenUI(
                 onCardClick = { _, date ->
                     onCardClick(date)
                 },
-                onDelete = viewModel::onWeightingDeleted,
+                onSwipe = viewModel::onWeightingSwiped,
             )
         }
         HistoryScreenState.Failure -> Unit // TODO
@@ -85,7 +84,7 @@ fun HistoryScreenUI(
 private fun Content(
     blocks: List<HistoryBlock>,
     onCardClick: (Float, LocalDate) -> Unit,
-    onDelete: (Float, LocalDate) -> Unit,
+    onSwipe: (Float, LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -119,12 +118,7 @@ private fun Content(
                     value = item.weighting.value,
                     date = item.weighting.date,
                     diff = item.diff,
-                    onDelete = { value, date ->
-                        coroutineScope.launch {
-                            isItemVisible = false
-                            onDelete(value, date)
-                        }
-                    },
+                    onSwipe = onSwipe,
                     showAnimation = showAnimation && !isAnimationRun,
                     onAnimationRun = ::onAnimationRun,
                     modifier = Modifier.clickable {
@@ -147,7 +141,7 @@ private fun WeightingCard(
     value: Float,
     date: LocalDate,
     diff: Float,
-    onDelete: (Float, LocalDate) -> Unit,
+    onSwipe: (Float, LocalDate) -> Unit,
     modifier: Modifier = Modifier,
     showAnimation: Boolean = false,
     onAnimationRun: () -> Unit = {},
@@ -159,7 +153,7 @@ private fun WeightingCard(
     LaunchedEffect(dismissState.currentValue) {
         when (dismissState.currentValue) {
             SwipeToDismissBoxValue.EndToStart -> {
-                onDelete(value, date)
+                onSwipe(value, date)
             }
             SwipeToDismissBoxValue.StartToEnd,
             SwipeToDismissBoxValue.Settled,
@@ -286,7 +280,7 @@ fun WeightCardPreview() {
                 value = 90f,
                 date = LocalDate.of(2025, 5, 30),
                 diff = 0f,
-                onDelete = { _, _ -> },
+                onSwipe = { _, _ -> },
             )
         }
     }
@@ -319,7 +313,7 @@ fun ContentPreview() {
             Content(
                 blocks = blocks,
                 onCardClick = { _, _ -> },
-                onDelete = { _, _ -> },
+                onSwipe = { _, _ -> },
             )
         }
     }
