@@ -50,6 +50,7 @@ import ru.andreewkov.weightdrop.R
 import ru.andreewkov.weightdrop.WeightingFormatter
 import ru.andreewkov.weightdrop.domain.model.HistoryBlock
 import ru.andreewkov.weightdrop.domain.weighting.CalculateHistoryBlocksUseCase
+import ru.andreewkov.weightdrop.route.screen.LoadingScreenUI
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.ScaffoldPreview
 import ru.andreewkov.weightdrop.util.WeightDropPreview
@@ -65,6 +66,9 @@ fun HistoryScreenUI(
     val screenState by viewModel.screenState.collectAsState()
 
     when (val state = screenState) {
+        HistoryScreenState.Loading -> {
+            LoadingScreenUI()
+        }
         is HistoryScreenState.Success -> {
             Content(
                 blocks = state.blocks,
@@ -75,7 +79,6 @@ fun HistoryScreenUI(
             )
         }
         HistoryScreenState.Failure -> Unit // TODO
-        HistoryScreenState.Loading -> Unit
         HistoryScreenState.Empty -> Unit
     }
 }

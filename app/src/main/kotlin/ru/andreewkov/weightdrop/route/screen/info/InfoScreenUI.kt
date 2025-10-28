@@ -28,6 +28,7 @@ import ru.andreewkov.weightdrop.domain.model.WeightingsChart
 import ru.andreewkov.weightdrop.domain.weighting.CalculateWeightingsChartUseCase
 import ru.andreewkov.weightdrop.model.ProgressWidgetValue
 import ru.andreewkov.weightdrop.model.WeightingsChartColor
+import ru.andreewkov.weightdrop.route.screen.LoadingScreenUI
 import ru.andreewkov.weightdrop.theme.Dark
 import ru.andreewkov.weightdrop.theme.Grey
 import ru.andreewkov.weightdrop.theme.Peach
@@ -37,7 +38,6 @@ import ru.andreewkov.weightdrop.util.WeightDropPreview
 import ru.andreewkov.weightdrop.util.isPortrait
 import ru.andreewkov.weightdrop.util.stubWeightingsMediumFourth
 import ru.andreewkov.weightdrop.widget.ChartWidget
-import ru.andreewkov.weightdrop.widget.LoadingIndicatorWidget
 import ru.andreewkov.weightdrop.widget.ProgressWidget
 import ru.andreewkov.weightdrop.widget.ProgressWidgetColor
 import ru.andreewkov.weightdrop.widget.ResultsWidget
@@ -49,26 +49,17 @@ fun InfoScreenUI() {
     val screenState by viewModel.screenState.collectAsState()
 
     when (val state = screenState) {
+        InfoScreenState.Loading -> {
+            LoadingScreenUI()
+        }
         is InfoScreenState.SuccessChart -> {
             Content(
                 chart = state.chart,
             )
         }
         InfoScreenState.SuccessEmpty -> Unit
-        InfoScreenState.Loading -> Loading()
         InfoScreenState.Failure -> Unit
     }
-}
-
-@Composable
-private fun Loading(
-    modifier: Modifier = Modifier,
-) {
-    LoadingIndicatorWidget(
-        color = MaterialTheme.colorScheme.secondary,
-        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = modifier,
-    )
 }
 
 @Composable
@@ -206,16 +197,6 @@ private fun ContentPreview() {
     WeightDropTheme {
         ScaffoldPreview {
             Content(chart)
-        }
-    }
-}
-
-@WeightDropPreview
-@Composable
-private fun LoadingPreview() {
-    WeightDropTheme {
-        ScaffoldPreview {
-            Loading()
         }
     }
 }

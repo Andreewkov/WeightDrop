@@ -23,6 +23,7 @@ import ru.andreewkov.weightdrop.model.SettingsItemType
 import ru.andreewkov.weightdrop.route.dialog.picker.DatePickerDialogUI
 import ru.andreewkov.weightdrop.route.dialog.picker.HeightPickerDialogUI
 import ru.andreewkov.weightdrop.route.dialog.picker.WeightPickerDialogUI
+import ru.andreewkov.weightdrop.route.screen.LoadingScreenUI
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.ScaffoldPreview
 import ru.andreewkov.weightdrop.util.WeightDropPreview
@@ -34,7 +35,9 @@ fun SettingsScreenUI() {
     val screenState by viewModel.screenState.collectAsState()
 
     when (val state = screenState.content) {
-        SettingsContentState.Loading -> Unit
+        SettingsContentState.Loading -> {
+            LoadingScreenUI()
+        }
         is SettingsContentState.Success -> {
             Content(
                 items = state.items,
