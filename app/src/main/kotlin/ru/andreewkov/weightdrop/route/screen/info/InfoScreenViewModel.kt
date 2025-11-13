@@ -34,6 +34,7 @@ class InfoScreenViewModel @Inject constructor(
             chartResult?.let { chart ->
                 InfoScreenState.SuccessChart(
                     chart = chartResult,
+                    settings = settings,
                 )
             } ?: InfoScreenState.Failure
         }

@@ -29,8 +29,8 @@ fun Float.hasDecimals(): Boolean {
     return this % 1 != 0f
 }
 
-fun Float.roundToDecimals(): Float {
-    return round(this * 10) / 10
+fun Float.roundToDecimals(step: Int = 10): Float {
+    return round(this * step) / step
 }
 
 fun Float.getInteger(): Int {

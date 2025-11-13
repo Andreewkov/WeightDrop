@@ -252,7 +252,7 @@ private fun DrawScope.drawWeightChart(
         points.forEach { point ->
             drawCircle(
                 color = pointColor,
-                radius = 8f,
+                radius = 1f,
                 center = Offset(point.x, point.y),
             )
         }

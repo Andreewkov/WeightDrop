@@ -27,7 +27,7 @@ class AddDialogViewModel @Inject constructor(
     private fun updateWeight(date: LocalDate) {
         viewModelScope.launch {
             val weighting = getWeightingUseCase(date).getOrElse {
-                updateState { copy(weight = 0f) }
+                // updateState { copy(weight = 0f) }
                 return@launch
             } // TODO
             updateState {

@@ -2,13 +2,13 @@ package ru.andreewkov.weightdrop.widget
 
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -23,8 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.andreewkov.weightdrop.WeightingFormatter
 import ru.andreewkov.weightdrop.theme.Peach
+import ru.andreewkov.weightdrop.theme.PeachLight
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 
 private const val INSET_BY_WIDTH = 0.08f
@@ -33,40 +33,38 @@ private const val PROGRESS_BY_WIDTH = 0.12f
 
 @Composable
 fun CircleProgressWidget(
-    color: Color,
+    trackColor: Color,
+    valueColor: Color,
     @FloatRange(from = -1.0, to = 1.0) progress: Float,
-    progressValue: Float,
+    progressValue: String,
     modifier: Modifier = Modifier,
 ) {
-    Box {
+    Box(
+        modifier = modifier.aspectRatio(1f),
+    ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .drawBehind {
-                    drawStroke(color)
+                    drawStroke(trackColor)
                 }
                 .blur(4.dp)
                 .drawBehind {
-                    drawProgress(color, progress)
-                }
+                    drawProgress(trackColor, progress)
+                },
         )
-        val progress by remember {
-            mutableStateOf(
-                value = if (progressValue > 0) {
-                    "+${WeightingFormatter.formatWeightShort(weight = progressValue)}"
-                } else {
-                    WeightingFormatter.formatWeightShort(weight = progressValue)
-                }
-            )
-        }
+
         Text(
-            text = progress,
-            fontSize = 40.sp,
+            text = progressValue,
+            autoSize = TextAutoSize.StepBased(minFontSize = 12.sp, maxFontSize = 60.sp),
             style = TextStyle(
                 fontWeight = FontWeight.W600,
             ),
-            color = color,
-            modifier = Modifier.align(Alignment.Center),
+            color = valueColor,
+            maxLines = 1,
+            modifier = Modifier
+                .fillMaxWidth(0.45f)
+                .align(Alignment.Center),
         )
     }
 }
@@ -81,12 +79,15 @@ private fun DrawScope.drawStroke(color: Color) {
             style = Stroke(
                 width = size.width * STROKE_BY_WIDTH,
             ),
-            alpha = 0.15f,
+            alpha = 0.25f,
         )
     }
 }
 
-private fun DrawScope.drawProgress(color: Color, @FloatRange(from = -1.0, to = 1.0) progress: Float) {
+private fun DrawScope.drawProgress(
+    color: Color,
+    @FloatRange(from = -1.0, to = 1.0) progress: Float,
+) {
     inset(size.width * INSET_BY_WIDTH) {
         drawArc(
             color = color,
@@ -106,9 +107,10 @@ private fun DrawScope.drawProgress(color: Color, @FloatRange(from = -1.0, to = 1
 private fun WidgetPreview() {
     WeightDropTheme {
         CircleProgressWidget(
-            color = Peach,
+            trackColor = Peach,
+            valueColor = PeachLight,
             progress = 0.3f,
-            progressValue = -10.7f,
+            progressValue = "-10.7",
             modifier = Modifier.size(200.dp),
         )
     }

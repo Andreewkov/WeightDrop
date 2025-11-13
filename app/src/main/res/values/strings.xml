@@ -21,4 +21,9 @@
     <string name="weight_wheel_picker_widget_divider">.</string>
     <string name="weight_wheel_picker_widget_units">кг</string>
     <string name="height_picker_widget_units">см</string>
+
+    <string name="progress_panel_start_weight">Начальный вес</string>
+    <string name="progress_panel_current_weight">Текущий вес</string>
+    <string name="progress_panel_target_weight">Желаемый вес</string>
+    <string name="progress_panel_percent_success">Процент успеха</string>
 </resources>

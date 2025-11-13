@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import ru.andreewkov.weightdrop.domain.model.Settings
 import ru.andreewkov.weightdrop.domain.model.WeightingsChart
 import ru.andreewkov.weightdrop.domain.weighting.CalculateWeightingsChartUseCase
 import ru.andreewkov.weightdrop.model.ProgressWidgetValue
@@ -38,6 +39,8 @@ import ru.andreewkov.weightdrop.util.WeightDropPreview
 import ru.andreewkov.weightdrop.util.isPortrait
 import ru.andreewkov.weightdrop.util.stubWeightingsMediumFourth
 import ru.andreewkov.weightdrop.widget.ChartWidget
+import ru.andreewkov.weightdrop.widget.ProgressPanelWidget
+import ru.andreewkov.weightdrop.widget.ProgressPanelWidgetState
 import ru.andreewkov.weightdrop.widget.ProgressWidget
 import ru.andreewkov.weightdrop.widget.ProgressWidgetColor
 import ru.andreewkov.weightdrop.widget.ResultsWidget
@@ -54,7 +57,7 @@ fun InfoScreenUI() {
         }
         is InfoScreenState.SuccessChart -> {
             Content(
-                chart = state.chart,
+                state = state,
             )
         }
         InfoScreenState.SuccessEmpty -> Unit
@@ -64,7 +67,7 @@ fun InfoScreenUI() {
 
 @Composable
 private fun Content(
-    chart: WeightingsChart,
+    state: InfoScreenState.SuccessChart,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -72,13 +75,25 @@ private fun Content(
             .padding(16.dp)
             .fillMaxSize(),
     ) {
-        ResultsPanel(
-            start = chart.scope.startWeighting.value,
-            target = chart.scope.targetWeight ?: chart.scope.bottomWeight,
-            current = chart.scope.endWeighting.value,
+//        ResultsPanel(
+//            start = chart.scope.startWeighting.value,
+//            target = chart.scope.targetWeight ?: chart.scope.bottomWeight,
+//            current = chart.scope.endWeighting.value,
+//        )
+        ProgressPanelWidget(
+            primaryColor = MaterialTheme.colorScheme.secondary,
+            secondaryColor = MaterialTheme.colorScheme.tertiary,
+            state = ProgressPanelWidgetState(
+                startWeight = state.settings.startWeight,
+                currentWeight = state.chart.scope.endWeighting.value,
+                targetWeight = state.settings.targetWeight,
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp),
         )
-        Spacer(modifier = Modifier.size(10.dp))
-        Chart(chart)
+        Spacer(modifier = Modifier.size(16.dp))
+        Chart(state.chart)
     }
 }
 
@@ -196,7 +211,7 @@ private fun ContentPreview() {
     }.getOrThrow()
     WeightDropTheme {
         ScaffoldPreview {
-            Content(chart)
+            Content(InfoScreenState.SuccessChart(chart, Settings(null, null, null, null)))
         }
     }
 }
