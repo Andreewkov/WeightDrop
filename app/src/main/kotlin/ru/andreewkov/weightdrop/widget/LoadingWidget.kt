@@ -38,8 +38,8 @@ fun LoadingWidget(
                 animation = tween(
                     1600,
                     easing = LinearEasing,
-                ), // tween animation with a duration of 1000ms
-                repeatMode = RepeatMode.Restart, // repeat the animation in reverse
+                ),
+                repeatMode = RepeatMode.Restart,
             ),
         )
     }
@@ -51,8 +51,8 @@ fun LoadingWidget(
                 animation = tween(
                     3000,
                     easing = LinearEasing,
-                ), // tween animation with a duration of 1000ms
-                repeatMode = RepeatMode.Restart, // repeat the animation in reverse
+                ),
+                repeatMode = RepeatMode.Restart,
             ),
         )
     }

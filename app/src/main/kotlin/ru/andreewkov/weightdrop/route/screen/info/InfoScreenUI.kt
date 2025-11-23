@@ -1,12 +1,15 @@
 package ru.andreewkov.weightdrop.route.screen.info
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,6 +27,7 @@ import ru.andreewkov.weightdrop.route.screen.LoadingScreenUI
 import ru.andreewkov.weightdrop.theme.WeightDropTheme
 import ru.andreewkov.weightdrop.util.ScaffoldPreview
 import ru.andreewkov.weightdrop.util.WeightDropPreview
+import ru.andreewkov.weightdrop.util.isPortrait
 import ru.andreewkov.weightdrop.util.stubWeightingsMediumFourth
 import ru.andreewkov.weightdrop.widget.ChartWidget
 import ru.andreewkov.weightdrop.widget.ProgressPanelWidget
@@ -53,16 +57,13 @@ private fun Content(
     state: InfoScreenState.SuccessChart,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    val isPortrait = isPortrait()
+    Container(
+        isPortrait = isPortrait,
         modifier = modifier
             .padding(16.dp)
             .fillMaxSize(),
     ) {
-//        ResultsPanel(
-//            start = chart.scope.startWeighting.value,
-//            target = chart.scope.targetWeight ?: chart.scope.bottomWeight,
-//            current = chart.scope.endWeighting.value,
-//        )
         ProgressPanelWidget(
             primaryColor = MaterialTheme.colorScheme.secondary,
             secondaryColor = MaterialTheme.colorScheme.tertiary,
@@ -71,12 +72,37 @@ private fun Content(
                 currentWeight = state.chart.scope.endWeighting.value,
                 targetWeight = state.settings.targetWeight,
             ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp),
+            modifier = if (isPortrait()) {
+                Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+            } else {
+                Modifier
+                    .fillMaxHeight()
+                    .width(240.dp)
+            },
         )
         Spacer(modifier = Modifier.size(16.dp))
         Chart(state.chart)
+    }
+}
+
+@Composable
+private fun Container(
+    isPortrait: Boolean,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    if (isPortrait) {
+        Column(
+            modifier = modifier,
+            content = { content() },
+        )
+    } else {
+        Row(
+            modifier = modifier,
+            content = { content() },
+        )
     }
 }
 

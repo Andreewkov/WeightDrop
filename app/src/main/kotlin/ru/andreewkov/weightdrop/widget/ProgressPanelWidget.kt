@@ -39,7 +39,30 @@ data class ProgressPanelWidgetState(
     val startWeight: Float?,
     val currentWeight: Float?,
     val targetWeight: Float?,
-)
+) {
+
+    fun getPercentProgress(): Float? {
+        return if (startWeight != null && currentWeight != null && targetWeight != null) {
+            val firstStep = startWeight - currentWeight
+            val all = startWeight - targetWeight
+            (firstStep / all * 100).roundToDecimals(100)
+        } else {
+            null
+        }
+    }
+
+    fun getDifferenceProgress(): String {
+        if (startWeight == null || currentWeight == null) return "-"
+        val progress = currentWeight - startWeight
+        val result = WeightingFormatter.formatWeightLong(progress)
+
+        return if (progress > 0) {
+            "+$result"
+        } else {
+            result
+        }
+    }
+}
 
 private interface WeightScope {
     fun Modifier.setWeight(weight: Float): Modifier
@@ -117,8 +140,8 @@ fun ProgressPanelWidget(
         CircleProgressWidget(
             trackColor = primaryColor,
             valueColor = secondaryColor,
-            progress = 0.4f,
-            progressValue = progressValue,
+            progress = (state.getPercentProgress() ?: 0f) / 100,
+            progressValue = state.getDifferenceProgress(),
             modifier = Modifier.setWeight(1f),
         )
 
@@ -140,7 +163,7 @@ fun ProgressPanelWidget(
                 primaryColor = primaryColor,
                 secondaryColor = secondaryColor,
                 titleRes = R.string.progress_panel_percent_success,
-                value = progress,
+                value = state.getPercentProgress()?.toString(),
             )
         }
     }
