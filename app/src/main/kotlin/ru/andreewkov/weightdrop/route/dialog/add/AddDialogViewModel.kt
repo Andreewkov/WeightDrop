@@ -3,38 +3,52 @@ package ru.andreewkov.weightdrop.route.dialog.add
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.andreewkov.weightdrop.domain.model.Weighting
-import ru.andreewkov.weightdrop.domain.weighting.GetWeightingUseCase
+import ru.andreewkov.weightdrop.domain.weighting.ObserveWeightingsUseCase
 import ru.andreewkov.weightdrop.domain.weighting.UpdateWeightingUseCase
-import ru.andreewkov.weightdrop.route.base.ScreenStateViewModel
+import ru.andreewkov.weightdrop.route.base.ObservingFlowProvider
+import ru.andreewkov.weightdrop.route.base.ObservingViewModel
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class AddDialogViewModel @Inject constructor(
-    private val getWeightingUseCase: GetWeightingUseCase,
+    private val observeWeightingsUseCase: ObserveWeightingsUseCase,
     private val updateWeightingUseCase: UpdateWeightingUseCase,
-) : ScreenStateViewModel<AddDialogState>(
+) : ObservingViewModel<AddDialogState, List<Weighting>>(
     defaultState = AddDialogState.createDefault(),
+    flowProvider = FlowProvider(observeWeightingsUseCase)
 ) {
 
     private val _datePickerRequestState = MutableStateFlow(AddDialogDatePickerRequestState(show = false))
     val datePickerRequestState get() = _datePickerRequestState.asStateFlow()
 
-    private fun updateWeight(date: LocalDate) {
+    private var weightings: List<Weighting> = emptyList()
+
+    override suspend fun handleObserved(value: List<Weighting>) {
+        weightings = value
+        updateWeight()
+    }
+
+    override fun onFailureObserved(throwable: Throwable) {
+        //TODO
+    }
+
+    private fun updateWeight(date: LocalDate = screenState.value.date) {
         viewModelScope.launch {
-            val weighting = getWeightingUseCase(date).getOrElse {
-                // updateState { copy(weight = 0f) }
-                return@launch
-            } // TODO
-            updateState {
-                copy(
-                    date = weighting.date,
-                    weight = weighting.value,
-                )
+            val weighting = weightings.findLast { weighting ->
+                weighting.date.isBefore(date) || weighting.date == date
+            } ?: weightings.find { weighting ->
+                weighting.date.isAfter(date)
+            }
+            weighting?.let {
+                updateState {
+                    copy(weight = weighting.value)
+                }
             }
         }
     }
@@ -74,5 +88,13 @@ class AddDialogViewModel @Inject constructor(
     fun dispose() {
         resetState()
         _datePickerRequestState.value = AddDialogDatePickerRequestState(show = false)
+    }
+
+    private class FlowProvider(
+        private val observeWeightingsUseCase: ObserveWeightingsUseCase,
+    ) : ObservingFlowProvider<List<Weighting>> {
+        override fun provideObservingFlow(): Flow<List<Weighting>> {
+            return observeWeightingsUseCase()
+        }
     }
 }
