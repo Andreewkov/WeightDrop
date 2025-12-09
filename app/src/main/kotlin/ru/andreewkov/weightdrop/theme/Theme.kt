@@ -11,6 +11,7 @@ val Peach = Color(0xFFF5D49B)
 val PeachLight = Color(0xFFFCF0DF)
 val Dark = Color(0xFF0B0518)
 val DarkLight = Color(0xFF1E192C)
+val Red = Color(0xFFE3212D)
 
 private val colorScheme = darkColorScheme(
     surface = Dark,
@@ -24,6 +25,8 @@ private val colorScheme = darkColorScheme(
     onSurface = Peach,
     surfaceContainer = Dark,
     surfaceVariant = DarkLight,
+    error = Red,
+    onError = Grey,
 )
 
 @Composable

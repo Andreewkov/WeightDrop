@@ -20,9 +20,9 @@ class AddDialogViewModel @Inject constructor(
     private val observeWeightingsUseCase: ObserveWeightingsUseCase,
     private val updateWeightingUseCase: UpdateWeightingUseCase,
 ) : ObservingViewModel<AddDialogState, List<Weighting>>(
-    defaultState = AddDialogState.createDefault(),
-    flowProvider = FlowProvider(observeWeightingsUseCase)
-) {
+        defaultState = AddDialogState.createDefault(),
+        flowProvider = FlowProvider(observeWeightingsUseCase),
+    ) {
 
     private val _datePickerRequestState = MutableStateFlow(AddDialogDatePickerRequestState(show = false))
     val datePickerRequestState get() = _datePickerRequestState.asStateFlow()
@@ -35,7 +35,7 @@ class AddDialogViewModel @Inject constructor(
     }
 
     override fun onFailureObserved(throwable: Throwable) {
-        //TODO
+        // TODO
     }
 
     private fun updateWeight(date: LocalDate = screenState.value.date) {

@@ -26,4 +26,6 @@
     <string name="progress_panel_current_weight">Текущий вес</string>
     <string name="progress_panel_target_weight">Желаемый вес</string>
     <string name="progress_panel_percent_success">Процент успеха</string>
+
+    <string name="error_toast_info">Не удалось построить график</string>
 </resources>
